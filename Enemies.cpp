@@ -31,7 +31,7 @@ int CEnemies::NextSpawnX() {
     switch(m_number_of_enemies % 3) {
         case 0: return 12; break;
         case 1: return 24; break;
-        case 2: return 0; break;
+		default:  return 0;
     }
 }
 

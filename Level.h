@@ -35,12 +35,12 @@ class CLevel {
         CLevel();
 
         void LoadLevel(const string fileName);
-        void LoadNextLevel();
+		void LoadNextLevel()  {}
         void DrawLevel(bool up);
         void DrawBackground();
         void DestroyTile(int x1, int y1, int x2, int y2, int power, DIRECTION dir);
 
-        void DumpLevel();   //Dump do konsoli
+		void DumpLevel()  {}  //Dump do konsoli
         void SaveLevel();   //Zapis do pliku
 
         int LevelNum() { return m_level.m_level_num; }
