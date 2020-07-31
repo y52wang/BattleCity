@@ -35,7 +35,7 @@ class CPlayer {
         bool Alive()                { return m_alive; }
         void SetAlive(bool alive)   { m_alive = alive;  }
         bool Stopping()             { return m_stopping; }
-        bool SetStopping(bool value){ m_stopping = value; }
+        void SetStopping(bool value){ m_stopping = value; }
 
         double GetX() { return m_x; }
         double GetY() { return m_y; }
