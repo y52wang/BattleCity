@@ -44,8 +44,8 @@ class CLevel {
         void SaveLevel();   //Zapis do pliku
 
         int LevelNum() { return m_level.m_level_num; }
-        int LevelWidth() { return m_level_width; }
-        int LevelHeifht() { return m_level_height; }
+        //int LevelWidth() { return m_level_width; }
+        //int LevelHeight() { return m_level_height; }
         int AllLevels()     { return m_all_levels; }
 
         void SetLevelField(int x, int y, LVL_FIELD type)    { m_level.data[y][x] = type; }

@@ -57,7 +57,7 @@ void CGUI::RenderText(const string& text, double x, double y, COLOR color) {
 
     //Rysowanie
     int temp;
-    for(int i=0; i<text.length(); ++i) {
+    for(int i=0; i<(int)text.length(); ++i) {
         temp = int(text[i]);
         if(temp >= 65 && temp <=90) {               //Drukowane litery
             CGame::Get().Renderer()->DrawSprite(chars, temp-65, x + i*pixels_per_one_sign, y, chars.width, chars.height, color);

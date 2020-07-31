@@ -197,61 +197,61 @@ void CEnemy::Update(double dt) {
 
     //Detekcja kolizji
     if(m_vx < 0 && m_x > 0.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_s) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_s) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_s) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_s) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_s) == LVL_EAGLE) {
+        if(CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_EAGLE ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_EAGLE) {
             //Kolizja od lewej strony czolgu
             m_x = pos_x_s;
             m_colide = true;
         }
     } else if(m_vx > 0 && m_x < 24.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_p,pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_d) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_s) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_s) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_s) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_s) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_p,pos_y_s) == LVL_EAGLE) {
+        if(CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_EAGLE ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_EAGLE) {
             //Kolizja od lewej strony czolgu
             m_x = pos_x_l;
             m_colide = true;
         }
     } else if(m_vy < 0 && m_y > 0.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_d) == LVL_EAGLE) {
+        if(CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_EAGLE ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_EAGLE) {
             //Kolizja od lewej strony czolgu
             m_y = pos_y_s;
             m_colide = true;
         }
     } else if(m_vy > 0 && m_y < 24.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_l,pos_y_g) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_g) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_g) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_g) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l,pos_y_g) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_g) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_g) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_g) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_g) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_s,pos_y_g) == LVL_EAGLE) {
+        if(CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_EAGLE ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_BRICK ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_BRICK_DAMAGED ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_WHITE ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_WATER ||
+           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_EAGLE) {
             //Kolizja od lewej strony czolgu
             m_y = pos_y_d;
             m_colide = true;
