@@ -1,14 +1,22 @@
 ﻿/**************************************************
 **************************************************/
 
-#include "Level.h"
 #include <assert.h>
+#include "Level.h"
+#include "Game.h"
 
 CLevel::CLevel()
 	: m_level_width(26)
 	, m_level_height(26)
 	, m_all_levels(20)
 {
+  m_SD_Brick  = &(CGame::Get().Sprites()->Get("lvl_brick") );
+  m_SD_White  = &(CGame::Get().Sprites()->Get("lvl_white") );
+  m_SD_Slide  = &(CGame::Get().Sprites()->Get("lvl_slide") );
+  m_SD_Bush   = &(CGame::Get().Sprites()->Get("lvl_bush") );
+  m_SD_Water  = &(CGame::Get().Sprites()->Get("lvl_water") );
+  m_SD_Eagle  = &(CGame::Get().Sprites()->Get("lvl_eagle") );
+  m_SD_BG     = &(CGame::Get().Sprites()->Get("lvl_background") );
 }
 
 void CLevel::LoadLevel(const string fileName)
@@ -32,6 +40,8 @@ void CLevel::LoadLevel(const string fileName)
 		m_level.data.push_back(vecLF);
 		m_bricks.push_back(vecB);
 	}
+  reverse(m_level.data.begin(), m_level.data.end() );
+  reverse(m_bricks.begin(), m_bricks.end() );
 
 	fclose(fp);
 }
@@ -39,23 +49,37 @@ void CLevel::LoadLevel(const string fileName)
 // level 分两层，up 用于控制绘制顺序
 void CLevel::DrawLevel(bool up)
 {
-	if (!up)
-	{
-		return;
-	}
+  auto filter = [up](LVL_FIELD lf) {
+    return up ? lf==LVL_BUSH : lf!=LVL_BUSH;
+  };
 
-	for (auto it=m_level.data.begin(); it!=m_level.data.end(); ++it)
-	{
-		for (auto jt=it->begin(); jt!=it->end(); ++jt)
-		{
+  int ts = CGame::Get().TailSize();
+	for (size_t i=0; i<m_level.data.size(); ++i) {
+		for (size_t j=0; j<m_level.data[i].size(); ++j) {
+      double pos_x = j * ts;
+      double pos_y = i * ts;
+
+      LVL_FIELD lf = m_level.data[i][j];
+      if (filter(lf) ) {
+        SpriteData* sd = GetSpriteData(lf);
+        if (sd!=NULL)
+          CGame::Get().Renderer()->DrawSprite(*sd, 0, pos_x, pos_y, ts, ts);
+      }
 		}
 	}
 }
 
-// 绘制黑框
+// 绘制黑色背景
 void CLevel::DrawBackground()
 {
-
+  int ts = CGame::Get().TailSize();
+  for (int i=0; i<m_level_height; ++i) {
+    for (int j=0; j<m_level_width; ++j) {
+      double pos_x = j * ts;
+      double pos_y = i * ts;
+      CGame::Get().Renderer()->DrawSprite(*m_SD_BG, 0, pos_x, pos_y, ts, ts);
+    }
+  }
 }
 
 void CLevel::DestroyTile(int x1, int y1, int x2, int y2, int power, DIRECTION dir)
@@ -64,4 +88,22 @@ void CLevel::DestroyTile(int x1, int y1, int x2, int y2, int power, DIRECTION di
 
 void CLevel::SaveLevel()
 {
+}
+
+SpriteData* CLevel::GetSpriteData(const LVL_FIELD lf) {
+  switch (lf) {
+  case LVL_BRICK:
+    return m_SD_Brick;
+  case LVL_WHITE:
+    return m_SD_White;
+  case LVL_SLIDE:
+    return m_SD_Slide;
+  case LVL_BUSH:
+    return m_SD_Bush;
+  case LVL_WATER:
+    return m_SD_Water;
+  case LVL_EAGLE:
+    return m_SD_Eagle;
+  }
+  return NULL;
 }

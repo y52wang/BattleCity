@@ -14,32 +14,31 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 CEnemy* CEnemies::SingleEnemy(int id) {
-    for(list <CEnemy*>::iterator iter = m_Enemies.begin(); iter!= m_Enemies.end(); ++iter) {
-        if((*iter)->Id() == id) {
-            return (*iter);
-        }
-    }
-    return NULL;
+  for(auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
+    if ((*iter)->Id() == id)
+      return (*iter);
+  }
+  return NULL;
 }
 
 void CEnemies::CreateEnemy() {
-    if(Enemies() < 20)
+  if (Enemies()<20)
         CreateEnemy(m_EnemiesType[Enemies()]);
 }
 
 int CEnemies::NextSpawnX() {
-    switch(m_number_of_enemies % 3) {
-        case 0: return 12; break;
-        case 1: return 24; break;
-		default:  return 0;
-    }
+  switch (m_number_of_enemies % 3) {
+    case 0: return 12; break;
+    case 1: return 24; break;
+    default:  return 0;
+  }
 }
 
 void CEnemies::CreateEnemy(ENEMY_TYPE type) {
     CEnemy* temp_enemy = new CEnemy;
 
     int x;
-    switch(m_number_of_enemies % 3) {
+    switch (m_number_of_enemies % 3) {
         case 0: x = 12; break;
         case 1: x = 24; break;
         case 2: x = 0; break;
@@ -58,26 +57,27 @@ void CEnemies::CreateEnemy(ENEMY_TYPE type) {
 }
 
 void CEnemies::Draw() {
-    for(list<CEnemy*>::iterator iter = m_Enemies.begin(); iter != m_Enemies.end(); ++iter) {
-        (*iter)->Draw();
-    }
+  for(auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
+    (*iter)->Draw();
+  }
 }
 
 void CEnemies::DestroyAllEnemies(bool wipe) {
-    static int TailSize = CGame::Get().TailSize();
-    for(list<CEnemy*>::iterator iter = m_Enemies.begin(); iter != m_Enemies.end(); ++iter) {
-        CGame::Get().Effects()->CreateEffect( (*iter)->GetX() * TailSize, (*iter)->GetY() * TailSize, EFFECT_EXPLODE);
-        delete (*iter);
-    }
-    m_Enemies.clear();
-    if(wipe)
-        m_number_of_enemies = 0;
+  int ts = CGame::Get().TailSize();
+  for (auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
+    CGame::Get().Effects()->CreateEffect( (*iter)->GetX() * ts, (*iter)->GetY() * ts, EFFECT_EXPLODE);
+    delete (*iter);
+  }
+  m_Enemies.clear();
+  if (wipe)
+    m_number_of_enemies = 0;
 }
 
 void CEnemies::DecreaseBullet(int id) {
-    for(list<CEnemy*>::iterator iter = m_Enemies.begin(); iter != m_Enemies.end(); ++iter) {
-        if((*iter)->Id() == id) (*iter)->DecreaseBullet();
-    }
+  for (auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
+    if ((*iter)->Id() == id)
+      (*iter)->DecreaseBullet();
+  }
 }
 
 void CEnemies::Update(double dt) {
@@ -241,17 +241,17 @@ void CEnemies::Update(double dt) {
 }
 
 list<CEnemy*>::iterator CEnemies::DestroyEnemy(list<CEnemy*>::iterator iter) {
-    if((*iter)->Level() <= 0) {
-        if(int((*iter)->Type()) >= 4) {
-            CGame::Get().Items()->CreateItem();
-        }
-        static int TailSize = CGame::Get().TailSize();
-        CGame::Get().Effects()->CreateEffect( (*iter)->GetX() * TailSize, (*iter)->GetY() * TailSize, EFFECT_EXPLODE);
-        CGame::Get().Audio()->PlayChunk(SOUND_DIE);
+  if ((*iter)->Level()<=0) {
+    if ((*iter)->Type()>=ENEMY_SLOW_BONUS)
+      CGame::Get().Items()->CreateItem();
 
-        delete (*iter);
-        return m_Enemies.erase(iter);
-    } else {
-        return ++iter;
-    }
+    int ts = CGame::Get().TailSize();
+    CGame::Get().Effects()->CreateEffect((*iter)->GetX()*ts, (*iter)->GetY()*ts, EFFECT_EXPLODE);
+    CGame::Get().Audio()->PlayChunk(SOUND_DIE);
+
+    delete (*iter);
+    return m_Enemies.erase(iter);
+  } else {
+    return ++iter;
+  }
 }

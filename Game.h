@@ -83,14 +83,21 @@ class CGame {
             m_tail_size = 16;
         }
         ~CGame() {
-            delete m_Window;            delete m_Audio;
-            delete m_Level;             delete m_Sprites;
-            delete m_Renderer;          delete m_Player;
-            delete m_PlayerTwo;         delete m_Bullets;
-            delete m_Editor;            delete m_Enemies;
-            delete m_Menu;              delete m_GameTimer;
-            delete m_Items;             delete m_GUI;
-            delete m_Effects;
+            delete m_Window;    m_Window    = NULL;
+            delete m_Audio;     m_Audio     = NULL;
+            delete m_Level;     m_Level     = NULL;
+            delete m_Renderer;  m_Renderer  = NULL;
+            delete m_Player;    m_Player    = NULL;
+            delete m_PlayerTwo; m_PlayerTwo = NULL;
+            delete m_Bullets;   m_Bullets   = NULL;
+            delete m_Editor;    m_Editor    = NULL;
+            delete m_Enemies;   m_Enemies   = NULL;
+            delete m_Menu;      m_Menu      = NULL;
+            delete m_GameTimer; m_GameTimer = NULL;
+            delete m_Items;     m_Items     = NULL;
+            delete m_GUI;       m_GUI       = NULL;
+            delete m_Effects;   m_Effects   = NULL;
+            delete m_Sprites;   m_Sprites   = NULL;
         }
 
     private:

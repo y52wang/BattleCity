@@ -11,173 +11,195 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 void CEnemy::Init(int x, int y, ENEMY_TYPE type) {
-    m_x = x; m_y = y;
-    m_speed = 3;
+  m_x = x; m_y = y;
+  m_speed = 3;
 
-    if(int(type) >= 4)
-        m_frame = 1;
-    else
-        m_frame = 0;
+  if (type >= ENEMY_SLOW_BONUS)
+    m_frame = 1;
+  else
+    m_frame = 0;
 
-    m_frame_duration = 0.0;
-    m_enemy_width = 32;
-    m_enemy_height = 32;
-    m_can_shoot = true;
-    m_bullets_in_game = 0;
-    m_turn_wait_time = (rand()%36 + 5)/10.0;
+  m_frame_duration = 0.0;
+  m_enemy_width = 32;
+  m_enemy_height = 32;
+  m_can_shoot = true;
+  m_bullets_in_game = 0;
+  m_turn_wait_time = (rand()%36 + 5)/10.0;
 
-    if(int(type) == 3 || int(type) == 7)
-        m_level = 4;
-    else
-        m_level = 1;
+  if (type==ENEMY_BIG || type==ENEMY_BIG_BONUS)
+    m_level = 4;
+  else
+    m_level = 1;
 
-    SetEnemyType(type);
-    Drive();
+  SetEnemyType(type);
+  Drive();
 }
 
 void CEnemy::Drive() {
-    SetXVelocity(0); SetYVelocity(0);
+  SetXVelocity(0);
+  SetYVelocity(0);
 
-    switch(m_direction) {
-        case DIR_UP:
-            m_vy = m_speed; break;
-        case DIR_DOWN:
-            m_vy = -m_speed; break;
-        case DIR_LEFT:
-            m_vx = -m_speed; break;
-        case DIR_RIGHT:
-            m_vx = m_speed; break;
+  switch (m_direction) {
+    case DIR_UP:
+      m_vy = m_speed; break;
+    case DIR_DOWN:
+      m_vy = -m_speed; break;
+    case DIR_LEFT:
+      m_vx = -m_speed; break;
+    case DIR_RIGHT:
+      m_vx = m_speed; break;
     }
 }
 
+// Enemy 数据配置！
 void CEnemy::SetEnemyType(ENEMY_TYPE type) {
-    switch(type) {
-        case ENEMY_SLOW:
-            m_sprite_up = "enemy_slow_up";
-            m_sprite_down = "enemy_slow_down";
-            m_sprite_left = "enemy_slow_left";
-            m_sprite_right = "enemy_slow_right";
-            m_enemy_type = type;
-            m_bullet_speed = 8;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_SLOW_BONUS:
-            m_sprite_up = "enemy_slow_bonus_up";
-            m_sprite_down = "enemy_slow_bonus_down";
-            m_sprite_left = "enemy_slow_bonus_left";
-            m_sprite_right = "enemy_slow_bonus_right";
-            m_enemy_type = type;
-            m_bullet_speed = 8;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_FAST:
-            m_sprite_up = "enemy_fast_up";
-            m_sprite_down = "enemy_fast_down";
-            m_sprite_left = "enemy_fast_left";
-            m_sprite_right = "enemy_fast_right";
-            m_enemy_type = type;
-            m_speed = 7;
-            m_bullet_speed = 15;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_FAST_BONUS:
-            m_sprite_up = "enemy_fast_bonus_up";
-            m_sprite_down = "enemy_fast_bonus_down";
-            m_sprite_left = "enemy_fast_bonus_left";
-            m_sprite_right = "enemy_fast_bonus_right";
-            m_enemy_type = type;
-            m_speed = 7;
-            m_bullet_speed = 15;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_MEDIUM:
-            m_sprite_up = "enemy_medium_up";
-            m_sprite_down = "enemy_medium_down";
-            m_sprite_left = "enemy_medium_left";
-            m_sprite_right = "enemy_medium_right";
-            m_enemy_type = type;
-            m_bullet_speed = 23;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_MEDIUM_BONUS:
-            m_sprite_up = "enemy_medium_bonus_up";
-            m_sprite_down = "enemy_medium_bonus_down";
-            m_sprite_left = "enemy_medium_bonus_left";
-            m_sprite_right = "enemy_medium_bonus_right";
-            m_enemy_type = type;
-            m_bullet_speed = 23;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_BIG:
-            m_sprite_up = "enemy_big_up";
-            m_sprite_down = "enemy_big_down";
-            m_sprite_left = "enemy_big_left";
-            m_sprite_right = "enemy_big_right";
-            m_enemy_type = type;
-            m_speed = 3;
-            m_bullet_speed = 15;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-        case ENEMY_BIG_BONUS:
-            m_sprite_up = "enemy_big_bonus_up";
-            m_sprite_down = "enemy_big_bonus_down";
-            m_sprite_left = "enemy_big_bonus_left";
-            m_sprite_right = "enemy_big_bonus_right";
-            m_enemy_type = type;
-            m_speed = 3;
-            m_bullet_speed = 15;
-            m_bullet_power = 1;
-            m_max_bullets = 1;
-            break;
-    }
+  switch(type) {
+    case ENEMY_SLOW:
+      m_sprite_up     = "enemy_slow_up";
+      m_sprite_down   = "enemy_slow_down";
+      m_sprite_left   = "enemy_slow_left";
+      m_sprite_right  = "enemy_slow_right";
+      m_enemy_type    = type;
+      m_bullet_speed  = 8;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_SLOW_BONUS:
+      m_sprite_up     = "enemy_slow_bonus_up";
+      m_sprite_down   = "enemy_slow_bonus_down";
+      m_sprite_left   = "enemy_slow_bonus_left";
+      m_sprite_right  = "enemy_slow_bonus_right";
+      m_enemy_type    = type;
+      m_bullet_speed  = 8;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_FAST:
+      m_sprite_up     = "enemy_fast_up";
+      m_sprite_down   = "enemy_fast_down";
+      m_sprite_left   = "enemy_fast_left";
+      m_sprite_right  = "enemy_fast_right";
+      m_enemy_type    = type;
+      m_speed         = 7;
+      m_bullet_speed  = 15;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_FAST_BONUS:
+      m_sprite_up     = "enemy_fast_bonus_up";
+      m_sprite_down   = "enemy_fast_bonus_down";
+      m_sprite_left   = "enemy_fast_bonus_left";
+      m_sprite_right  = "enemy_fast_bonus_right";
+      m_enemy_type    = type;
+      m_speed         = 7;
+      m_bullet_speed  = 15;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_MEDIUM:
+      m_sprite_up     = "enemy_medium_up";
+      m_sprite_down   = "enemy_medium_down";
+      m_sprite_left   = "enemy_medium_left";
+      m_sprite_right  = "enemy_medium_right";
+      m_enemy_type    = type;
+      m_bullet_speed  = 23;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_MEDIUM_BONUS:
+      m_sprite_up     = "enemy_medium_bonus_up";
+      m_sprite_down   = "enemy_medium_bonus_down";
+      m_sprite_left   = "enemy_medium_bonus_left";
+      m_sprite_right  = "enemy_medium_bonus_right";
+      m_enemy_type    = type;
+      m_bullet_speed  = 23;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_BIG:
+      m_sprite_up     = "enemy_big_up";
+      m_sprite_down   = "enemy_big_down";
+      m_sprite_left   = "enemy_big_left";
+      m_sprite_right  = "enemy_big_right";
+      m_enemy_type    = type;
+      m_speed         = 3;
+      m_bullet_speed  = 15;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+
+    case ENEMY_BIG_BONUS:
+      m_sprite_up     = "enemy_big_bonus_up";
+      m_sprite_down   = "enemy_big_bonus_down";
+      m_sprite_left   = "enemy_big_bonus_left";
+      m_sprite_right  = "enemy_big_bonus_right";
+      m_enemy_type    = type;
+      m_speed         = 3;
+      m_bullet_speed  = 15;
+      m_bullet_power  = 1;
+      m_max_bullets   = 1;
+      break;
+  }
 }
 
 void CEnemy::Shoot() {
-    if(m_can_shoot) {
-        CGame::Get().Audio()->PlayChunk(SOUND_FIRE);
-        CGame::Get().Bullets()->CreateBullet(m_x, m_y, m_direction, OWN_ENEMY, m_id, m_bullet_speed);
-        ++m_bullets_in_game;
-        if(m_bullets_in_game >= m_max_bullets) {
-            m_can_shoot = false;
-        }
+  if (m_can_shoot) {
+    CGame::Get().Audio()->PlayChunk(SOUND_FIRE);
+    CGame::Get().Bullets()->CreateBullet(m_x, m_y, m_direction, OWN_ENEMY, m_id, m_bullet_speed);
+    ++m_bullets_in_game;
+    if(m_bullets_in_game >= m_max_bullets) {
+      m_can_shoot = false;
     }
+  }
 }
 
 void CEnemy::DecreaseBullet() {
-    --m_bullets_in_game;
-    m_can_shoot = true;
+  --m_bullets_in_game;
+  m_can_shoot = true;
 }
 
 void CEnemy::Draw() {
-    double pos_x = m_x * CGame::Get().TailSize();
-    double pos_y = m_y * CGame::Get().TailSize();
+  double pos_x = m_x * CGame::Get().TailSize();
+  double pos_y = m_y * CGame::Get().TailSize();
 
-    int frame = m_frame;
-    if(m_enemy_type == ENEMY_BIG) {
-        switch(m_level) {
-            case 2: frame += 6; break;
-            case 3: frame += 8; break;
-            case 4: frame += 10; break;
-        }
+  int frame = m_frame;
+  if(m_enemy_type == ENEMY_BIG) {
+    switch(m_level) {
+      case 2: frame += 6; break;
+      case 3: frame += 8; break;
+      case 4: frame += 10; break;
     }
+  }
 
-    switch (m_direction) {
-        case DIR_UP:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_up), frame, pos_x, pos_y, m_enemy_width, m_enemy_height); break;
-        case DIR_DOWN:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_down), frame, pos_x, pos_y, m_enemy_width, m_enemy_height); break;
-        case DIR_LEFT:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_left), frame, pos_x, pos_y, m_enemy_width, m_enemy_height); break;
-        case DIR_RIGHT:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_right), frame, pos_x, pos_y, m_enemy_width, m_enemy_height); break;
-    }
+  CSprites* s = CGame::Get().Sprites();
+  CRenderer* r = CGame::Get().Renderer();
+  switch (m_direction) {
+    case DIR_UP:
+      r->DrawSprite(s->Get(m_sprite_up), frame,
+        pos_x, pos_y, m_enemy_width, m_enemy_height);
+      break;
+
+    case DIR_DOWN:
+      r->DrawSprite(s->Get(m_sprite_down), frame,
+        pos_x, pos_y, m_enemy_width, m_enemy_height);
+      break;
+
+    case DIR_LEFT:
+      r->DrawSprite(s->Get(m_sprite_left), frame,
+        pos_x, pos_y, m_enemy_width, m_enemy_height);
+      break;
+
+    case DIR_RIGHT:
+      r->DrawSprite(s->Get(m_sprite_right), frame,
+        pos_x, pos_y, m_enemy_width, m_enemy_height);
+      break;
+  }
 }
 
 void CEnemy::Update(double dt) {

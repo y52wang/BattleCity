@@ -60,20 +60,20 @@ void CBullets::CreateBullet(double x, double y, DIRECTION dir, OWNER owner, int 
 }
 
 void CBullets::Draw() {
-	for(auto iter = m_bullets.begin(); iter != m_bullets.end(); ++iter) {
-        double pos_x = (*iter).x * CGame::Get().TailSize();
-        double pos_y = (*iter).y * CGame::Get().TailSize();
+  for (auto it=m_bullets.begin(); it!=m_bullets.end(); ++it) {
+    double pos_x = it->x * CGame::Get().TailSize();
+    double pos_y = it->y * CGame::Get().TailSize();
 
-        SpriteData& temp = CGame::Get().Sprites()->Get("bullet");
-        if (iter->xv<0)  // W lewo（在左边）
-			CGame::Get().Renderer()->DrawSprite(temp, 3, pos_x, pos_y, temp.width, temp.height);
-        else if (iter->xv>0)  // W prawo（在右面）
-			CGame::Get().Renderer()->DrawSprite(temp, 1, pos_x, pos_y, temp.width, temp.height);
-        else if(iter->yv<0)  // W dol（在下面）
+    SpriteData& temp = CGame::Get().Sprites()->Get("bullet");
+    if (it->xv<0)  // W lewo（在左边）
+      CGame::Get().Renderer()->DrawSprite(temp, 3, pos_x, pos_y, temp.width, temp.height);
+    else if (it->xv>0)  // W prawo（在右面）
+      CGame::Get().Renderer()->DrawSprite(temp, 1, pos_x, pos_y, temp.width, temp.height);
+    else if(it->yv<0)  // W dol（在下面）
 			CGame::Get().Renderer()->DrawSprite(temp, 2, pos_x, pos_y, temp.width, temp.height);
-        else if (iter->yv>0)  // W gore（在上面）
+    else if (it->yv>0)  // W gore（在上面）
 			CGame::Get().Renderer()->DrawSprite(temp, 0, pos_x, pos_y, temp.width, temp.height);
-	}
+  }
 }
 
 void CBullets::Update(double dt) {
@@ -128,40 +128,43 @@ void CBullets::Update(double dt) {
           level->LevelField(pos_x_s,pos_y_s) == LVL_BRICK ||
           (level->LevelField(pos_x_s,pos_y_s) == LVL_BRICK_DAMAGED && (brick2.bottom_left || brick2.bottom_right)) ||
           level->LevelField(pos_x_s,pos_y_s) == LVL_WHITE) {
-          it = DestroyBullet(it, DIR_RIGHT); already_destroyed = true;
+            it = DestroyBullet(it, DIR_RIGHT);
+            already_destroyed = true;
         }
-      } else if((*it).yv < 0 && (*it).y > 0.0) {      //w dol
-                brick1 = level->BrickField(pos_x_l, pos_y_d);
-                brick2 = level->BrickField(pos_x_s, pos_y_d);
-                if(level->LevelField(pos_x_l,pos_y_d) == LVL_BRICK ||
-                   (level->LevelField(pos_x_l,pos_y_d) == LVL_BRICK_DAMAGED && (brick1.top_right || brick1.bottom_right)) ||
-                   level->LevelField(pos_x_l,pos_y_d) == LVL_WHITE ||
-                   level->LevelField(pos_x_s,pos_y_d) == LVL_BRICK ||
-                   (level->LevelField(pos_x_s,pos_y_d) == LVL_BRICK_DAMAGED && (brick2.top_left || brick2.bottom_left)) ||
-                   level->LevelField(pos_x_s,pos_y_d) == LVL_WHITE) {
-                    it = DestroyBullet(it, DIR_DOWN); already_destroyed = true;
-                }
-            } else if((*it).yv > 0 && (*it).y < 25.5) {     //w gore
-                brick1 = level->BrickField(pos_x_l, pos_y_s);
-                brick2 = level->BrickField(pos_x_s, pos_y_s);
-                if(level->LevelField(pos_x_l,pos_y_s) == LVL_BRICK ||
-                   (level->LevelField(pos_x_l,pos_y_s) == LVL_BRICK_DAMAGED && (brick1.bottom_right || brick1.top_right)) ||
-                   level->LevelField(pos_x_l,pos_y_s) == LVL_WHITE ||
-                   level->LevelField(pos_x_s,pos_y_s) == LVL_BRICK ||
-                   (level->LevelField(pos_x_s,pos_y_s) == LVL_BRICK_DAMAGED && (brick2.bottom_left || brick2.top_left) ) ||
-                   level->LevelField(pos_x_s,pos_y_s) == LVL_WHITE) {
-                    it = DestroyBullet(it, DIR_UP); already_destroyed = true;
-                }
-            }
+      } else if (it->yv<0 && it->y>0.0) {  //w dol
+        brick1 = level->BrickField(pos_x_l, pos_y_d);
+        brick2 = level->BrickField(pos_x_s, pos_y_d);
+        if (level->LevelField(pos_x_l,pos_y_d) == LVL_BRICK ||
+          (level->LevelField(pos_x_l,pos_y_d) == LVL_BRICK_DAMAGED && (brick1.top_right || brick1.bottom_right)) ||
+          level->LevelField(pos_x_l,pos_y_d) == LVL_WHITE ||
+          level->LevelField(pos_x_s,pos_y_d) == LVL_BRICK ||
+          (level->LevelField(pos_x_s,pos_y_d) == LVL_BRICK_DAMAGED && (brick2.top_left || brick2.bottom_left)) ||
+          level->LevelField(pos_x_s,pos_y_d) == LVL_WHITE) {
+            it = DestroyBullet(it, DIR_DOWN);
+            already_destroyed = true;
+          }
+      } else if (it->yv>0 && it->y<25.5) {  //w gore
+        brick1 = level->BrickField(pos_x_l, pos_y_s);
+        brick2 = level->BrickField(pos_x_s, pos_y_s);
+        if (level->LevelField(pos_x_l,pos_y_s) == LVL_BRICK ||
+          (level->LevelField(pos_x_l,pos_y_s) == LVL_BRICK_DAMAGED && (brick1.bottom_right || brick1.top_right)) ||
+          level->LevelField(pos_x_l,pos_y_s) == LVL_WHITE ||
+          level->LevelField(pos_x_s,pos_y_s) == LVL_BRICK ||
+          (level->LevelField(pos_x_s,pos_y_s) == LVL_BRICK_DAMAGED && (brick2.bottom_left || brick2.top_left) ) ||
+          level->LevelField(pos_x_s,pos_y_s) == LVL_WHITE) {
+            it = DestroyBullet(it, DIR_UP);
+            already_destroyed = true;
         }
+      }
+    }
 
     if (!already_destroyed) {
       double x1, x2, x3, x4, y1, y2, y3, y4;
 
       //Kolizja 'kula <-> kula'
       //子弹互相碰撞处理
-      for (auto iter2=m_bullets.begin(); iter2 != m_bullets.end(); ++iter2) {
-        if(it != iter2) {
+      for (auto iter2=m_bullets.begin(); iter2!=m_bullets.end(); ++iter2) {
+        if (it!=iter2) {
           x1 = it->x;       y1 = it->y;
           x2 = x1 + 0.5;    y2 = y1 + 0.5;
           x3 = iter2->x;    y3 = iter2->y;
@@ -176,9 +179,10 @@ void CBullets::Update(double dt) {
       }
 
       //Kolizja z godłem
-      x1 = (*it).x;     y1 = (*it).y; //Współrzędne kuli
-      x2 = x1 + 0.5;      y2 = y1 + 0.5;
-      x3 = 12;            y3 = 0;         //Współrzędne godła
+      //与联轴器碰撞
+      x1 = it->x;         y1 = it->y; //Współrzędne kuli
+      x2 = x1+0.5;        y2 = y1+0.5;
+      x3 = 12;            y3 = 0;     //Współrzędne godła
       x4 = x3+2;          y4 = y3 + 2;
       if (TwoRectangles(x1, y1, x2, y2, x3, y3, x4, y4) ) {
         it->destroyed = true;

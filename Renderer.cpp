@@ -85,21 +85,23 @@ void CRenderer::StopRendering() {
     SDL_GL_SwapBuffers();
 }
 
-void CRenderer::DrawSprite(SpriteData &sprite_data, int frame, double scr_x, double scr_y, int width, int height, COLOR color) {
+void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
+  double scr_x, double scr_y, int width, int height,
+  COLOR color) {
     static int offX = CGame::Get().GameOffsetX();
     static int offY = CGame::Get().GameOffsetY();
     scr_x += offX;
     scr_y += offY;
 
     if(color != COLOR_NONE) {
-        double r,g,b;
-        switch(color) {
-                case COLOR_BLACK:       r = 0; g = 0; b = 0; break;
-                case COLOR_RED:         r = 1; g = 0; b = 0; break;
-                case COLOR_GREEN:       r = 0; g = 1; b = 0; break;
-                case COLOR_BLUE:        r = 0; g = 0; b = 1; break;
-        }
-        glColor3d(r,g,b);
+      double r,g,b;
+      switch(color) {
+        case COLOR_BLACK:       r = 0; g = 0; b = 0; break;
+        case COLOR_RED:         r = 1; g = 0; b = 0; break;
+        case COLOR_GREEN:       r = 0; g = 1; b = 0; break;
+        case COLOR_BLUE:        r = 0; g = 0; b = 1; break;
+      }
+      glColor3d(r,g,b);
     }
 
     //Współrzędne na teksturze, ponieważ ma ona współrzędne lewego górnego rogu (0,0) i prawego dolnego (1,1)

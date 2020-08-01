@@ -5,8 +5,9 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 
 #include <SDL/SDL.h>
 #include <iostream>
-#include "Sprites.h"
 using namespace std;
+
+#include "Sprites.h"
 
 CSprites::CSprites() {
 	// Now that should be from file or smthing,
@@ -123,11 +124,11 @@ CSprites::CSprites() {
 }
 
 SpriteData& CSprites::Get(const string &name) {
-    if((m_sprites.find(name) != m_sprites.end()))
-        return m_sprites.find(name)->second;
-    else {
-		// 找不到贴图精灵信息
-        cout << "- Nie znaleziono informacji o sprite'cie '" << name << "'.\n";
-        exit(1);
-    }
+  if (m_sprites.find(name)!=m_sprites.end())
+    return m_sprites.find(name)->second;
+  else {
+    // 找不到贴图精灵信息
+    cout << "- Nie znaleziono informacji o sprite'cie '" << name << "'.\n";
+    exit(1);
+  }
 }
