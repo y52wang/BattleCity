@@ -1,4 +1,4 @@
-/**************************************************
+﻿/**************************************************
 Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
@@ -78,7 +78,9 @@ class CGame {
             m_GUI = new CGUI;                   m_Effects = new CEffects;
 
             m_end_game = false;
-            m_tail_size = 16;    //Rozmiar 1 klocka w budowaniu poziomu
+			//Rozmiar 1 klocka w budowaniu poziomu
+			//横向单位长度
+            m_tail_size = 16;
         }
         ~CGame() {
             delete m_Window;            delete m_Audio;
@@ -129,7 +131,9 @@ class CGame {
 };
 
 /* Funkcja sprawdzająca kolizję między 2 prostokątami */
-inline bool TwoRectangles(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+// 函数检查两个矩形之间的碰撞（上面是波兰语）
+inline bool TwoRectangles(double x1, double y1, double x2, double y2,
+	double x3, double y3, double x4, double y4) {
     if(x1 > x3) {
         swap(x1, x3); swap(y1, y3);
         swap(x2, x4); swap(y2, y4);

@@ -1,4 +1,4 @@
-/**************************************************
+﻿/**************************************************
 Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
@@ -89,7 +89,7 @@ void CEnemies::Update(double dt) {
         }
     }
 
-    for(list<CEnemy*>::iterator iter = m_Enemies.begin(); iter != m_Enemies.end(); ) {
+    for(auto iter = m_Enemies.begin(); iter != m_Enemies.end(); ) {
         if(!m_enemies_paused)
             (*iter)->Update(dt);
         else if(int((*iter)->Type()) >= 4) {
@@ -101,12 +101,14 @@ void CEnemies::Update(double dt) {
         }
 
         //Niszczenie przeciwnika
+        //消灭对手
         if((*iter)->Destroyed())
             iter = DestroyEnemy(iter);
         else {
             //Kolizja z innymi czołgami
+            //与其他坦克相撞
             double x1,x2,x3,x4,y1,y2,y3,y4;
-            for(list<CEnemy*>::iterator iter2 = m_Enemies.begin(); iter2 != m_Enemies.end(); ++iter2) {
+            for(auto iter2 = m_Enemies.begin(); iter2 != m_Enemies.end(); ++iter2) {
                 if((*iter)->Id() != (*iter2)->Id()) {
                     x1 = (*iter)->GetX();       y1 = (*iter)->GetY();
                     x2 = x1 + 2;                y2 = y1 + 2;
@@ -144,6 +146,7 @@ void CEnemies::Update(double dt) {
             }//Koniec pętli
 
             //Kolizja z graczem 1
+			//与玩家1碰撞
             x1 = (*iter)->GetX();                   y1 = (*iter)->GetY();
             x2 = x1 + 2;                            y2 = y1 + 2;
             x3 = CGame::Get().Player()->GetX();     y3 = CGame::Get().Player()->GetY();
@@ -176,6 +179,7 @@ void CEnemies::Update(double dt) {
             }
 
             //Kolizja z graczem 2
+			//与玩家2碰撞
             if(CGame::Get().PlayerTwo() != NULL) {
                 x1 = (*iter)->GetX();                   y1 = (*iter)->GetY();
                 x2 = x1 + 2;                            y2 = y1 + 2;

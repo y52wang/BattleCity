@@ -1,4 +1,4 @@
-/**************************************************
+﻿/**************************************************
 **************************************************/
 
 #include "Level.h"
@@ -36,12 +36,26 @@ void CLevel::LoadLevel(const string fileName)
 	fclose(fp);
 }
 
+// level 分两层，up 用于控制绘制顺序
 void CLevel::DrawLevel(bool up)
 {
+	if (!up)
+	{
+		return;
+	}
+
+	for (auto it=m_level.data.begin(); it!=m_level.data.end(); ++it)
+	{
+		for (auto jt=it->begin(); jt!=it->end(); ++jt)
+		{
+		}
+	}
 }
 
+// 绘制黑框
 void CLevel::DrawBackground()
 {
+
 }
 
 void CLevel::DestroyTile(int x1, int y1, int x2, int y2, int power, DIRECTION dir)

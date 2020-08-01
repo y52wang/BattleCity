@@ -1,5 +1,5 @@
-/**************************************************
-Autor: Damian "RippeR" Dy�do
+﻿/**************************************************
+Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
@@ -8,8 +8,13 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Sprites.h"
 using namespace std;
 
-CSprites::CSprites() {  //Now that should be from file or smthing, but for now lets keep it simple and just load as it is
-    //"name",SpriteData([n] frame_count, [d] frame_duration, [d]left, [d] bottom, d] width, [d] height, [b] loop, [s] atlas)
+CSprites::CSprites() {
+	// Now that should be from file or smthing,
+	// but for now lets keep it simple and just load as it is
+    // "name",
+	// SpriteData([n]frame_count, [d]frame_duration,
+	//     [d]left, [d]bottom, [d]width, [d]height,
+	//     [b]loop, [s]atlas)
 
     /***                Player One              ***/
     Insert("player_one_up_0", SpriteData(2, 0.05, 0, 32, 32, 32, true, "atlas"));
@@ -121,6 +126,7 @@ SpriteData& CSprites::Get(const string &name) {
     if((m_sprites.find(name) != m_sprites.end()))
         return m_sprites.find(name)->second;
     else {
+		// 找不到贴图精灵信息
         cout << "- Nie znaleziono informacji o sprite'cie '" << name << "'.\n";
         exit(1);
     }
