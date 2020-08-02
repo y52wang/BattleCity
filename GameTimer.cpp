@@ -97,29 +97,30 @@ void CGameTimer::ChooseLevel() {
 void CGameTimer::Update(double dt) {
     static int TailSize = CGame::Get().TailSize();
     if(CGame::Get().GameState() == GS_GAMEPLAY) {
-        //Sprawdzanie ilości przeciwników, ew. respawn przeciwników
-        if(CGame::Get().Enemies()->AliveEnemies() < m_enemies_at_once && CGame::Get().Enemies()->Enemies() < 20) {
-            m_current_enemy_time += dt;
-            if(m_current_enemy_time >= m_enemy_spawn_time) {
-                CGame::Get().Enemies()->CreateEnemy();
-                m_current_enemy_time = 0;
-                m_enemy_spawn_animation = false;
-            } else if(m_current_enemy_time >= m_enemy_spawn_time - 0.5 && m_enemy_spawn_animation == false) {
-                int x = CGame::Get().Enemies()->NextSpawnX();
-                CGame::Get().Effects()->CreateEffect(TailSize*x, TailSize*24, EFFECT_SPAWN);
-                m_enemy_spawn_animation = true;
-            }
-
-        } else if(CGame::Get().Enemies()->Enemies() == 20 && CGame::Get().Enemies()->AliveEnemies() == 0 && CGame::Get().GameLost() == false) {
-            m_current_nextmap_time += dt;
-            if(m_current_nextmap_time >= m_nextmap_change_time) {
-                //Zmiana poziomu [!!!]
-                CGame::Get().SetGameState(GS_STAGESELECT);
-                ++m_selected_level;
-                ++m_showed_level;
-                m_current_nextmap_time = 0.0;
-            }
+      //Sprawdzanie ilości przeciwników, ew. respawn przeciwników
+      if (CGame::Get().Enemies()->AliveEnemies()<m_enemies_at_once && CGame::Get().Enemies()->Enemies()<20) {
+        m_current_enemy_time += dt;
+        if (m_current_enemy_time >= m_enemy_spawn_time) {
+          CGame::Get().Enemies()->CreateEnemy();
+          m_current_enemy_time = 0;
+          m_enemy_spawn_animation = false;
+        } else if (m_current_enemy_time>=m_enemy_spawn_time-0.5 && m_enemy_spawn_animation==false) {
+          int x = CGame::Get().Enemies()->NextSpawnX();
+          CGame::Get().Effects()->CreateEffect(TailSize*x, TailSize*24, EFFECT_SPAWN);
+          m_enemy_spawn_animation = true;
         }
+      } else if (CGame::Get().Enemies()->Enemies()==20
+        && CGame::Get().Enemies()->AliveEnemies()==0
+        && CGame::Get().GameLost()==false) {  // 判断本关结束，进入下一关
+        m_current_nextmap_time += dt;
+        if (m_current_nextmap_time >= m_nextmap_change_time) {
+          //Zmiana poziomu [!!!]
+          CGame::Get().SetGameState(GS_STAGESELECT);
+          ++m_selected_level;
+          ++m_showed_level;
+          m_current_nextmap_time = 0.0;
+        }
+      }
 
         if(CGame::Get().Player()->Lifes() < 0 && (CGame::Get().PlayerTwo() == NULL || CGame::Get().PlayerTwo()->Lifes() < 0)) {
             CGame::Get().SetGameLost(true);

@@ -23,7 +23,7 @@ CEnemy* CEnemies::SingleEnemy(int id) {
 
 void CEnemies::CreateEnemy() {
   if (Enemies()<20)
-        CreateEnemy(m_EnemiesType[Enemies()]);
+    CreateEnemy(m_EnemiesType[Enemies()]);
 }
 
 int CEnemies::NextSpawnX() {

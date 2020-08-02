@@ -19,6 +19,13 @@ CLevel::CLevel()
   m_SD_BG     = &(CGame::Get().Sprites()->Get("lvl_background") );
 }
 
+/*
+  bin\data\levels 目录下 lvl 文件格式
+  第 1 行：关卡号
+  第 2-27 行（共 26 行）：地图数据，每行 26 个数字对应 LVL_FIELD
+  第 28 行：一个数字 -1，表示敌方坦克类型 ENEMY_TYPE 随机出现
+            否则二十个数字，表示敌方坦克的类型
+*/
 void CLevel::LoadLevel(const string fileName)
 {
 	FILE* fp = fopen(fileName.c_str(), "r");

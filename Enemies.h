@@ -16,7 +16,9 @@ using namespace std;
 
 class CEnemies {
   public:
-    CEnemies() : m_number_of_enemies(0), m_pause_time(15), m_enemies_paused(false) { m_EnemiesType.resize(20); }
+    CEnemies()
+      : m_number_of_enemies(0), m_pause_time(15), m_enemies_paused(false)
+    { m_EnemiesType.resize(20); }
     ~CEnemies() { DestroyAllEnemies(); }
 
     void Update(double dt);                                                     //Aktualizacja wszystkich przeciwnikow
