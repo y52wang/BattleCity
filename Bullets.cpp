@@ -179,7 +179,7 @@ void CBullets::Update(double dt) {
       }
 
       //Kolizja z godłem
-      //与联轴器碰撞
+      //与联轴器（LVL_FIELD 的 LVL_EAGLE）碰撞
       x1 = it->x;         y1 = it->y; //Współrzędne kuli
       x2 = x1+0.5;        y2 = y1+0.5;
       x3 = 12;            y3 = 0;     //Współrzędne godła

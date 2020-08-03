@@ -22,7 +22,7 @@ CEnemy* CEnemies::SingleEnemy(int id) {
 }
 
 void CEnemies::CreateEnemy() {
-  if (Enemies()<20)
+  if (Enemies()<MAX_ENEMY_COUNT)
     CreateEnemy(m_EnemiesType[Enemies()]);
 }
 
@@ -81,69 +81,82 @@ void CEnemies::DecreaseBullet(int id) {
 }
 
 void CEnemies::Update(double dt) {
-    if(m_enemies_paused) {
-        m_current_pause_time += dt;
-        if(m_current_pause_time >= m_pause_time) {
-            m_enemies_paused = false;
-            m_current_pause_time = 0.0;
-        }
+  if (m_enemies_paused) {
+    m_current_pause_time += dt;
+    if (m_current_pause_time >= m_pause_time) {
+      m_enemies_paused = false;
+      m_current_pause_time = 0.0;
     }
+  }
 
-    for(auto iter = m_Enemies.begin(); iter != m_Enemies.end(); ) {
-        if(!m_enemies_paused)
-            (*iter)->Update(dt);
-        else if(int((*iter)->Type()) >= 4) {
-            (*iter)->UpdatePaused(dt);
+  for (auto iter=m_Enemies.begin(); iter!=m_Enemies.end();) {
+    CEnemy* e = *iter;
+
+    if (!m_enemies_paused)
+      e->Update(dt);
+    else if (e->Type()>=ENEMY_SLOW_BONUS)
+      e->UpdatePaused(dt);
+
+    if (e->Level()<=0)
+      (*iter)->Destroy();
+
+    //Niszczenie przeciwnika
+    //消灭对手
+    if (e->Destroyed() )
+      iter = DestroyEnemy(iter);
+    else {
+      //Kolizja z innymi czołgami
+      //与其他坦克相撞
+      double x1, x2, x3, x4, y1, y2, y3, y4;
+      for (auto iter2=m_Enemies.begin(); iter2!=m_Enemies.end(); ++iter2) {
+        CEnemy* e2 = *iter2;
+        if (e->Id() != e2->Id() ) {
+          x1 = e->GetX();       y1 = e->GetY();
+          x2 = x1 + 2;          y2 = y1 + 2;
+          x3 = e2->GetX();      y3 = e2->GetY();
+          x4 = x3 + 2;          y4 = y3 + 2;
+
+          if (TwoRectangles(x1, y1, x2, y2, x3, y3, x4, y4) ) {
+            bool colide = true;
+
+            switch (e->GetDirection() ) {
+              case DIR_UP:
+                if (e2->GetY() > e->GetY() ) {
+                  double new_y = e2->GetY()-2;
+                  if (new_y < 0)  new_y = 0;
+                  e->SetPosition(e->GetX(), new_y);
+                  e->SetColide(true);
+                } break;
+
+              case DIR_DOWN:
+                if (e2->GetY() < e->GetY() ) {
+                  double new_y = e2->GetY() + 2;
+                  if (new_y > 24)  new_y = 24;
+                  e->SetPosition(e->GetX(), new_y);
+                  e->SetColide(true);
+                } break;
+
+              case DIR_LEFT:
+                if (e2->GetX() < e->GetX() ) {
+                  double new_x = e2->GetX() + 2;
+                  if (new_x > 24)  new_x = 24;
+                  e->SetPosition(new_x, e->GetY() );
+                  e->SetColide(true);
+                } break;
+
+              case DIR_RIGHT:
+                if (e2->GetX() > e->GetX() ) {
+                  double new_x = e2->GetX() - 2;
+                  if (new_x < 0)  new_x = 0;
+                  e->SetPosition(new_x, e->GetY() );
+                  e->SetColide(true);
+                } break;
+
+              default: colide = false; break;
+            }
+          }
         }
-
-        if((*iter)->Level() <= 0) {
-            (*iter)->Destroy();
-        }
-
-        //Niszczenie przeciwnika
-        //消灭对手
-        if((*iter)->Destroyed())
-            iter = DestroyEnemy(iter);
-        else {
-            //Kolizja z innymi czołgami
-            //与其他坦克相撞
-            double x1,x2,x3,x4,y1,y2,y3,y4;
-            for(auto iter2 = m_Enemies.begin(); iter2 != m_Enemies.end(); ++iter2) {
-                if((*iter)->Id() != (*iter2)->Id()) {
-                    x1 = (*iter)->GetX();       y1 = (*iter)->GetY();
-                    x2 = x1 + 2;                y2 = y1 + 2;
-                    x3 = (*iter2)->GetX();      y3 = (*iter2)->GetY();
-                    x4 = x3 + 2;                y4 = y3 + 2;
-
-                    if(TwoRectangles(x1,y1,x2,y2,x3,y3,x4,y4)) {
-                        bool colide = true;
-
-                        switch((*iter)->GetDirection()) {
-                            case DIR_UP:
-                                if((*iter2)->GetY() > (*iter)->GetY()) {
-                                    double new_y = (*iter2)->GetY() - 2; if(new_y < 0) new_y = 0;
-                                    (*iter)->SetPosition((*iter)->GetX(), new_y);   (*iter)->SetColide(true);
-                                } break;
-                            case DIR_DOWN:
-                                if((*iter2)->GetY() < (*iter)->GetY()) {
-                                    double new_y = (*iter2)->GetY() + 2; if(new_y > 24) new_y = 24;
-                                    (*iter)->SetPosition((*iter)->GetX(), new_y);   (*iter)->SetColide(true);
-                                } break;
-                            case DIR_LEFT:
-                                if((*iter2)->GetX() < (*iter)->GetX()) {
-                                    double new_x = (*iter2)->GetX() + 2; if(new_x > 24) new_x = 24;
-                                    (*iter)->SetPosition(new_x, (*iter)->GetY());   (*iter)->SetColide(true);
-                                } break;
-                            case DIR_RIGHT:
-                                if((*iter2)->GetX() > (*iter)->GetX()) {
-                                    double new_x = (*iter2)->GetX() - 2; if(new_x < 0) new_x = 0;
-                                    (*iter)->SetPosition(new_x, (*iter)->GetY());   (*iter)->SetColide(true);
-                                } break;
-                            default: colide = false; break;
-                        }
-                    }
-                }
-            }//Koniec pętli
+      }//Koniec pętli
 
             //Kolizja z graczem 1
 			//与玩家1碰撞
@@ -213,31 +226,30 @@ void CEnemies::Update(double dt) {
                 }
             }
 
+      /***            Kolizja z pociskami             ***/
+      const list<Bullet>& temp = CGame::Get().Bullets()->AllBullets();
+      for (auto iter2=temp.begin(); iter2!=temp.end(); ++iter2) {
+        if ((*iter2).owner != OWN_ENEMY) {
+          double x1, x2, x3, x4, y1, y2, y3, y4;
+          x1 = (*iter)->GetX();       y1 = (*iter)->GetY();
+          x2 = x1 + 2;                y2 = y1 + 2;
+          x3 = (*iter2).x;            y3 = (*iter2).y;
+          x4 = x3 + 0.5;              y4 = y3 + 0.5;
 
-            /***            Kolizja z pociskami             ***/
-            list<Bullet> temp = CGame::Get().Bullets()->AllBullets();
-            for(list<Bullet>::iterator iter2 = temp.begin(); iter2 != temp.end(); ++iter2) {
-                if((*iter2).owner != OWN_ENEMY) {
-                    double x1,x2,x3,x4,y1,y2,y3,y4;
-                    x1 = (*iter)->GetX();       y1 = (*iter)->GetY();
-                    x2 = x1 + 2;                y2 = y1 + 2;
-                    x3 = (*iter2).x;            y3 = (*iter2).y;
-                    x4 = x3 + 0.5;              y4 = y3 + 0.5;
-
-                    if(TwoRectangles(x1,y1,x2,y2,x3,y3,x4,y4)) {
-                        (*iter)->DecreaseLevel();
-                        if((*iter)->Level() == 3 && (*iter)->EnemyType() == ENEMY_BIG_BONUS) {
-                            (*iter)->SetEnemyType(ENEMY_BIG);
-                            CGame::Get().Items()->CreateItem();
-                        }
-                        CGame::Get().Bullets()->DestroyBullet((*iter2).id);
-                        break;
-                    }
-                }
+          if (TwoRectangles(x1, y1, x2, y2, x3, y3, x4, y4) ) {
+            (*iter)->DecreaseLevel();
+            if ((*iter)->Level() == 3 && (*iter)->EnemyType() == ENEMY_BIG_BONUS) {
+              (*iter)->SetEnemyType(ENEMY_BIG);
+              CGame::Get().Items()->CreateItem();
             }
-            ++iter;
+            CGame::Get().Bullets()->DestroyBullet((*iter2).id);
+            break;
+          }
         }
+      }
+      ++iter;
     }
+  }
 }
 
 list<CEnemy*>::iterator CEnemies::DestroyEnemy(list<CEnemy*>::iterator iter) {

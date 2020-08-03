@@ -14,11 +14,13 @@ using namespace std;
 #include "Enemy.h"
 #include "Types.h"
 
+#define MAX_ENEMY_COUNT 20
+
 class CEnemies {
   public:
     CEnemies()
       : m_number_of_enemies(0), m_pause_time(15), m_enemies_paused(false)
-    { m_EnemiesType.resize(20); }
+    { m_EnemiesType.resize(MAX_ENEMY_COUNT); }
     ~CEnemies() { DestroyAllEnemies(); }
 
     void Update(double dt);                                                     //Aktualizacja wszystkich przeciwnikow

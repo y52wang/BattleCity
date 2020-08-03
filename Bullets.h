@@ -38,7 +38,7 @@ class CBullets {
         void DestroyAllBullets();                               //zniszczenie wszystkich pocisków
 
         int BulletsNum() { return m_bullets.size(); }           //iloœæ pocisków
-        list <Bullet> AllBullets() { return m_bullets; }        //zwraca kopie listy pocisków
+        const list <Bullet>& AllBullets() { return m_bullets; } //zwraca kopie listy pocisków
 
     private:
         list <Bullet> m_bullets;                                //instancja listy pocisków

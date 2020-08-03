@@ -50,6 +50,22 @@ void CLevel::LoadLevel(const string fileName)
   reverse(m_level.data.begin(), m_level.data.end() );
   reverse(m_bricks.begin(), m_bricks.end() );
 
+  CEnemies* enemies = CGame::Get().Enemies();
+  int et = -1;
+  fscanf(fp, "%d", &et);
+  if (et==-1) {
+    for (int i=0; i<MAX_ENEMY_COUNT; ++i) {
+      et = rand() % ENEMY_COUNT;
+      enemies->SetEnemyType(i, (ENEMY_TYPE)et);
+    }
+  } else {
+    enemies->SetEnemyType(0, (ENEMY_TYPE)et);
+    for (int i=1; i<MAX_ENEMY_COUNT; ++i) {
+      fscanf(fp, "%d", &et);
+      enemies->SetEnemyType(i, (ENEMY_TYPE)et);
+    }
+  }
+
 	fclose(fp);
 }
 

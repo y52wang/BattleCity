@@ -98,7 +98,7 @@ void CGameTimer::Update(double dt) {
     static int TailSize = CGame::Get().TailSize();
     if(CGame::Get().GameState() == GS_GAMEPLAY) {
       //Sprawdzanie ilości przeciwników, ew. respawn przeciwników
-      if (CGame::Get().Enemies()->AliveEnemies()<m_enemies_at_once && CGame::Get().Enemies()->Enemies()<20) {
+      if (CGame::Get().Enemies()->AliveEnemies()<m_enemies_at_once && CGame::Get().Enemies()->Enemies()<MAX_ENEMY_COUNT) {
         m_current_enemy_time += dt;
         if (m_current_enemy_time >= m_enemy_spawn_time) {
           CGame::Get().Enemies()->CreateEnemy();
@@ -109,7 +109,7 @@ void CGameTimer::Update(double dt) {
           CGame::Get().Effects()->CreateEffect(TailSize*x, TailSize*24, EFFECT_SPAWN);
           m_enemy_spawn_animation = true;
         }
-      } else if (CGame::Get().Enemies()->Enemies()==20
+      } else if (CGame::Get().Enemies()->Enemies()==MAX_ENEMY_COUNT
         && CGame::Get().Enemies()->AliveEnemies()==0
         && CGame::Get().GameLost()==false) {  // 判断本关结束，进入下一关
         m_current_nextmap_time += dt;

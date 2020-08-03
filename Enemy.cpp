@@ -153,7 +153,7 @@ void CEnemy::Shoot() {
     CGame::Get().Audio()->PlayChunk(SOUND_FIRE);
     CGame::Get().Bullets()->CreateBullet(m_x, m_y, m_direction, OWN_ENEMY, m_id, m_bullet_speed);
     ++m_bullets_in_game;
-    if(m_bullets_in_game >= m_max_bullets) {
+    if (m_bullets_in_game>=m_max_bullets) {
       m_can_shoot = false;
     }
   }
@@ -169,7 +169,7 @@ void CEnemy::Draw() {
   double pos_y = m_y * CGame::Get().TailSize();
 
   int frame = m_frame;
-  if(m_enemy_type == ENEMY_BIG) {
+  if (m_enemy_type == ENEMY_BIG) {
     switch(m_level) {
       case 2: frame += 6; break;
       case 3: frame += 8; break;
@@ -203,82 +203,83 @@ void CEnemy::Draw() {
 }
 
 void CEnemy::Update(double dt) {
-    m_x = m_x + m_vx * dt * m_speed_ratio;
-    m_y = m_y + m_vy * dt * m_speed_ratio;
+  m_x = m_x + m_vx*dt*m_speed_ratio;
+  m_y = m_y + m_vy*dt*m_speed_ratio;
 
-    m_colide = false;
+  m_colide = false;
 
-    //Wyjechanie poza mapę
-    if(m_x < 0.0)  { m_x = 0.0; m_colide = true; }
-    if(m_x > 24.0) { m_x = 24.0; m_colide = true; }
-    if(m_y < 0.0)  { m_y = 0.0; m_colide = true; }
-    if(m_y > 24.0) { m_y = 24.0; m_colide = true; }
+  //Wyjechanie poza mapę
+  if (m_x<0.0)  { m_x = 0.0;    m_colide = true; }
+  if (m_x>24.0) { m_x = 24.0;   m_colide = true; }
+  if (m_y<0.0)  { m_y = 0.0;    m_colide = true; }
+  if (m_y>24.0) { m_y = 24.0;   m_colide = true; }
 
-    int pos_x_l = m_x, pos_x_s = m_x + 1, pos_x_p = m_x + 2;
-    int pos_y_d = m_y, pos_y_s = m_y + 1, pos_y_g = m_y + 2;
+  int pos_x_l=m_x, pos_x_s=m_x+1, pos_x_p=m_x+2;
+  int pos_y_d=m_y, pos_y_s=m_y+1, pos_y_g=m_y+2;
 
-    //Detekcja kolizji
-    if(m_vx < 0 && m_x > 0.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_s) == LVL_EAGLE) {
-            //Kolizja od lewej strony czolgu
-            m_x = pos_x_s;
-            m_colide = true;
-        }
-    } else if(m_vx > 0 && m_x < 24.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_d) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_p, pos_y_s) == LVL_EAGLE) {
-            //Kolizja od lewej strony czolgu
-            m_x = pos_x_l;
-            m_colide = true;
-        }
-    } else if(m_vy < 0 && m_y > 0.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_d) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_d) == LVL_EAGLE) {
-            //Kolizja od lewej strony czolgu
-            m_y = pos_y_s;
-            m_colide = true;
-        }
-    } else if(m_vy > 0 && m_y < 24.0) {
-        if(CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_l, pos_y_g) == LVL_EAGLE ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_BRICK ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_BRICK_DAMAGED ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_WHITE ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_WATER ||
-           CGame::Get().Level()->LevelField(pos_x_s, pos_y_g) == LVL_EAGLE) {
-            //Kolizja od lewej strony czolgu
-            m_y = pos_y_d;
-            m_colide = true;
-        }
+  CLevel* level = CGame::Get().Level();
+  //Detekcja kolizji
+  if (m_vx<0 && m_x>0) {
+    if (level->LevelField(pos_x_l, pos_y_d) == LVL_BRICK ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_WHITE ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_WATER ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_EAGLE ||
+      level->LevelField(pos_x_l, pos_y_s) == LVL_BRICK ||
+      level->LevelField(pos_x_l, pos_y_s) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_l, pos_y_s) == LVL_WHITE ||
+      level->LevelField(pos_x_l, pos_y_s) == LVL_WATER ||
+      level->LevelField(pos_x_l, pos_y_s) == LVL_EAGLE) {
+        //Kolizja od lewej strony czolgu
+        m_x = pos_x_s;
+        m_colide = true;
     }
+  } else if (m_vx>0 && m_x<24) {
+    if (level->LevelField(pos_x_p, pos_y_d) == LVL_BRICK ||
+      level->LevelField(pos_x_p, pos_y_d) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_p, pos_y_d) == LVL_WHITE ||
+      level->LevelField(pos_x_p, pos_y_d) == LVL_WATER ||
+      level->LevelField(pos_x_p, pos_y_d) == LVL_EAGLE ||
+      level->LevelField(pos_x_p, pos_y_s) == LVL_BRICK ||
+      level->LevelField(pos_x_p, pos_y_s) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_p, pos_y_s) == LVL_WHITE ||
+      level->LevelField(pos_x_p, pos_y_s) == LVL_WATER ||
+      level->LevelField(pos_x_p, pos_y_s) == LVL_EAGLE) {
+        //Kolizja od lewej strony czolgu
+        m_x = pos_x_l;
+        m_colide = true;
+      }
+  } else if (m_vy<0 && m_y>0.0) {
+    if(level->LevelField(pos_x_l, pos_y_d) == LVL_BRICK ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_WHITE ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_WATER ||
+      level->LevelField(pos_x_l, pos_y_d) == LVL_EAGLE ||
+      level->LevelField(pos_x_s, pos_y_d) == LVL_BRICK ||
+      level->LevelField(pos_x_s, pos_y_d) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_s, pos_y_d) == LVL_WHITE ||
+      level->LevelField(pos_x_s, pos_y_d) == LVL_WATER ||
+      level->LevelField(pos_x_s, pos_y_d) == LVL_EAGLE) {
+        //Kolizja od lewej strony czolgu
+        m_y = pos_y_s;
+        m_colide = true;
+    }
+  } else if (m_vy>0 && m_y<24) {
+    if (level->LevelField(pos_x_l, pos_y_g) == LVL_BRICK ||
+      level->LevelField(pos_x_l, pos_y_g) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_l, pos_y_g) == LVL_WHITE ||
+      level->LevelField(pos_x_l, pos_y_g) == LVL_WATER ||
+      level->LevelField(pos_x_l, pos_y_g) == LVL_EAGLE ||
+      level->LevelField(pos_x_s, pos_y_g) == LVL_BRICK ||
+      level->LevelField(pos_x_s, pos_y_g) == LVL_BRICK_DAMAGED ||
+      level->LevelField(pos_x_s, pos_y_g) == LVL_WHITE ||
+      level->LevelField(pos_x_s, pos_y_g) == LVL_WATER ||
+      level->LevelField(pos_x_s, pos_y_g) == LVL_EAGLE) {
+        //Kolizja od lewej strony czolgu
+        m_y = pos_y_d;
+        m_colide = true;
+    }
+  }
 
     //Sprawdzenie klatki animacji
     SpriteData temp;
@@ -328,100 +329,105 @@ void CEnemy::Update(double dt) {
         m_current_collision_turn_time = 0;
     }
 
-    //W przypadku kolizji - specjalny tryb zmiany kierunku
-    if(m_colide) {
-        m_current_collision_turn_time += dt;
+  //W przypadku kolizji - specjalny tryb zmiany kierunku
+  if (m_colide) {
+    m_current_collision_turn_time += dt;
 
-        if(m_current_collision_turn_time > m_collision_turn_time) {
-            ChooseDirection(true);
-            m_current_collision_turn_time = 0;
-            m_collision_turn_time = (rand()%10) / (double(m_speed)*1.5);
-        }
+    if(m_current_collision_turn_time > m_collision_turn_time) {
+      ChooseDirection(true);
+      m_current_collision_turn_time = 0;
+      m_collision_turn_time = (rand()%10) / (double(m_speed)*1.5);
     }
+  }
 }
 
 void CEnemy::UpdatePaused(double dt) {
-    //Sprawdzenie klatki animacji
-    SpriteData temp;
-    switch(m_direction) {
-        case DIR_UP:
-            if(abs(m_x - int(m_x)) < 0.5) m_x = int(m_x);
-            else                          m_x = int(m_x)+1;
-            temp = CGame::Get().Sprites()->Get(m_sprite_up); break;
-        case DIR_DOWN:
-            if(abs(m_x - int(m_x)) < 0.5) m_x = int(m_x);
-            else                          m_x = int(m_x)+1;
-            temp = CGame::Get().Sprites()->Get(m_sprite_down); break;
-        case DIR_LEFT:
-            if(abs(m_y - int(m_y)) < 0.5) m_y = int(m_y);
-            else                          m_y = int(m_y)+1;
-            temp = CGame::Get().Sprites()->Get(m_sprite_left); break;
-        case DIR_RIGHT:
-            if(abs(m_y - int(m_y) < 0.5)) m_y = int(m_y);
-            else                          m_y = int(m_y)+1;
-            temp = CGame::Get().Sprites()->Get(m_sprite_right); break;
-    }
+  //Sprawdzenie klatki animacji
+  //检查动画框架，用于 ENEMY_TYPE >= ENEMY_SLOW_BONUS 的更新
+  SpriteData temp;
+  CSprites* sprites = CGame::Get().Sprites();
+  switch(m_direction) {
+    case DIR_UP:
+      if (abs(m_x-int(m_x) )<0.5)  m_x = int(m_x);
+      else  m_x = int(m_x)+1;
+      temp = sprites->Get(m_sprite_up);  break;
 
-    m_frame_duration += dt;
-    if(m_frame_duration >= temp.frame_duration) {
-        if(m_frame == 0)
-            m_frame = 1;
-        else
-            m_frame = 0;
-        m_frame_duration = 0;
-    }
+    case DIR_DOWN:
+      if (abs(m_x-int(m_x) )<0.5)  m_x = int(m_x);
+      else  m_x = int(m_x)+1;
+      temp = sprites->Get(m_sprite_down);  break;
+
+    case DIR_LEFT:
+      if (abs(m_y-int(m_y) )<0.5)  m_y = int(m_y);
+      else  m_y = int(m_y)+1;
+      temp = sprites->Get(m_sprite_left);  break;
+
+    case DIR_RIGHT:
+      if (abs(m_y-int(m_y) )<0.5)  m_y = int(m_y);
+      else  m_y = int(m_y)+1;
+      temp = sprites->Get(m_sprite_right);  break;
+  }
+
+  m_frame_duration += dt;
+  if (m_frame_duration>=temp.frame_duration) {
+    if (m_frame == 0)
+      m_frame = 1;
+    else
+      m_frame = 0;
+    m_frame_duration = 0;
+  }
 }
 
 void CEnemy::ChooseDirection(bool collision) {
-    if(m_colide) {
-        int test = rand()%4;
-        if(test == 3 || test == 1) {
-            m_turn_wait_time = 1;
-            return;
-        } else {
-            m_turn_wait_time = 2;
-        }
-    }
-
-    int randed;
-    if(int(m_y) < 10) {      //Jeśli może w poziomie zbić godło
-        randed = rand()%5;
-    } else {                //Jeśli nie może zbić godło
-        randed = rand()%6;
-    }
-
-    DIRECTION dir;
-    if(m_x < 10) {
-        switch(randed) {
-            case 0: dir = DIR_DOWN; break;
-            case 1: dir = DIR_RIGHT; break;
-            case 2: dir = DIR_LEFT; break;
-            case 3: dir = DIR_UP; break;
-            case 4: dir = DIR_RIGHT; break;
-            case 5: dir = DIR_DOWN; break;
-            default: dir = DIR_DOWN; break;
-        }
-    } else if(m_x <= 12) {
-        switch(randed) {
-            case 0: dir = DIR_DOWN; break;
-            case 1: dir = DIR_RIGHT; break;
-            case 2: dir = DIR_LEFT; break;
-            case 3: dir = DIR_UP; break;
-            case 4: dir = DIR_UP; break;
-            default: dir = DIR_UP; break;
-        }
+  if (m_colide) {
+    int test = rand()%4;
+    if (test==3 || test==1) {
+      m_turn_wait_time = 1;
+      return;
     } else {
-        switch(randed) {
-            case 0: dir = DIR_DOWN; break;
-            case 1: dir = DIR_RIGHT; break;
-            case 2: dir = DIR_LEFT; break;
-            case 3: dir = DIR_UP; break;
-            case 4: dir = DIR_LEFT; break;
-            case 5: dir = DIR_DOWN; break;
-            default: dir = DIR_DOWN; break;
-        }
+      m_turn_wait_time = 2;
     }
+  }
 
-    SetDirection(dir); Drive();
-    m_turn_wait_time = (rand()%31 + 5)/(double(m_speed)*1.5);
+  int randed;
+  if (int(m_y) < 10) {  //Jeśli może w poziomie zbić godło
+    randed = rand()%5;
+  } else {  //Jeśli nie może zbić godło
+    randed = rand()%6;
+  }
+
+  DIRECTION dir;
+  if (m_x<10) {
+    switch (randed) {
+      case 0: dir = DIR_DOWN; break;
+      case 1: dir = DIR_RIGHT; break;
+      case 2: dir = DIR_LEFT; break;
+      case 3: dir = DIR_UP; break;
+      case 4: dir = DIR_RIGHT; break;
+      case 5: dir = DIR_DOWN; break;
+      default: dir = DIR_DOWN; break;
+    }
+  } else if (m_x<=12) {
+    switch (randed) {
+      case 0: dir = DIR_DOWN; break;
+      case 1: dir = DIR_RIGHT; break;
+      case 2: dir = DIR_LEFT; break;
+      case 3: dir = DIR_UP; break;
+      case 4: dir = DIR_UP; break;
+      default: dir = DIR_UP; break;
+    }
+  } else {
+    switch (randed) {
+      case 0: dir = DIR_DOWN; break;
+      case 1: dir = DIR_RIGHT; break;
+      case 2: dir = DIR_LEFT; break;
+      case 3: dir = DIR_UP; break;
+      case 4: dir = DIR_LEFT; break;
+      case 5: dir = DIR_DOWN; break;
+      default: dir = DIR_DOWN; break;
+    }
+  }
+
+  SetDirection(dir); Drive();
+  m_turn_wait_time = (rand()%31 + 5)/(double(m_speed)*1.5);
 }

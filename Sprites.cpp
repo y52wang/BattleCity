@@ -104,7 +104,6 @@ CSprites::CSprites() {
         Insert("enemy_big_bonus_down", SpriteData(4, 0.15, 64, 904, 32, 32, true, "atlas"));
         Insert("enemy_big_bonus_left", SpriteData(4, 0.15, 64, 936, 32, 32, true, "atlas"));
 
-
     /***                Effects                 ***/
     Insert("effect_spawn", SpriteData(6, 0.05, 256, 64, 32, 32, true, "atlas"));
     Insert("effect_explode", SpriteData(3, 0.05, 256, 96, 32, 32, true, "atlas"));

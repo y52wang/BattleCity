@@ -26,11 +26,11 @@ enum LVL_FIELD {
 };
 
 enum DIRECTION {
-    DIR_UP = 0,
-    DIR_RIGHT = 1,
-    DIR_DOWN = 2,
-    DIR_LEFT = 3,
-    //DIR_NONE = 4
+  DIR_UP    = 0,
+  DIR_RIGHT = 1,
+  DIR_DOWN  = 2,
+  DIR_LEFT  = 3,
+  //DIR_NONE  = 4
 };
 
 enum PLAYER_STATE {
@@ -38,6 +38,7 @@ enum PLAYER_STATE {
     PLAYER_DRIVE = 1,
 };
 
+// Bullet 的所属者
 enum OWNER {
     OWN_PLAYER_ONE = 0,
     OWN_PLAYER_TWO = 1,
@@ -45,24 +46,26 @@ enum OWNER {
 };
 
 enum ENEMY_TYPE {
-    ENEMY_SLOW = 0,
-    ENEMY_FAST = 1,
-    ENEMY_MEDIUM = 2,
-    ENEMY_BIG = 3,
+  ENEMY_SLOW    = 0,
+  ENEMY_FAST    = 1,
+  ENEMY_MEDIUM  = 2,
+  ENEMY_BIG     = 3,
 
-    ENEMY_SLOW_BONUS = 4,
-    ENEMY_FAST_BONUS = 5,
-    ENEMY_MEDIUM_BONUS = 6,
-    ENEMY_BIG_BONUS = 7
+  ENEMY_SLOW_BONUS    = 4,
+  ENEMY_FAST_BONUS    = 5,
+  ENEMY_MEDIUM_BONUS  = 6,
+  ENEMY_BIG_BONUS     = 7,
+
+  ENEMY_COUNT   = 8
 };
 
 enum ITEM_TYPE {
-    ITEM_STAR = 0,
-    ITEM_LIFE = 1,
-    ITEM_INVINCIBILITY = 2,
-    ITEM_PROTECT = 3,
-    ITEM_TIME = 4,
-    ITEM_GRANADE = 5
+  ITEM_STAR           = 0,
+  ITEM_LIFE           = 1,
+  ITEM_INVINCIBILITY  = 2,
+  ITEM_PROTECT        = 3,
+  ITEM_TIME           = 4,
+  ITEM_GRANADE        = 5
 };
 
 enum COLOR {
