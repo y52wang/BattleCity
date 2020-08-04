@@ -10,53 +10,57 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 void CBullets::DestroyAllBullets() {
-    m_bullets.clear();
-    m_bullets_num = 0;
+  m_bullets.clear();
+  m_bullets_num = 0;
 
-    CGame::Get().Player()->ResetBullets();
-    if(CGame::Get().PlayerTwo() != NULL) CGame::Get().PlayerTwo()->ResetBullets();
+  CGame::Get().Player()->ResetBullets();
+  if (CGame::Get().PlayerTwo() != NULL)
+    CGame::Get().PlayerTwo()->ResetBullets();
 }
 
 void CBullets::CreateBullet(double x, double y, DIRECTION dir, OWNER owner, int owner_id, double speed = 0) {
-    Bullet temp_bullet;
-    temp_bullet.owner = owner;
-    temp_bullet.owner_id = owner_id;
-    temp_bullet.destroyed = false;
-    temp_bullet.id = m_bullets_num + 1;
-    ++m_bullets_num;
+  Bullet temp_bullet;
+  temp_bullet.owner     = owner;
+  temp_bullet.owner_id  = owner_id;
+  temp_bullet.destroyed = false;
+  temp_bullet.id        = m_bullets_num + 1;
+  ++m_bullets_num;
 
-    static int tile_size = CGame::Get().TailSize();
+  int tile_size = CGame::Get().TailSize();
 
-    if(speed == 0) speed = m_speed;
+  if (speed == 0)  speed = m_speed;
 
-    switch(dir) {
-        case DIR_UP:
-            temp_bullet.x  = x + (12/double(tile_size));
-            temp_bullet.y  = y + (24/double(tile_size));
-            temp_bullet.xv = 0.0;
-            temp_bullet.yv = speed;
-            break;
-        case DIR_DOWN:
-            temp_bullet.x  = x + (12/double(tile_size));
-            temp_bullet.y  = y;
-            temp_bullet.xv = 0.0;
-            temp_bullet.yv = -speed;
-            break;
-        case DIR_LEFT:
-            temp_bullet.x  = x;
-            temp_bullet.y  = y + (12/double(tile_size));
-            temp_bullet.xv = -speed;
-            temp_bullet.yv = 0.0;
-            break;
-        case DIR_RIGHT:
-            temp_bullet.x  = x + (24/double(tile_size));
-            temp_bullet.y  = y + (12/double(tile_size));
-            temp_bullet.xv = speed;
-            temp_bullet.yv = 0.0;
-            break;
-    }
+  switch(dir) {
+    case DIR_UP:
+      temp_bullet.x  = x + (12/double(tile_size) );
+      temp_bullet.y  = y + (24/double(tile_size) );
+      temp_bullet.xv = 0.0;
+      temp_bullet.yv = speed;
+      break;
 
-    m_bullets.insert(m_bullets.end(), temp_bullet);
+    case DIR_DOWN:
+      temp_bullet.x  = x + (12/double(tile_size) );
+      temp_bullet.y  = y;
+      temp_bullet.xv = 0.0;
+      temp_bullet.yv = -speed;
+      break;
+
+    case DIR_LEFT:
+      temp_bullet.x  = x;
+      temp_bullet.y  = y + (12/double(tile_size) );
+      temp_bullet.xv = -speed;
+      temp_bullet.yv = 0.0;
+      break;
+
+    case DIR_RIGHT:
+      temp_bullet.x  = x + (24/double(tile_size) );
+      temp_bullet.y  = y + (12/double(tile_size) );
+      temp_bullet.xv = speed;
+      temp_bullet.yv = 0.0;
+      break;
+  }
+
+  m_bullets.insert(m_bullets.end(), temp_bullet);
 }
 
 void CBullets::Draw() {
@@ -218,7 +222,7 @@ list<Bullet>::iterator CBullets::DestroyBullet(list<Bullet>::iterator iter, DIRE
 
   int pos_x = iter->x;
   int pos_y = iter->y;
-  switch(dir) {
+  switch (dir) {
     case DIR_UP:
 			CGame::Get().Level()->DestroyTile(
 				pos_x, pos_y+1, pos_x+1, pos_y+1,

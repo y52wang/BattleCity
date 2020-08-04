@@ -98,7 +98,7 @@ void CEnemies::Update(double dt) {
       e->UpdatePaused(dt);
 
     if (e->Level()<=0)
-      (*iter)->Destroy();
+      e->Destroy();
 
     //Niszczenie przeciwnika
     //消灭对手
@@ -158,73 +158,92 @@ void CEnemies::Update(double dt) {
         }
       }//Koniec pętli
 
-            //Kolizja z graczem 1
-			//与玩家1碰撞
-            x1 = (*iter)->GetX();                   y1 = (*iter)->GetY();
-            x2 = x1 + 2;                            y2 = y1 + 2;
-            x3 = CGame::Get().Player()->GetX();     y3 = CGame::Get().Player()->GetY();
-            x4 = x3 + 2;                            y4 = y3 + 2;
+      //Kolizja z graczem 1
+      //与玩家1碰撞
+      x1 = e->GetX();                       y1 = e->GetY();
+      x2 = x1 + 2;                          y2 = y1 + 2;
+      x3 = CGame::Get().Player()->GetX();   y3 = CGame::Get().Player()->GetY();
+      x4 = x3 + 2;                          y4 = y3 + 2;
 
-            if(TwoRectangles(x1,y1,x2,y2,x3,y3,x4,y4)) {
-                switch((*iter)->GetDirection()) {
-                    case DIR_UP:
-                        if(y3 > y1) {
-                            double new_y = y3 - 2; if(new_y < 0) new_y = 0;
-                            (*iter)->SetPosition(x1,new_y); (*iter)->SetColide(true);
-                        } break;
-                    case DIR_DOWN:
-                        if(y3 < y1) {
-                            double new_y = y3 + 2; if(new_y > 24) new_y = 24;
-                            (*iter)->SetPosition(x1, new_y);    (*iter)->SetColide(true);
-                        } break;
-                    case DIR_LEFT:
-                        if(x3 < x1) {
-                            double new_x = x3 + 2; if(new_x > 24) new_x = 24;
-                            (*iter)->SetPosition(new_x, y1);    (*iter)->SetColide(true);
-                        } break;
-                        break;
-                    case DIR_RIGHT:
-                        if(x3 > x1) {
-                            double new_x = x3 - 2; if(new_x < 0) new_x = 0;
-                            (*iter)->SetPosition(new_x, y1);    (*iter)->SetColide(true);
-                        } break;
-                }
-            }
+      if (TwoRectangles(x1, y1, x2, y2, x3, y3, x4, y4) ) {
+        switch (e->GetDirection()) {
+          case DIR_UP:
+            if (y3 > y1) {
+              double new_y = y3 - 2;
+              if(new_y<0)  new_y = 0;
+              e->SetPosition(x1,new_y);
+              e->SetColide(true);
+            } break;
 
-            //Kolizja z graczem 2
-			//与玩家2碰撞
-            if(CGame::Get().PlayerTwo() != NULL) {
-                x1 = (*iter)->GetX();                   y1 = (*iter)->GetY();
-                x2 = x1 + 2;                            y2 = y1 + 2;
-                x3 = CGame::Get().PlayerTwo()->GetX();  y3 = CGame::Get().PlayerTwo()->GetY();
-                x4 = x3 + 2;                            y4 = y3 + 2;
+          case DIR_DOWN:
+            if (y3 < y1) {
+              double new_y = y3 + 2;
+              if (new_y > 24)  new_y = 24;
+              e->SetPosition(x1, new_y);
+              e->SetColide(true);
+            } break;
 
-                if(TwoRectangles(x1,y1,x2,y2,x3,y3,x4,y4)) {
-                    switch((*iter)->GetDirection()) {
-                        case DIR_UP:
-                            if(y3 > y1) {
-                                double new_y = y3 - 2; if(new_y < 0) new_y = 0;
-                                (*iter)->SetPosition(x1,new_y); (*iter)->SetColide(true);
-                            } break;
-                        case DIR_DOWN:
-                            if(y3 < y1) {
-                                double new_y = y3 + 2; if(new_y > 24) new_y = 24;
-                                (*iter)->SetPosition(x1, new_y);    (*iter)->SetColide(true);
-                            } break;
-                        case DIR_LEFT:
-                            if(x3 < x1) {
-                                double new_x = x3 + 2; if(new_x > 24) new_x = 24;
-                                (*iter)->SetPosition(new_x, y1);    (*iter)->SetColide(true);
-                            } break;
-                            break;
-                        case DIR_RIGHT:
-                            if(x3 > x1) {
-                                double new_x = x3 - 2; if(new_x < 0) new_x = 0;
-                                (*iter)->SetPosition(new_x, y1);    (*iter)->SetColide(true);
-                            } break;
-                    }
-                }
-            }
+          case DIR_LEFT:
+            if (x3 < x1) {
+              double new_x = x3 + 2;
+              if (new_x > 24)  new_x = 24;
+              e->SetPosition(new_x, y1);
+              e->SetColide(true);
+            } break;
+
+          case DIR_RIGHT:
+            if (x3 > x1) {
+              double new_x = x3 - 2; if(new_x < 0) new_x = 0;
+              e->SetPosition(new_x, y1);
+              e->SetColide(true);
+            } break;
+        }
+      }
+
+      //Kolizja z graczem 2
+      //与玩家2碰撞
+      if (CGame::Get().PlayerTwo() != NULL) {
+        x1 = e->GetX();                         y1 = e->GetY();
+        x2 = x1 + 2;                            y2 = y1 + 2;
+        x3 = CGame::Get().PlayerTwo()->GetX();  y3 = CGame::Get().PlayerTwo()->GetY();
+        x4 = x3 + 2;                            y4 = y3 + 2;
+
+        if (TwoRectangles(x1, y1, x2, y2, x3, y3, x4, y4) ) {
+          switch (e->GetDirection() ) {
+            case DIR_UP:
+              if (y3 > y1) {
+                double new_y = y3 - 2;
+                if (new_y < 0)  new_y = 0;
+                e->SetPosition(x1,new_y);
+                e->SetColide(true);
+              } break;
+
+            case DIR_DOWN:
+              if (y3 < y1) {
+                double new_y = y3 + 2;
+                if (new_y > 24)  new_y = 24;
+                e->SetPosition(x1, new_y);
+                e->SetColide(true);
+              } break;
+
+            case DIR_LEFT:
+              if (x3 < x1) {
+                double new_x = x3 + 2;
+                if (new_x > 24)  new_x = 24;
+                e->SetPosition(new_x, y1);
+                e->SetColide(true);
+              } break;
+
+              case DIR_RIGHT:
+                if (x3 > x1) {
+                  double new_x = x3 - 2;
+                  if (new_x < 0)  new_x = 0;
+                  e->SetPosition(new_x, y1);
+                  e->SetColide(true);
+                } break;
+          }
+        }
+      }
 
       /***            Kolizja z pociskami             ***/
       const list<Bullet>& temp = CGame::Get().Bullets()->AllBullets();
