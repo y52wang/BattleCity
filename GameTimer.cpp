@@ -40,152 +40,156 @@ void CGameTimer::SetLevelProtect(bool protect) {
 }
 
 void CGameTimer::DrawStageSelect() {
-    CGame::Get().GUI()->RenderText("STAGE " + ToString(m_showed_level), 230, 230, COLOR_BLACK);
+  CGame::Get().GUI()->RenderText("STAGE " + ToString(m_showed_level), 230, 230, COLOR_BLACK);
 }
 
 void CGameTimer::ProcessEvents() {
-    SDL_Event event;
+  SDL_Event event;
 
-    while(SDL_PollEvent(&event)) {
-        if(event.type == SDL_QUIT) {
-            CGame::Get().EndGame();
-        } else if(event.type == SDL_KEYDOWN) {
-            if(event.key.keysym.sym == SDLK_ESCAPE) {
-                CGame::Get().SetGameState(GS_MENU);
-            } else if(CGame::Get().Level()->LevelNum() == 0) {
-                if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_RIGHT) {
-                    int i = m_selected_level + 1;
-                    if(i>CGame::Get().Level()->AllLevels()) i = CGame::Get().Level()->AllLevels();
-                    m_selected_level = m_showed_level = i;
-                } else if(event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT) {
-                    int i = m_selected_level - 1;
-                    if(i < 1) i = 1;
-                    m_selected_level = m_showed_level = i;
-                } else if(event.key.keysym.sym == SDLK_RETURN) {
-                    ChooseLevel();
-                }
-            }
+  while(SDL_PollEvent(&event)) {
+    if(event.type == SDL_QUIT) {
+      CGame::Get().EndGame();
+    } else if(event.type == SDL_KEYDOWN) {
+      if(event.key.keysym.sym == SDLK_ESCAPE) {
+        CGame::Get().SetGameState(GS_MENU);
+      } else if(CGame::Get().Level()->LevelNum() == 0) {
+        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_RIGHT) {
+          int i = m_selected_level + 1;
+          int al = CGame::Get().Level()->AllLevels();
+          if(i>al) i = al;
+          m_selected_level = m_showed_level = i;
+        } else if(event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT) {
+          int i = m_selected_level - 1;
+          if(i < 1) i = 1;
+          m_selected_level = m_showed_level = i;
+        } else if(event.key.keysym.sym == SDLK_RETURN) {
+          ChooseLevel();
         }
+      }
     }
+  }
 }
 
 void CGameTimer::ChooseLevel() {
-    if(m_selected_level > CGame::Get().Level()->AllLevels()) m_selected_level = 1;
-    string level = "data/levels/" + ToString(m_selected_level) + ".lvl";
+  if(m_selected_level > CGame::Get().Level()->AllLevels()) m_selected_level = 1;
+  string level = "data/levels/" + ToString(m_selected_level) + ".lvl";
 
-    CGame::Get().Level()->LoadLevel(level);
-    CGame::Get().Audio()->PlayChunk(SOUND_GAMESTART);
+  CGame::Get().Level()->LoadLevel(level);
+  CGame::Get().Audio()->PlayChunk(SOUND_GAMESTART);
 
-    CGame::Get().Bullets()->DestroyAllBullets();
-    CGame::Get().Effects()->DestroyAllEffects();
-    CGame::Get().Enemies()->DestroyAllEnemies();
-    CGame::Get().Enemies()->UnPause();
+  CGame::Get().Bullets()->DestroyAllBullets();
+  CGame::Get().Effects()->DestroyAllEffects();
+  CGame::Get().Enemies()->DestroyAllEnemies();
+  CGame::Get().Enemies()->UnPause();
 
-    CGame::Get().Player()->SetInvincibility(5);
-    CGame::Get().Player()->Born();
-    if(CGame::Get().PlayerTwo() != NULL) {
-        CGame::Get().PlayerTwo()->SetInvincibility(5);
-        CGame::Get().PlayerTwo()->Born();
-    }
+  CGame::Get().Player()->SetInvincibility(5);
+  CGame::Get().Player()->Born();
+  if(CGame::Get().PlayerTwo() != NULL) {
+      CGame::Get().PlayerTwo()->SetInvincibility(5);
+      CGame::Get().PlayerTwo()->Born();
+  }
 
-    CGame::Get().Items()->DestroyItem();
-    CGame::Get().StartGameplay();
-    CGame::Get().SetGameState(GS_GAMEPLAY);
-    Init();
+  CGame::Get().Items()->DestroyItem();
+  CGame::Get().StartGameplay();
+  CGame::Get().SetGameState(GS_GAMEPLAY);
+  Init();
 }
 
+// 和时间相关的更新
 void CGameTimer::Update(double dt) {
-    static int TailSize = CGame::Get().TailSize();
-    if(CGame::Get().GameState() == GS_GAMEPLAY) {
-      //Sprawdzanie ilości przeciwników, ew. respawn przeciwników
-      if (CGame::Get().Enemies()->AliveEnemies()<m_enemies_at_once && CGame::Get().Enemies()->Enemies()<MAX_ENEMY_COUNT) {
-        m_current_enemy_time += dt;
-        if (m_current_enemy_time >= m_enemy_spawn_time) {
-          CGame::Get().Enemies()->CreateEnemy();
-          m_current_enemy_time = 0;
-          m_enemy_spawn_animation = false;
-        } else if (m_current_enemy_time>=m_enemy_spawn_time-0.5 && m_enemy_spawn_animation==false) {
-          int x = CGame::Get().Enemies()->NextSpawnX();
-          CGame::Get().Effects()->CreateEffect(TailSize*x, TailSize*24, EFFECT_SPAWN);
-          m_enemy_spawn_animation = true;
-        }
-      } else if (CGame::Get().Enemies()->Enemies()==MAX_ENEMY_COUNT
-        && CGame::Get().Enemies()->AliveEnemies()==0
-        && CGame::Get().GameLost()==false) {  // 判断本关结束，进入下一关
-        m_current_nextmap_time += dt;
-        if (m_current_nextmap_time >= m_nextmap_change_time) {
-          //Zmiana poziomu [!!!]
-          CGame::Get().SetGameState(GS_STAGESELECT);
-          ++m_selected_level;
-          ++m_showed_level;
-          m_current_nextmap_time = 0.0;
-        }
+  static int TailSize = CGame::Get().TailSize();
+  if(CGame::Get().GameState() == GS_GAMEPLAY) {
+    //Sprawdzanie ilości przeciwników, ew. respawn przeciwników
+    if (CGame::Get().Enemies()->AliveEnemies()<m_enemies_at_once && CGame::Get().Enemies()->Enemies()<MAX_ENEMY_COUNT) {
+      m_current_enemy_time += dt;
+      if (m_current_enemy_time >= m_enemy_spawn_time) {
+        CGame::Get().Enemies()->CreateEnemy();
+        m_current_enemy_time = 0;
+        m_enemy_spawn_animation = false;
+      } else if (m_current_enemy_time>=m_enemy_spawn_time-0.5 && m_enemy_spawn_animation==false) {
+        int x = CGame::Get().Enemies()->NextSpawnX();
+        CGame::Get().Effects()->CreateEffect(TailSize*x, TailSize*24, EFFECT_SPAWN);
+        m_enemy_spawn_animation = true;
       }
+    } else if (CGame::Get().Enemies()->Enemies()==MAX_ENEMY_COUNT
+      && CGame::Get().Enemies()->AliveEnemies()==0
+      && CGame::Get().GameLost()==false) {  // 判断本关结束，进入下一关
+      m_current_nextmap_time += dt;
+      if (m_current_nextmap_time >= m_nextmap_change_time) {
+        //Zmiana poziomu [!!!]
+        CGame::Get().SetGameState(GS_STAGESELECT);
+        ++m_selected_level;
+        ++m_showed_level;
+        m_current_nextmap_time = 0.0;
+      }
+    }
 
-        if(CGame::Get().Player()->Lifes() < 0 && (CGame::Get().PlayerTwo() == NULL || CGame::Get().PlayerTwo()->Lifes() < 0)) {
-            CGame::Get().SetGameLost(true);
-        }
+    if(CGame::Get().Player()->Lifes() < 0 && (CGame::Get().PlayerTwo() == NULL || CGame::Get().PlayerTwo()->Lifes() < 0)) {
+      CGame::Get().SetGameLost(true);
+    }
 
-        if(CGame::Get().GameLost()) {
-            if(m_current_game_lost_time == 0.0)
-                CGame::Get().Audio()->PlayChunk(SOUND_GAMEOVER);
+    if(CGame::Get().GameLost()) {
+      if(m_current_game_lost_time == 0.0)
+        CGame::Get().Audio()->PlayChunk(SOUND_GAMEOVER);
 
-            m_current_game_lost_time += dt;
-            if(m_current_game_lost_time >= m_game_lost_time) {
-                CGame::Get().SetGameState(GS_MENU);
-                m_current_game_lost_time = 0.0;
-            }
-        }
+      m_current_game_lost_time += dt;
+      if(m_current_game_lost_time >= m_game_lost_time) {
+        CGame::Get().SetGameState(GS_MENU);
+        m_current_game_lost_time = 0.0;
+      }
+    }
 
-        //Narodziny gracza
-        if(CGame::Get().Player()->Alive() == false && CGame::Get().Player()->Lifes() >= 0) {
-            if(m_current_ressurection_player_one == 0.0)
-                CGame::Get().Effects()->CreateEffect(TailSize*8, 0, EFFECT_SPAWN);
+    //Narodziny gracza（玩家的出生）
+    CPlayer* p = CGame::Get().Player();
+    if (p->Alive()==false && p->Lifes() >= 0) {
+      if(m_current_ressurection_player_one == 0.0)
+        CGame::Get().Effects()->CreateEffect(TailSize*8, 0, EFFECT_SPAWN);
 
-            m_current_ressurection_player_one += dt;
-            if(m_current_ressurection_player_one >= m_ressurection_player) {
-                CGame::Get().Player()->Born();
-                m_current_ressurection_player_one = 0;
-            }
-        }
-        if(CGame::Get().PlayerTwo() != NULL) {
-            if(CGame::Get().PlayerTwo()->Alive() == false && CGame::Get().PlayerTwo()->Lifes() >= 0) {
-                if(m_current_ressurection_player_two == 0.0)
-                    CGame::Get().Effects()->CreateEffect(TailSize*16, 0, EFFECT_SPAWN);
-
-                m_current_ressurection_player_two += dt;
-                if(m_current_ressurection_player_two >= m_ressurection_player) {
-                    CGame::Get().PlayerTwo()->Born();
-                    m_current_ressurection_player_two = 0;
-                }
-            }
-        }
-
-        //Ochrona godła
-        if(m_levelprotect) {
-            m_current_levelprotect_time += dt;
-            if(m_current_levelprotect_time >= m_levelprotect_time) {
-                m_levelprotect = false;
-                SetLevelProtect(false);
-                m_current_levelprotect_time = 0.0;
-            }
-
-            if(m_current_levelprotect_time >= m_levelprotect_time - 0.5)
-                SetLevelProtect(true);
-            else if(m_current_levelprotect_time >= m_levelprotect_time - 1)
-                SetLevelProtect(false);
-            else if(m_current_levelprotect_time >= m_levelprotect_time - 1.5)
-                SetLevelProtect(true);
-            else if(m_current_levelprotect_time >= m_levelprotect_time - 2)
-                SetLevelProtect(false);
-        }
-    } else if(CGame::Get().GameState() == GS_STAGESELECT) {
-        if(CGame::Get().Level()->LevelNum() != 0) {
-            m_current_nextmap_time += dt;
-            if(m_current_nextmap_time >= m_nextmap_change_time) {
-                m_current_nextmap_time = 0.0;
-                ChooseLevel();
-            }
+        m_current_ressurection_player_one += dt;
+        if(m_current_ressurection_player_one >= m_ressurection_player) {
+          p->Born();
+          m_current_ressurection_player_one = 0;
         }
     }
+    CPlayer* p2 = CGame::Get().PlayerTwo();
+    if (p2!=NULL) {
+      if (p2->Alive() == false && p2->Lifes() >= 0) {
+        if(m_current_ressurection_player_two == 0.0)
+          CGame::Get().Effects()->CreateEffect(TailSize*16, 0, EFFECT_SPAWN);
+
+        m_current_ressurection_player_two += dt;
+        if (m_current_ressurection_player_two >= m_ressurection_player) {
+          p2->Born();
+          m_current_ressurection_player_two = 0;
+        }
+      }
+    }
+
+    //Ochrona godła（集群保护）
+    if(m_levelprotect) {
+      m_current_levelprotect_time += dt;
+      if(m_current_levelprotect_time >= m_levelprotect_time) {
+        m_levelprotect = false;
+        SetLevelProtect(false);
+        m_current_levelprotect_time = 0.0;
+      }
+
+      if (m_current_levelprotect_time >= m_levelprotect_time-0.5)
+        SetLevelProtect(true);
+      else if (m_current_levelprotect_time >= m_levelprotect_time-1)
+        SetLevelProtect(false);
+      else if (m_current_levelprotect_time >= m_levelprotect_time-1.5)
+        SetLevelProtect(true);
+      else if (m_current_levelprotect_time >= m_levelprotect_time-2)
+        SetLevelProtect(false);
+    }
+  } else if(CGame::Get().GameState() == GS_STAGESELECT) {
+    if(CGame::Get().Level()->LevelNum() != 0) {
+      m_current_nextmap_time += dt;
+      if(m_current_nextmap_time >= m_nextmap_change_time) {
+        m_current_nextmap_time = 0.0;
+        ChooseLevel();
+      }
+    }
+  }
 }

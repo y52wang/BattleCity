@@ -71,18 +71,18 @@ void CRenderer::LoadAtlasFromFile(const string &fileName, const string &atlasNam
 }
 
 void CRenderer::StartRendering() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glLoadIdentity();
 
-    glPushMatrix();
-        glBegin(GL_QUADS);
+  glPushMatrix();
+    glBegin(GL_QUADS);
 }
 
 void CRenderer::StopRendering() {
-        glEnd();
-    glPopMatrix();
+    glEnd();
+  glPopMatrix();
 
-    SDL_GL_SwapBuffers();
+  SDL_GL_SwapBuffers();
 }
 
 void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,

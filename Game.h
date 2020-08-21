@@ -26,11 +26,11 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 struct Mouse { int x, y; };
 
 class CGame {
-    public: //Metody
-        static CGame &Get() {
-            static CGame Game;
-            return Game;
-        }
+  public: //Metody
+    static CGame &Get() {
+      static CGame Game;
+      return Game;
+    }
 
         //void Init();
         void Init();                                                //Inicjalizacja
