@@ -3,7 +3,12 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
+#ifdef USE_SDL2
+#include <SDL2/SDL.h>
+#else
 #include <SDL/SDL.h>
+#endif
+
 #include <iostream>
 #include "Game.h"
 #include "Renderer.h"
@@ -71,18 +76,22 @@ void CRenderer::LoadAtlasFromFile(const string &fileName, const string &atlasNam
 }
 
 void CRenderer::StartRendering() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glLoadIdentity();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
 
-  glPushMatrix();
-    glBegin(GL_QUADS);
+    glPushMatrix();
+        glBegin(GL_QUADS);
 }
 
 void CRenderer::StopRendering() {
-    glEnd();
-  glPopMatrix();
+        glEnd();
+    glPopMatrix();
 
-  SDL_GL_SwapBuffers();
+#ifdef USE_SDL2
+    SDL_GL_SwapWindow(CGame::Get().Window()->GetWindow());
+#else
+    SDL_GL_SwapBuffers();
+#endif
 }
 
 void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,

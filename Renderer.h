@@ -6,7 +6,12 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #ifndef RENDERER_H_INCLUDED
 #define RENDERER_H_INCLUDED
 
+#ifdef USE_SDL2
+#include <SDL2/SDL_opengl.h>
+#else
 #include <SDL/SDL_opengl.h>
+#endif
+
 #include <string>
 #include <map>
 #include "Sprites.h"
