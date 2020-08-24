@@ -3,13 +3,8 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
-#ifdef USE_SDL2
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-#else
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
-#endif
 
 #include <GL/gl.h>
 #include <iostream>
@@ -101,11 +96,8 @@ void CGame::Init() {
       ostringstream o;
       o << Window()->WindowTitle() << " | FPS: " << fps_num;
 
-#ifdef USE_SDL2
       SDL_SetWindowTitle(CGame::Get().Window()->GetWindow(), o.str().c_str());
-#else
-      SDL_WM_SetCaption(o.str().c_str(), NULL);
-#endif
+
       //cout << "FPS: " << fps_num << "\n";
       fps_count = 0;
       fps_time = 0;

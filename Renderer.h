@@ -6,11 +6,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #ifndef RENDERER_H_INCLUDED
 #define RENDERER_H_INCLUDED
 
-#ifdef USE_SDL2
 #include <SDL2/SDL_opengl.h>
-#else
-#include <SDL/SDL_opengl.h>
-#endif
 
 #include <string>
 #include <map>
@@ -23,22 +19,27 @@ struct Atlas {
 };
 
 class CRenderer {
-    public:
-        ~CRenderer();
+public:
+    ~CRenderer();
 
-        void Init();
-        void LoadAtlasFromFile(const string &fileName, const string &atlasName);
+    void Init();
+    void LoadAtlasFromFile(const string &fileName, const string &atlasName);
 
-        void StartRendering();
-        void StopRendering();
-        void DrawSprite(SpriteData &sprite_data, int frame, double scr_x, double scr_y, int width, int height, COLOR color = COLOR_NONE);
+    void StartRendering();
+    void StopRendering();
+    void DrawSprite(SpriteData &sprite_data,
+        int frame,
+        double scr_x, double scr_y, int width, int height,
+        COLOR color = COLOR_NONE);
 
-        int AtlasWidth(const string &name) { return m_atlasses[name].width; }
-        int AtlasHeight(const string &name) { return m_atlasses[name].height; }
+    int AtlasWidth(const string &name) { return m_atlasses[name].width; }
+    int AtlasHeight(const string &name) { return m_atlasses[name].height; }
 
-    private:
-        map<string, Atlas> m_atlasses;
-        void InsertAtlas(const string &name, Atlas atlas) { m_atlasses.insert(make_pair(name, atlas)); }
+private:
+    map<string, Atlas>      m_atlasses;
+
+    void InsertAtlas(const string &name, Atlas atlas)
+    { m_atlasses.insert(make_pair(name, atlas)); }
 };
 
 #endif // RENDERER_H_INCLUDED

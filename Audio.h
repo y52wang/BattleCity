@@ -6,11 +6,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #ifndef AUDIO_H_INCLUDED
 #define AUDIO_H_INCLUDED
 
-#ifdef USE_SDL2
 #include <SDL2/SDL_mixer.h>
-#else
-#include <SDL/SDL_mixer.h>
-#endif
 
 #include "Types.h"
 using namespace std;

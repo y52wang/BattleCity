@@ -3,12 +3,9 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
-#ifdef USE_SDL2
 #include <SDL2/SDL.h>
-#else
-#include <SDL/SDL.h>
-#endif
 
+#include <assert.h>
 #include <iostream>
 #include "Game.h"
 #include "Renderer.h"
@@ -66,7 +63,7 @@ void CRenderer::LoadAtlasFromFile(const string &fileName, const string &atlasNam
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexImage2D(GL_TEXTURE_2D, 0, temp_surface->format->BytesPerPixel,     //Stworzenie obrazu tekstury
-                 NewAtlas.width, NewAtlas.height, 0, format, GL_UNSIGNED_BYTE, temp_surface->pixels);
+        NewAtlas.width, NewAtlas.height, 0, format, GL_UNSIGNED_BYTE, temp_surface->pixels);
 
     if (temp_surface)                                                       //Zwolnienie pamięci
         SDL_FreeSurface(temp_surface);
@@ -76,27 +73,29 @@ void CRenderer::LoadAtlasFromFile(const string &fileName, const string &atlasNam
 }
 
 void CRenderer::StartRendering() {
+    SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
+    SDL_RenderClear(r);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     glPushMatrix();
         glBegin(GL_QUADS);
+
 }
 
 void CRenderer::StopRendering() {
+        SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
+        SDL_RenderPresent(r);
         glEnd();
     glPopMatrix();
 
-#ifdef USE_SDL2
     SDL_GL_SwapWindow(CGame::Get().Window()->GetWindow());
-#else
-    SDL_GL_SwapBuffers();
-#endif
 }
 
 void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
-  double scr_x, double scr_y, int width, int height,
-  COLOR color) {
+    double scr_x, double scr_y, int width, int height,
+    COLOR color) {
     static int offX = CGame::Get().GameOffsetX();
     static int offY = CGame::Get().GameOffsetY();
     scr_x += offX;
