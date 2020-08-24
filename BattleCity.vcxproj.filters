@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\SDL_draw">
+      <UniqueIdentifier>{7570a1c3-a20a-40f3-967d-542c206d99ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\SDL_draw">
+      <UniqueIdentifier>{7445b8e9-6624-4af3-8141-45aa5cf17430}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -66,6 +72,9 @@
     <ClInclude Include="Window.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\SDL_draw\SDL_draw.h">
+      <Filter>头文件\SDL_draw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -118,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Level.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\SDL_draw\SDL_draw.c">
+      <Filter>源文件\SDL_draw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

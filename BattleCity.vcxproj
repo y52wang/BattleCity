@@ -100,6 +100,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="Utility\SDL_draw\SDL_draw.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +120,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Sprites.cpp" />
+    <ClCompile Include="Utility\SDL_draw\SDL_draw.c" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
