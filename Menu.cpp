@@ -24,11 +24,14 @@ void CMenu::DrawMenu() {
 
     switch(m_selected_item) {
         case 1:
-            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 205, m_Pointer.width, m_Pointer.height); break;
+            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 205, m_Pointer.width, m_Pointer.height);
+            break;
         case 2:
-            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 173, m_Pointer.width, m_Pointer.height); break;
+            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 173, m_Pointer.width, m_Pointer.height);
+            break;
         case 3:
-            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 140, m_Pointer.width, m_Pointer.height); break;
+            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 140, m_Pointer.width, m_Pointer.height);
+            break;
     }
 
     CGame::Get().GUI()->RenderText("RIPPER", 500, 0);
@@ -58,25 +61,28 @@ void CMenu::ChooseItem() {
 }
 
 void CMenu::ProcessEvents() {
-    SDL_Event event;
+  SDL_Event event;
 
-    while(SDL_PollEvent(&event)) {
-        if(event.type == SDL_QUIT) {
-            CGame::Get().EndGame();
-        } else if(event.type == SDL_KEYDOWN) {
-            if(event.key.keysym.sym == SDLK_ESCAPE) {
-                CGame::Get().EndGame();
-            } else if(event.key.keysym.sym == SDLK_UP) {
-                int i = SelectedItem() - 1;
-                if(i==0) i = 3;
-                SelectItem(i);
-            } else if(event.key.keysym.sym == SDLK_DOWN) {
-                int i = SelectedItem() + 1;
-                if(i==4) i = 1;
-                SelectItem(i);
-            } else if(event.key.keysym.sym == SDLK_RETURN) {
-                ChooseItem();
-            }
-        }
+  while(SDL_PollEvent(&event)) {
+    if(event.type == SDL_QUIT) {
+      CGame::Get().EndGame();
+    } else if(event.type == SDL_KEYDOWN) {
+      if(event.key.keysym.sym == SDLK_ESCAPE) {
+        CGame::Get().EndGame();
+      } else if(event.key.keysym.sym == SDLK_UP) {
+        int i = SelectedItem() - 1;
+        if(i==0) i = 3;
+        SelectItem(i);
+      } else if(event.key.keysym.sym == SDLK_DOWN) {
+        int i = SelectedItem() + 1;
+        if(i==4) i = 1;
+        SelectItem(i);
+      } else if(event.key.keysym.sym == SDLK_RETURN) {
+        ChooseItem();
+      } else if(event.key.keysym.sym == SDLK_SPACE) {
+        int i = SelectedItem();
+        if (i==1 || i==2)  m_EnableLog = !m_EnableLog;
+      }
     }
+  }
 }
