@@ -43,15 +43,16 @@ void CGame::DeletePlayerTwo() {
 }
 
 void CGame::Init() {
+  // 类与类之间有先后依赖关系的初始化，放在这里
   Window()->Init();
   Audio()->Init();
   Renderer()->Init();
   Player()->Init(8, 0, 1);
   Menu()->Init();
 
-  m_game_offset_scr_x = 32;       //Stała
-  m_game_offset_scr_y = 16;       //Stała
-  m_game_state = GS_MENU;         //Jak rozpoczyna - od razu w grze czy może w menu/edytorze
+  m_game_offset_scr_x = 32;  //Stała
+  m_game_offset_scr_y = 16;  //Stała
+  m_game_state = GS_MENU;    //Jak rozpoczyna - od razu w grze czy może w menu/edytorze
   delta_time = 0.0;
   cout << "\n\n";
 
@@ -126,7 +127,7 @@ void CGame::Init() {
     }
 
     //Rendering
-    Renderer()->StartRendering();
+    Renderer()->StartRendering();  // 渲染开始 ----------------------------------------------------
     switch(m_game_state) {
       case GS_MENU:
         Menu()->DrawMenu();
@@ -164,7 +165,7 @@ void CGame::Init() {
         Level()->DrawLevel(1);
         break;
     }
-    Renderer()->StopRendering();
+    Renderer()->StopRendering();  // 渲染结束 -----------------------------------------------------
   }
   SDL_Quit();
 }
