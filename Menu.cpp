@@ -3,6 +3,7 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
+#include <SDL2/SDL.h>
 #include <iostream>
 #include "Game.h"
 #include "Menu.h"
@@ -26,8 +27,8 @@ void CMenu::DrawMenu() {
     switch(m_selected_item) {
         case 1:
             CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 205, m_Pointer.width, m_Pointer.height);
-            SDL_SetRenderDrawColor(r, 255, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderDrawLine(r, 0, 0, 200, 200);
+            //SDL_SetRenderDrawColor(r, 255, 0, 0, SDL_ALPHA_OPAQUE);
+            //SDL_RenderDrawLine(r, 0, 0, 200, 200);
             break;
         case 2:
             CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 173, m_Pointer.width, m_Pointer.height);

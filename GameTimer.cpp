@@ -3,6 +3,7 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
+#include <SDL2/SDL.h>
 #include <iostream>
 #include "GameTimer.h"
 #include "Game.h"

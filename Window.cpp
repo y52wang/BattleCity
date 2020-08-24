@@ -20,24 +20,15 @@ void CWindow::Init() {
         cout << "# Nie udalo sie zaladowac biblioteki SDL!\n";
 
 
-    if(m_scr_fullscreen)
-    {
-        m_window = SDL_CreateWindow(m_title.c_str(),
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
+    if(m_scr_fullscreen) {
+        int res = SDL_CreateWindowAndRenderer(
             m_scr_width,
             m_scr_height,
-            SDL_WINDOW_FULLSCREEN);
-    }
-    else
-    {
-        //m_window = SDL_CreateWindow(m_title.c_str(),
-        //    SDL_WINDOWPOS_UNDEFINED,
-        //    SDL_WINDOWPOS_UNDEFINED,
-        //    m_scr_width,
-        //    m_scr_height,
-        //    SDL_WINDOW_OPENGL);
-
+            SDL_WINDOW_FULLSCREEN,
+            &m_window,
+            &m_renderer);
+        assert(res==0);
+    } else {
         int res = SDL_CreateWindowAndRenderer(
             m_scr_width,
             m_scr_height,
@@ -47,40 +38,19 @@ void CWindow::Init() {
         assert(res==0);
     }
 
-    if(m_window != NULL)
-    {
+    if(m_window != NULL) {
+        SDL_SetWindowTitle(m_window, m_title.c_str());
         cout << "- Zainicjalizowano tryb wideo.\n";
-    }
-    else
-    {
+    } else {
         cout << "# Nie zainicjalizowano trybu wideo!";
     }
 
-    SDL_GLContext context = SDL_GL_CreateContext(m_window);
+    m_context = SDL_GL_CreateContext(m_window);
 
+    // WangLiang: 下面是否可以不需要，彻底不依赖 opengl
     GLenum err = glewInit();
-    assert(GLEW_OK==err);
-
-    glViewport(0, 0, m_scr_width, m_scr_height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, m_scr_width, 0, m_scr_height, -1, 5);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    assert(err==GLEW_OK);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-
     SDL_GL_SetSwapInterval(0);
-
-    glClearColor(0.455, 0.455, 0.455, 1);  //szare tło
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    glEnable(GL_TEXTURE_2D);
-
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GEQUAL, 0.5);  //Jeśli byłby problem z kanałem alpha - zmień na więcej!
 }

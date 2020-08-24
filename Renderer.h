@@ -14,7 +14,12 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 struct Atlas {
-    GLuint texture;
+    Atlas()
+        : m_tex(NULL)
+        , width(0), height(0)
+    {}
+        
+    SDL_Texture* m_tex;
     int width, height;
 };
 

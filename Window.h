@@ -7,16 +7,23 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #define WINDOW_H_INCLUDED
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-
-#include <GL/gl.h>
 #include <string>
 using namespace std;
 
+struct SDL_Window;
+struct SDL_Renderer;
+
 class CWindow {
 public:
+    CWindow()
+        : m_window(NULL)
+        , m_renderer(NULL)
+        , m_context(NULL)
+    {}
+
     void Init();
-    void Set(int width, int height, int bits, bool fullscreen) {
+    void Set(int width, int height, int bits, bool fullscreen)
+    {
         m_scr_width = width;
         m_scr_height = height;
         m_scr_bits = bits;
@@ -40,6 +47,7 @@ private:
 
     SDL_Window*     m_window;
     SDL_Renderer*   m_renderer;
+    SDL_GLContext   m_context;
 };
 
 #endif // WINDOW_H_INCLUDED

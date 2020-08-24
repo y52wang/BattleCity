@@ -4,9 +4,6 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-
-#include <GL/gl.h>
 #include <iostream>
 #include <sstream>
 #include <string>

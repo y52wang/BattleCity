@@ -11,26 +11,26 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 struct SpriteData {
-  SpriteData() { }
-  SpriteData(int frame_count, double frame_duration,
-    double left, double bottom, double width, double height,
-    bool loop, string atlas)
-      : frame_count(frame_count), frame_duration(frame_duration)
-      , left(left), bottom(bottom), width(width), height(height)
-			, loop(loop), atlas(atlas) { }
+    SpriteData() { }
+    SpriteData(int frame_count, double frame_duration,
+        double left, double bottom, double width, double height,
+        bool loop, string atlas)
+        : frame_count(frame_count), frame_duration(frame_duration)
+        , left(left), bottom(bottom), width(width), height(height)
+            , loop(loop), atlas(atlas) { }
 
-  int frame_count;
-  double frame_duration, left, bottom, width, height;
-  bool loop;
-  string atlas;
+    int     frame_count;
+    double  frame_duration, left, bottom, width, height;
+    bool    loop;
+    string  atlas;
 };
 
 class CSprites {
-  public:
+public:
     CSprites();
     SpriteData& Get(const string &name);
 
-  private:
+private:
     void Insert(const string& name, const SpriteData& data)
     { m_sprites.insert(make_pair(name, data)); }
 
