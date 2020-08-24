@@ -5,18 +5,18 @@
 #include "Level.h"
 #include "Game.h"
 
-CLevel::CLevel()
+CLevel::CLevel(CSprites* sprites)
 	: m_level_width(26)
 	, m_level_height(26)
 	, m_all_levels(20)
 {
-  m_SD_Brick  = &(CGame::Get().Sprites()->Get("lvl_brick") );
-  m_SD_White  = &(CGame::Get().Sprites()->Get("lvl_white") );
-  m_SD_Slide  = &(CGame::Get().Sprites()->Get("lvl_slide") );
-  m_SD_Bush   = &(CGame::Get().Sprites()->Get("lvl_bush") );
-  m_SD_Water  = &(CGame::Get().Sprites()->Get("lvl_water") );
-  m_SD_Eagle  = &(CGame::Get().Sprites()->Get("lvl_eagle") );
-  m_SD_BG     = &(CGame::Get().Sprites()->Get("lvl_background") );
+  m_SD_Brick  = &(sprites->Get("lvl_brick") );
+  m_SD_White  = &(sprites->Get("lvl_white") );
+  m_SD_Slide  = &(sprites->Get("lvl_slide") );
+  m_SD_Bush   = &(sprites->Get("lvl_bush") );
+  m_SD_Water  = &(sprites->Get("lvl_water") );
+  m_SD_Eagle  = &(sprites->Get("lvl_eagle") );
+  m_SD_BG     = &(sprites->Get("lvl_background") );
 }
 
 /*

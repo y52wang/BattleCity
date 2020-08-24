@@ -69,7 +69,7 @@ class CGame {
     private: //Metody
         CGame() {
             m_Window = new CWindow;             m_Audio = new CAudio;
-            m_Sprites = new CSprites;           m_Level = new CLevel;
+            m_Sprites = new CSprites;           m_Level = new CLevel(m_Sprites);
             m_Renderer = new CRenderer;         m_Player = new CPlayer;
             m_PlayerTwo = NULL;                 //Standardowo gracz 2 nie istnieje
             m_Bullets = new CBullets;           m_Editor = new CEditor;
@@ -145,10 +145,10 @@ inline bool TwoRectangles(double x1, double y1, double x2, double y2,
         swap(x1, x3); swap(y1, y3);
         swap(x2, x4); swap(y2, y4);
     }
-    if(y1>y2) swap(y1,y2);
-    if(y3>y4) swap(y3,y4);
-    if(x1>x2) swap(x1,x2);
-    if(x3>x4) swap (x3,x4);
+    if (y1>y2) swap(y1, y2);
+    if (y3>y4) swap(y3, y4);
+    if (x1>x2) swap(x1, x2);
+    if (x3>x4) swap(x3, x4);
 
     if(y1>y3) { swap(y1,y3); swap(y2,y4); }
     if(y1==y3 && y2>y4) swap(y2,y4);

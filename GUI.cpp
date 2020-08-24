@@ -5,6 +5,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 
 #include "GUI.h"
 #include "Game.h"
+#include <algorithm>
 using namespace std;
 
 void CGUI::DrawGameplayStats() {

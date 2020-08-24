@@ -34,11 +34,12 @@ struct sBrick {
   bool bottom_right;
 };
 
+class CSprites;
 struct SpriteData;
 
 class CLevel {
   public:
-    CLevel();
+    CLevel(CSprites* sprites);
 
     void LoadLevel(const string fileName);
     void LoadNextLevel()  {}
