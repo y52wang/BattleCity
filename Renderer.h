@@ -34,7 +34,7 @@ public:
     void StopRendering();
     void DrawSprite(SpriteData &sprite_data,
         int frame,
-        double scr_x, double scr_y, int width, int height,
+        int scr_x, int scr_y, int width, int height,  // screen_x, screen_y
         COLOR color = COLOR_NONE);
 
     int AtlasWidth(const string &name) { return m_atlasses[name].width; }

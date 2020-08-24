@@ -3,7 +3,7 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <iostream>
 #include <assert.h>
 #include "Window.h"
@@ -48,8 +48,8 @@ void CWindow::Init() {
     m_context = SDL_GL_CreateContext(m_window);
 
     // WangLiang: 下面是否可以不需要，彻底不依赖 opengl
-    GLenum err = glewInit();
-    assert(err==GLEW_OK);
+    //GLenum err = glewInit();
+    //assert(err==GLEW_OK);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetSwapInterval(0);

@@ -6,7 +6,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #pragma comment(lib, "SDL2")
 #pragma comment(lib, "SDL2main")
 #pragma comment(lib, "SDL2_mixer")
-#pragma comment(lib, "glew32")
+//#pragma comment(lib, "glew32")
 
 #include <ctime>
 #include "Game.h"

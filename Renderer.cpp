@@ -78,10 +78,11 @@ void CRenderer::StopRendering() {
 }
 
 void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
-    double scr_x, double scr_y, int width, int height,
+    int scr_x, int scr_y, int width, int height,
     COLOR color)
 {
-    SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
+    CWindow* w = CGame::Get().Window();
+    SDL_Renderer* r = w->GetRenderer();
 
     static int offX = CGame::Get().GameOffsetX();
     static int offY = CGame::Get().GameOffsetY();
@@ -101,19 +102,13 @@ void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
 
     const Atlas& atlas = m_atlasses[sprite_data.atlas];
 
-    //Współrzędne na teksturze, ponieważ ma ona współrzędne lewego górnego rogu (0,0) i prawego dolnego (1,1)
     int left     = sprite_data.left + (sprite_data.width * frame);
     int right    = left + sprite_data.width;
     int bottom   = sprite_data.bottom;
     int top      = bottom - sprite_data.height;
 
-    //glTexCoord2f(right, top);       glVertex2f(scr_x + width, scr_y + height);
-    //glTexCoord2f(left, top);        glVertex2f(scr_x, scr_y + height);
-    //glTexCoord2f(left, bottom);     glVertex2f(scr_x, scr_y);
-    //glTexCoord2f(right, bottom);    glVertex2f(scr_x + width, scr_y);
-
     SDL_Rect src = { left, top, sprite_data.width, sprite_data.height };
-    SDL_Rect dst = { scr_x, scr_y, width, height };
+    SDL_Rect dst = { scr_x, w->WindowHeight()-scr_y, width, height };
     SDL_RenderCopy(r, atlas.m_tex, &src, &dst);
 
     //if(color != COLOR_NONE) {
