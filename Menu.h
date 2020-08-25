@@ -27,6 +27,8 @@ public:
 
     int SelectedItem()  { return m_selected_item; }
 
+    bool EnableLog()    { return m_EnableLog; }
+
 private:
     int         m_selected_item;  //Aktualnie zaznaczona opcja
     SpriteData  m_Background;

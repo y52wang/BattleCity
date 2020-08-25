@@ -165,41 +165,47 @@ void CEnemy::DecreaseBullet() {
 }
 
 void CEnemy::Draw() {
-  double pos_x = m_x * CGame::Get().TailSize();
-  double pos_y = m_y * CGame::Get().TailSize();
+    CGame& game = CGame::Get();
+    int pos_x = m_x * game.TailSize();
+    int pos_y = m_y * game.TailSize();
 
-  int frame = m_frame;
-  if (m_enemy_type == ENEMY_BIG) {
-    switch(m_level) {
-      case 2: frame += 6; break;
-      case 3: frame += 8; break;
-      case 4: frame += 10; break;
+    int frame = m_frame;
+    if (m_enemy_type == ENEMY_BIG) {
+        switch(m_level) {
+            case 2: frame += 6; break;
+            case 3: frame += 8; break;
+            case 4: frame += 10; break;
+        }
     }
-  }
 
-  CSprites* s = CGame::Get().Sprites();
-  CRenderer* r = CGame::Get().Renderer();
-  switch (m_direction) {
-    case DIR_UP:
-      r->DrawSprite(s->Get(m_sprite_up), frame,
-        pos_x, pos_y, m_enemy_width, m_enemy_height);
-      break;
+    CSprites*     s = game.Sprites();
+    CRenderer*    r = game.Renderer();
+    bool log = game.Menu()->EnableLog();
+    switch (m_direction) {
+        case DIR_UP:
+            r->DrawSprite(s->Get(m_sprite_up), frame,
+                pos_x, pos_y, m_enemy_width, m_enemy_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_enemy_width, m_enemy_height, r->_red);
+        break;
 
-    case DIR_DOWN:
-      r->DrawSprite(s->Get(m_sprite_down), frame,
-        pos_x, pos_y, m_enemy_width, m_enemy_height);
-      break;
+        case DIR_DOWN:
+            r->DrawSprite(s->Get(m_sprite_down), frame,
+                pos_x, pos_y, m_enemy_width, m_enemy_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_enemy_width, m_enemy_height, r->_red);
+        break;
 
-    case DIR_LEFT:
-      r->DrawSprite(s->Get(m_sprite_left), frame,
-        pos_x, pos_y, m_enemy_width, m_enemy_height);
-      break;
+        case DIR_LEFT:
+            r->DrawSprite(s->Get(m_sprite_left), frame,
+                pos_x, pos_y, m_enemy_width, m_enemy_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_enemy_width, m_enemy_height, r->_red);
+        break;
 
-    case DIR_RIGHT:
-      r->DrawSprite(s->Get(m_sprite_right), frame,
-        pos_x, pos_y, m_enemy_width, m_enemy_height);
-      break;
-  }
+        case DIR_RIGHT:
+            r->DrawSprite(s->Get(m_sprite_right), frame,
+                pos_x, pos_y, m_enemy_width, m_enemy_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_enemy_width, m_enemy_height, r->_red);
+        break;
+    }
 }
 
 void CEnemy::Update(double dt) {

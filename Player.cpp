@@ -152,21 +152,33 @@ void CPlayer::DecreaseBullet() {
 }
 
 void CPlayer::Draw() {
-    double pos_x = m_x * CGame::Get().TailSize();
-    double pos_y = m_y * CGame::Get().TailSize();
+    CGame& game = CGame::Get();
+    int pos_x = m_x * game.TailSize();
+    int pos_y = m_y * game.TailSize();
 
+    CSprites*   s = game.Sprites();
+    CRenderer*  r = game.Renderer();
+    bool log = game.Menu()->EnableLog();
     switch (m_direction) {
         case DIR_UP:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_up), m_frame, pos_x, pos_y, m_player_width, m_player_height); break;
+            r->DrawSprite(s->Get(m_sprite_up), m_frame, pos_x, pos_y, m_player_width, m_player_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            break;
         case DIR_DOWN:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_down), m_frame, pos_x, pos_y, m_player_width, m_player_height); break;
+            r->DrawSprite(s->Get(m_sprite_down), m_frame, pos_x, pos_y, m_player_width, m_player_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            break;
         case DIR_LEFT:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_left), m_frame, pos_x, pos_y, m_player_width, m_player_height); break;
+            r->DrawSprite(s->Get(m_sprite_left), m_frame, pos_x, pos_y, m_player_width, m_player_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            break;
         case DIR_RIGHT:
-            CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get(m_sprite_right), m_frame, pos_x, pos_y, m_player_width, m_player_height); break;
+            r->DrawSprite(s->Get(m_sprite_right), m_frame, pos_x, pos_y, m_player_width, m_player_height);
+            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            break;
     }
     if(m_invincibility) {
-        CGame::Get().Renderer()->DrawSprite(CGame::Get().Sprites()->Get("player_border"), m_inv_frame, pos_x, pos_y, m_player_width, m_player_height);
+        r->DrawSprite(s->Get("player_border"), m_inv_frame, pos_x, pos_y, m_player_width, m_player_height);
     }
 }
 
