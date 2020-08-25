@@ -246,7 +246,7 @@ void CEnemies::Update(double dt) {
       }
 
       /***            Kolizja z pociskami             ***/
-      const list<Bullet>& temp = CGame::Get().Bullets()->AllBullets();
+      const BulletList& temp = CGame::Get().Bullets()->AllBullets();
       for (auto iter2=temp.begin(); iter2!=temp.end(); ++iter2) {
         if ((*iter2).owner != OWN_ENEMY) {
           double x1, x2, x3, x4, y1, y2, y3, y4;
@@ -271,18 +271,22 @@ void CEnemies::Update(double dt) {
   }
 }
 
-list<CEnemy*>::iterator CEnemies::DestroyEnemy(list<CEnemy*>::iterator iter) {
-  if ((*iter)->Level()<=0) {
-    if ((*iter)->Type()>=ENEMY_SLOW_BONUS)
-      CGame::Get().Items()->CreateItem();
+EnemyListIt CEnemies::DestroyEnemy(EnemyListIt iter) {
+	if ((*iter)->Level() <= 0) {
+		if ((*iter)->Type() >= ENEMY_SLOW_BONUS)
+			CGame::Get().Items()->CreateItem();
 
-    int ts = CGame::Get().TailSize();
-    CGame::Get().Effects()->CreateEffect((*iter)->GetX()*ts, (*iter)->GetY()*ts, EFFECT_EXPLODE);
-    CGame::Get().Audio()->PlayChunk(SOUND_DIE);
+		int ts = CGame::Get().TailSize();
+		CGame::Get().Effects()->CreateEffect((*iter)->GetX()*ts, (*iter)->GetY()*ts, EFFECT_EXPLODE);
+		CGame::Get().Audio()->PlayChunk(SOUND_DIE);
 
-    delete (*iter);
-    return m_Enemies.erase(iter);
-  } else {
-    return ++iter;
-  }
+		delete *iter;
+		return m_Enemies.erase(iter);
+	} else {
+		return ++iter;
+	}
+}
+
+void CEnemies::LogData(CDataManager* dm)
+{
 }

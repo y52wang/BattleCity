@@ -437,3 +437,7 @@ void CEnemy::ChooseDirection(bool collision) {
   SetDirection(dir); Drive();
   m_turn_wait_time = (rand()%31 + 5)/(double(m_speed)*1.5);
 }
+
+void CEnemy::LogData(CDataManager* dm)
+{
+}

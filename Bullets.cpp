@@ -215,8 +215,8 @@ void CBullets::Update(double dt) {
   }
 }
 
-list<Bullet>::iterator CBullets::DestroyBullet(list<Bullet>::iterator iter, DIRECTION dir) {
-  static int TailSize = CGame::Get().TailSize();
+BulletListIt CBullets::DestroyBullet(BulletListIt iter, DIRECTION dir) {
+  int TailSize = CGame::Get().TailSize();
   int power;
 
   if (iter->owner==OWN_PLAYER_ONE) {
@@ -281,4 +281,8 @@ void CBullets::DestroyBullet(int id) {
 			++iter;
 		}
 	}
+}
+
+void CBullets::LogData(CDataManager* dm)
+{
 }

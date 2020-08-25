@@ -510,3 +510,7 @@ void CPlayer::Update(double dt) {
         }
     }
 }
+
+void CPlayer::LogData(CDataManager* dm)
+{
+}

@@ -22,6 +22,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Items.h"
 #include "GUI.h"
 #include "Effects.h"
+#include "AI/Data.h"
 
 struct Mouse { int x, y; };
 
@@ -50,21 +51,22 @@ public: //Metody
     int GameOffsetX() { return m_game_offset_scr_x;}            //Offset na osi X czarnego okna (gameplay itp)
     int GameOffsetY() { return m_game_offset_scr_y;}            //-||-
 
-    CWindow*    Window()    { return m_Window; }                //Zwraca wskaźnik na obiekt gry
-    CAudio*     Audio()     { return m_Audio; }                 // -||-
-    CLevel*     Level()     { return m_Level; }                 // -||-
-    CSprites*   Sprites()   { return m_Sprites; }               // -||-
-    CRenderer*  Renderer()  { return m_Renderer; }              // -||-
-    CPlayer*    Player()    { return m_Player; }                // -||-
-    CPlayer*    PlayerTwo() { return m_PlayerTwo; }             // -||-
-    CBullets*   Bullets()   { return m_Bullets; }               // -||-
-    CEditor*    Editor()    { return m_Editor; }                // -||-
-    CEnemies*   Enemies()   { return m_Enemies; }               // -||-
-    CMenu*      Menu()      { return m_Menu; }                  // -||-
-    CGameTimer* GameTimer() { return m_GameTimer; }             // -||-
-    CItems*     Items()     { return m_Items; }                 // -||-
-    CGUI*       GUI()       { return m_GUI; }                   // -||-
-    CEffects*   Effects()   { return m_Effects; }               // -||-
+    CWindow*		Window()		{ return m_Window; }        //Zwraca wskaźnik na obiekt gry
+    CAudio*			Audio()			{ return m_Audio; }         // -||-
+    CLevel*			Level()			{ return m_Level; }         // -||-
+    CSprites*		Sprites()		{ return m_Sprites; }       // -||-
+    CRenderer*		Renderer()		{ return m_Renderer; }      // -||-
+    CPlayer*		Player()		{ return m_Player; }        // -||-
+    CPlayer*		PlayerTwo()		{ return m_PlayerTwo; }     // -||-
+    CBullets*		Bullets()		{ return m_Bullets; }       // -||-
+    CEditor*		Editor()		{ return m_Editor; }        // -||-
+    CEnemies*		Enemies()		{ return m_Enemies; }       // -||-
+    CMenu*			Menu()			{ return m_Menu; }          // -||-
+    CGameTimer*		GameTimer()		{ return m_GameTimer; }     // -||-
+    CItems*			Items()			{ return m_Items; }         // -||-
+    CGUI*			GUI()			{ return m_GUI; }           // -||-
+    CEffects*		Effects()		{ return m_Effects; }       // -||-
+	CDataManager*	DataManager()	{ return m_DataMgr; }		//
 
 private: //Metody
     CGame() {
@@ -76,6 +78,7 @@ private: //Metody
         m_Enemies = new CEnemies;           m_Menu = new CMenu;
         m_GameTimer = new CGameTimer;       m_Items = new CItems;
         m_GUI = new CGUI;                   m_Effects = new CEffects;
+		m_DataMgr = new CDataManager;
 
         m_end_game = false;
         //Rozmiar 1 klocka w budowaniu poziomu
@@ -98,6 +101,7 @@ private: //Metody
         delete m_GUI;       m_GUI       = NULL;
         delete m_Effects;   m_Effects   = NULL;
         delete m_Sprites;   m_Sprites   = NULL;
+		delete m_DataMgr;	m_DataMgr	= NULL;
     }
 
 private:
@@ -118,23 +122,23 @@ private:
     int m_game_offset_scr_x;//Pozycja okna gry głównej
     int m_game_offset_scr_y;//Pozycja okna gry głównej
 
-
     //Wskaznki na główne obiekty gry
-    CWindow *m_Window;      //Obiekt okna (w SDL)
-    CAudio *m_Audio;        //Obiekt audio (muzyka, dźwięki)
-    CLevel* m_Level;        //Obiekt aktualnego poziomu w SDL
-    CSprites* m_Sprites;    //Obiekt sprite'ów (mapa wszystkich możliwych sprite'ów na podstawie której określamy info dot. rysowanego sprite'a.
-    CRenderer* m_Renderer;  //Obiekt renderer, którym rysuje wszystkie obiekty.
-    CPlayer* m_Player;      //Obiekt pierwszego gracza
-    CPlayer* m_PlayerTwo;   //Obiekt drugiego gracza
-    CBullets* m_Bullets;    //Obiekt pociskow
-    CEditor* m_Editor;      //Obiekt edytora
-    CEnemies* m_Enemies;    //Obiekt przeciwnikow
-    CMenu* m_Menu;          //Obiekt menu
-    CGameTimer* m_GameTimer;//Obiekt timer'a gry
-    CItems* m_Items;        //Obiekt item'ów
-    CGUI* m_GUI;            //Obiekt GUI
-    CEffects* m_Effects;    //Obiekt efektów
+    CWindow*		m_Window;		//Obiekt okna (w SDL)
+    CAudio*			m_Audio;		//Obiekt audio (muzyka, dźwięki)
+    CLevel*			m_Level;		//Obiekt aktualnego poziomu w SDL
+    CSprites*		m_Sprites;		//Obiekt sprite'ów (mapa wszystkich możliwych sprite'ów na podstawie której określamy info dot. rysowanego sprite'a.
+    CRenderer*		m_Renderer;		//Obiekt renderer, którym rysuje wszystkie obiekty.
+    CPlayer*		m_Player;		//Obiekt pierwszego gracza
+    CPlayer*		m_PlayerTwo;	//Obiekt drugiego gracza
+    CBullets*		m_Bullets;		//Obiekt pociskow
+    CEditor*		m_Editor;		//Obiekt edytora
+    CEnemies*		m_Enemies;		//Obiekt przeciwnikow
+    CMenu*			m_Menu;			//Obiekt menu
+    CGameTimer*		m_GameTimer;	//Obiekt timer'a gry
+    CItems*			m_Items;		//Obiekt item'ów
+    CGUI*			m_GUI;			//Obiekt GUI
+    CEffects*		m_Effects;		//Obiekt efektów
+	CDataManager*	m_DataMgr;
 };
 
 /* Funkcja sprawdzająca kolizję między 2 prostokątami */

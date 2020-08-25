@@ -10,6 +10,8 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include <string>
 using namespace std;
 
+class CDataManager;
+
 class CPlayer {
     public:
         CPlayer() : m_state(PLAYER_STOP), m_vx(0.0), m_vy(0.0), m_speed_ratio(1.0), m_max_bullets(1), m_invincibility(false),
@@ -56,12 +58,14 @@ class CPlayer {
         void SetXVelocity(double v)         { m_vx = v; }
         void SetYVelocity(double v)         { m_vy = v; }
 
+		void LogData(CDataManager* dm);
+
     private:
         DIRECTION m_direction;  //w którą stronę się patrzy
         DIRECTION m_stopping_dir;   //Kierunek hamowania
         PLAYER_STATE m_state;   //stan gracza
 
-        int m_id;               //id gracza
+        int m_id;               //id gracza（玩家 id）
         int m_lifes;            //ilość żyć
         bool m_alive;           //czy jeszcze żyje
         int m_frame;            //aktualnie wyswietlana klatka

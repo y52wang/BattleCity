@@ -30,11 +30,12 @@ struct OutputData {
 typedef std::pair<InputData, OutputData>    IOData;
 typedef std::vector<IOData>                 IODataVec;
 
-class DataManager {
+class CDataManager {
 public:
-	DataManager();
+	CDataManager();
 
-
+	void BeginLog();
+	void EndLog();
 
 	IODataVec       m_IODataVec;
 };

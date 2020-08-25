@@ -1,4 +1,10 @@
 #include "Data.h"
 
-DataManager::DataManager() {
+CDataManager::CDataManager() {
+}
+
+void CDataManager::BeginLog() {
+}
+
+void CDataManager::EndLog() {
 }
