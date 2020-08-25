@@ -39,8 +39,9 @@ struct SpriteData;
 
 class CLevel {
   public:
-    CLevel(CSprites* sprites);
+    CLevel();
 
+    void Init();
     void LoadLevel(const string fileName);
     void LoadNextLevel()  {}
     void DrawLevel(bool up);

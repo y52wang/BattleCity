@@ -5,18 +5,32 @@
 #include "Level.h"
 #include "Game.h"
 
-CLevel::CLevel(CSprites* sprites)
+CLevel::CLevel()
 	: m_level_width(26)
 	, m_level_height(26)
 	, m_all_levels(20)
+
+    , m_SD_Brick(NULL)
+    , m_SD_White(NULL)
+    , m_SD_Slide(NULL)
+    , m_SD_Bush(NULL)
+    , m_SD_Water(NULL)
+    , m_SD_Eagle(NULL)
+    , m_SD_BG(NULL)
 {
-  m_SD_Brick  = &(sprites->Get("lvl_brick") );
-  m_SD_White  = &(sprites->Get("lvl_white") );
-  m_SD_Slide  = &(sprites->Get("lvl_slide") );
-  m_SD_Bush   = &(sprites->Get("lvl_bush") );
-  m_SD_Water  = &(sprites->Get("lvl_water") );
-  m_SD_Eagle  = &(sprites->Get("lvl_eagle") );
-  m_SD_BG     = &(sprites->Get("lvl_background") );
+}
+
+void CLevel::Init()
+{
+    CSprites* sprites = CGame::Get().Sprites();
+
+    m_SD_Brick  = &(sprites->Get("lvl_brick") );
+    m_SD_White  = &(sprites->Get("lvl_white") );
+    m_SD_Slide  = &(sprites->Get("lvl_slide") );
+    m_SD_Bush   = &(sprites->Get("lvl_bush") );
+    m_SD_Water  = &(sprites->Get("lvl_water") );
+    m_SD_Eagle  = &(sprites->Get("lvl_eagle") );
+    m_SD_BG     = &(sprites->Get("lvl_background") );
 }
 
 /*

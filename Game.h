@@ -69,7 +69,7 @@ public: //Metody
 private: //Metody
     CGame() {
         m_Window = new CWindow;             m_Audio = new CAudio;
-        m_Sprites = new CSprites;           m_Level = new CLevel(m_Sprites);
+        m_Sprites = new CSprites;           m_Level = new CLevel();
         m_Renderer = new CRenderer;         m_Player = new CPlayer;
         m_PlayerTwo = NULL;                 //Standardowo gracz 2 nie istnieje
         m_Bullets = new CBullets;           m_Editor = new CEditor;

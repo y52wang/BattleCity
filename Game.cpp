@@ -45,6 +45,7 @@ void CGame::Init() {
   Window()->Init();
   Audio()->Init();
   Renderer()->Init();
+  Level()->Init();
   Player()->Init(8, 0, 1);
   Menu()->Init();
 
