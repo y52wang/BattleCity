@@ -156,34 +156,51 @@ void CPlayer::Draw() {
     int pos_x = m_x * game.TailSize();
     int pos_y = m_y * game.TailSize();
 
+    // m_x 取值范围 [0.0, 24.0]
+    // m_y 取值范围 [0.0, 24.0]
+    // 整个地图是 26*26 个格子，坦克占 2*2 个格子
+    //printf("pos(%.2lf, %.2lf)\n", m_x, m_y);
+
     CSprites*   s = game.Sprites();
     CRenderer*  r = game.Renderer();
     bool log = game.Menu()->EnableLog();
     switch (m_direction) {
         case DIR_UP:
             r->DrawSprite(s->Get(m_sprite_up), m_frame, pos_x, pos_y, m_player_width, m_player_height);
-            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            if (log) {
+                r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+                //printf("pos(%d, %d), w(%d), h(%d)\n", pos_x, pos_y, m_player_width, m_player_height);
+            }
             break;
         case DIR_DOWN:
             r->DrawSprite(s->Get(m_sprite_down), m_frame, pos_x, pos_y, m_player_width, m_player_height);
-            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            if (log) {
+                r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+                //printf("pos(%d, %d), w(%d), h(%d)\n", pos_x, pos_y, m_player_width, m_player_height);
+            }
             break;
         case DIR_LEFT:
             r->DrawSprite(s->Get(m_sprite_left), m_frame, pos_x, pos_y, m_player_width, m_player_height);
-            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            if (log) {
+                r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+                //printf("pos(%d, %d), w(%d), h(%d)\n", pos_x, pos_y, m_player_width, m_player_height);
+            }
             break;
         case DIR_RIGHT:
             r->DrawSprite(s->Get(m_sprite_right), m_frame, pos_x, pos_y, m_player_width, m_player_height);
-            if (log)  r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+            if (log) {
+                r->DrawRect(pos_x, pos_y, m_player_width, m_player_height, r->_green);
+                //printf("pos(%d, %d), w(%d), h(%d)\n", pos_x, pos_y, m_player_width, m_player_height);
+            }
             break;
     }
-    if(m_invincibility) {
+    if (m_invincibility) {
         r->DrawSprite(s->Get("player_border"), m_inv_frame, pos_x, pos_y, m_player_width, m_player_height);
     }
 }
 
 void CPlayer::EarnStar() {
-    switch(PlayerLevel()) {
+    switch (PlayerLevel()) {
         case 0: SetPlayerLevel(1); break;
         case 1: SetPlayerLevel(2); break;
         case 2: SetPlayerLevel(3); break;
@@ -248,7 +265,7 @@ void CPlayer::Update(double dt) {
         if(m_invincibility_remain_time <= 0)    m_invincibility = false;
     }
 
-    //Wyjechanie poza mapę
+    //Wyjechanie poza mapę（在地图之外）
     if(m_x < 0.0)  m_x = 0.0;
     if(m_x > 24.0) m_x = 24.0;
     if(m_y < 0.0)  m_y = 0.0;
@@ -257,7 +274,7 @@ void CPlayer::Update(double dt) {
     int pos_x_l = m_x, pos_x_s = m_x + 1, pos_x_p = m_x + 2;
     int pos_y_d = m_y, pos_y_s = m_y + 1, pos_y_g = m_y + 2;
 
-    //Detekcja kolizji
+    //Detekcja kolizji（碰撞检测）
     if(m_vx < 0 && m_x > 0.0) {
         if(CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_BRICK ||
            CGame::Get().Level()->LevelField(pos_x_l,pos_y_d) == LVL_BRICK_DAMAGED ||
@@ -320,7 +337,7 @@ void CPlayer::Update(double dt) {
     list <CEnemy*> enemies = CGame::Get().Enemies()->EnemiesList();
     double x1,x2,x3,x4,y1,y2,y3,y4;
 
-    for(list <CEnemy*>::iterator iter = enemies.begin(); iter!= enemies.end(); ++iter) {
+    for(auto iter=enemies.begin(); iter!=enemies.end(); ++iter) {
         x1 = GetX();                y1 = GetY();
         x2 = x1+2;                  y2 = y1+2;
         x3 = (*iter)->GetX();       y3 = (*iter)->GetY();
@@ -426,7 +443,7 @@ void CPlayer::Update(double dt) {
     //Kolizja z pociskami
     list<Bullet> temp = CGame::Get().Bullets()->AllBullets();
 
-    for(list<Bullet>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
+    for(auto iter=temp.begin(); iter!=temp.end(); ++iter) {
         if((*iter).owner == OWN_ENEMY) {
             x1 = GetX();        y1 = GetY();
             x2 = x1 + 2;        y2 = y1 + 2;

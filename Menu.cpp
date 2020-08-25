@@ -8,6 +8,9 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Game.h"
 #include "Menu.h"
 #include "Renderer.h"
+
+#include <MiniDNN/MiniDNN.h>
+
 using namespace std;
 
 void CMenu::Init() {
@@ -71,28 +74,30 @@ void CMenu::ChooseItem() {
 }
 
 void CMenu::ProcessEvents() {
-  SDL_Event event;
+    SDL_Event event;
 
-  while(SDL_PollEvent(&event)) {
-    if(event.type == SDL_QUIT) {
-      CGame::Get().EndGame();
-    } else if(event.type == SDL_KEYDOWN) {
-      if(event.key.keysym.sym == SDLK_ESCAPE) {
-        CGame::Get().EndGame();
-      } else if(event.key.keysym.sym == SDLK_UP) {
-        int i = SelectedItem() - 1;
-        if(i==0) i = 3;
-        SelectItem(i);
-      } else if(event.key.keysym.sym == SDLK_DOWN) {
-        int i = SelectedItem() + 1;
-        if(i==4) i = 1;
-        SelectItem(i);
-      } else if(event.key.keysym.sym == SDLK_RETURN) {
-        ChooseItem();
-      } else if(event.key.keysym.sym == SDLK_SPACE) {
-        int i = SelectedItem();
-        if (i==1 || i==2)  m_EnableLog = !m_EnableLog;
-      }
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            CGame::Get().EndGame();
+        } else if (event.type == SDL_KEYDOWN) {
+            if(event.key.keysym.sym == SDLK_ESCAPE) {
+                CGame::Get().EndGame();
+            } else if (event.key.keysym.sym == SDLK_UP) {
+                int i = SelectedItem() - 1;
+                if(i==0) i = 3;
+                SelectItem(i);
+            } else if (event.key.keysym.sym == SDLK_DOWN) {
+                int i = SelectedItem() + 1;
+                if (i==4) i = 1;
+                SelectItem(i);
+            } else if (event.key.keysym.sym == SDLK_RETURN) {
+                ChooseItem();
+            } else if (event.key.keysym.sym == SDLK_SPACE) {
+                int i = SelectedItem();
+                if (i==1 || i==2)  m_EnableLog = !m_EnableLog;
+            } else if (event.key.keysym.sym == SDLK_t) {  // 按下 字母 t 键
+                // 读取数据，进行卷积网络的训练
+            }
+        }
     }
-  }
 }
