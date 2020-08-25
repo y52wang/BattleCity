@@ -67,13 +67,18 @@ void CRenderer::LoadAtlasFromFile(const string &fileName, const string &atlasNam
 }
 
 void CRenderer::StartRendering() {
-    SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
-    SDL_RenderClear(r);
+    SDL_Renderer* render = CGame::Get().Window()->GetRenderer();
+
+    Uint8 r, g, b, a;
+    SDL_GetRenderDrawColor(render, &r, &g, &b, &a);
+    SDL_SetRenderDrawColor(render, 116, 116, 116, SDL_ALPHA_OPAQUE);  // 使用灰色进行 Clear
+    SDL_RenderClear(render);
+    SDL_SetRenderDrawColor(render, r, g, b, a);
 }
 
 void CRenderer::StopRendering() {
-    SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
-    SDL_RenderPresent(r);
+    SDL_Renderer* render = CGame::Get().Window()->GetRenderer();
+    SDL_RenderPresent(render);
     SDL_Delay(1000/60);
 }
 
