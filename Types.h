@@ -30,7 +30,7 @@ enum DIRECTION {
   DIR_RIGHT = 1,
   DIR_DOWN  = 2,
   DIR_LEFT  = 3,
-  //DIR_NONE  = 4
+  DIR_NONE  = 4
 };
 
 enum PLAYER_STATE {

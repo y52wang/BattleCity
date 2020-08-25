@@ -9,7 +9,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Menu.h"
 #include "Renderer.h"
 
-#include <MiniDNN/MiniDNN.h>
+#include "AI/StrategyCnn.h"
 
 using namespace std;
 

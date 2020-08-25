@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AI\Data.h" />
+    <ClInclude Include="AI\StrategyCnn.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Bullets.h" />
     <ClInclude Include="Editor.h" />
@@ -107,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\Data.cpp" />
+    <ClCompile Include="AI\StrategyCnn.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Bullets.cpp" />
     <ClCompile Include="Editor.cpp" />
