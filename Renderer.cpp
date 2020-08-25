@@ -101,6 +101,7 @@ void CRenderer::StopRendering() {
 // scr_y:       screen y
 // CRenderer::DrawSprite 所认为的坐标系，x 向右，y 向上，原点在左下角
 // SDL2 所认为的坐标系，x 向右，y 向下，原点在左上角
+// Player.cpp 中 void CPlayer::Draw() 函数中亦有说明！
 void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
     int scr_x, int scr_y, int width, int height,
     COLOR color)

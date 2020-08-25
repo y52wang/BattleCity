@@ -36,8 +36,8 @@ class CPlayer {
         bool OnMove();
         bool Alive()                { return m_alive; }
         void SetAlive(bool alive)   { m_alive = alive;  }
-        bool Stopping()             { return m_stopping; }
-        void SetStopping(bool value){ m_stopping = value; }
+        //bool Stopping()             { return m_stopping; }
+        void SetStopping(bool value){ m_stopping = value; }  // 冰块上的运动会用到
 
         double GetX() { return m_x; }
         double GetY() { return m_y; }
@@ -63,7 +63,7 @@ class CPlayer {
     private:
         DIRECTION m_direction;  //w którą stronę się patrzy
         DIRECTION m_stopping_dir;   //Kierunek hamowania
-        PLAYER_STATE m_state;   //stan gracza
+        PLAYER_STATE m_state;   //stan gracza（玩家状态）
 
         int m_id;               //id gracza（玩家 id）
         int m_lifes;            //ilość żyć

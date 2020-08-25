@@ -17,12 +17,13 @@ struct Bullet {
     Bullet() {}
     Bullet(double x, double y, OWNER owner) : x(x), y(y), owner(owner) { }
 
-    int id;
-    double x, y;
-    double xv, yv;
-    OWNER owner;
-    int owner_id;
-    bool destroyed;
+    int			id;
+    double		x, y;
+    double		xv, yv;
+    OWNER		owner;
+	DIRECTION	dir;
+    int			owner_id;
+    bool		destroyed;
 };
 
 typedef list<Bullet>			BulletList;
@@ -41,15 +42,15 @@ public:
 	void DestroyBullet(int id);                             //zniszczenie pocisku o id
 	void DestroyAllBullets();                               //zniszczenie wszystkich pocisków
 
-	int BulletsNum() { return m_bullets.size(); }           //iloœæ pocisków
-	const BulletList& AllBullets() { return m_bullets; } //zwraca kopie listy pocisków
+	int BulletsNum() { return m_bullets.size(); }			//iloœæ pocisków
+	const BulletList& AllBullets() { return m_bullets; }	//zwraca kopie listy pocisków
 
 	void LogData(CDataManager* dm);
 
 private:
-	BulletList	m_bullets;                                //instancja listy pocisków
-	double		m_speed;                                         //standardowa prêdkoœæ pociskó
-	int			m_bullets_num;                                      //iloœæ pocisków
+	BulletList	m_bullets;		//instancja listy pocisków
+	double		m_speed;		//standardowa prêdkoœæ pociskó
+	int			m_bullets_num;	//iloœæ pocisków
 };
 
 #endif // BULLETS_H_INCLUDED

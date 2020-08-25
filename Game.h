@@ -180,4 +180,9 @@ inline string ToString(double whatever) {
     return o.str();
 }
 
+// 四舍五入
+inline int round_double(double num) {
+	return num>0.0 ? num+0.5 : num-0.5;
+}
+
 #endif // GAME_H_INCLUDED

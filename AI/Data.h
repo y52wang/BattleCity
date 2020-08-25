@@ -13,6 +13,10 @@ struct Pos {
 		x = -1;
 		y = -1;
 	}
+
+	bool IsEmpty() {
+		return x==-1 && y==-1;
+	}
 };
 
 // 坐标系，x 向右，y 向上，原点在左下角
@@ -30,6 +34,7 @@ struct InputData {
 
 	InputData();
 	void Reset();
+	bool IsEmpty();
 };
 
 struct OutputData {
@@ -52,7 +57,8 @@ public:
 
 	void LogPlayer(int pos_x, int pos_y, DIRECTION dir);
 	void LogEnemy(int pos_x, int pos_y, DIRECTION dir);
-	void LogBullet(int pos_x, int pos_y, DIRECTION dir);
+	void LogPlayerBullet(int pos_x, int pos_y, DIRECTION dir);
+	void LogEnemyBullet(int pos_x, int pos_y, DIRECTION dir);
 
     bool IsEnableLog()    { return m_EnableLog; }
 	void EnableLog(bool enable)	{ m_EnableLog = enable; }

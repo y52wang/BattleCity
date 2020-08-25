@@ -10,7 +10,8 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Game.h"
 using namespace std;
 
-void CGame::StartGameplay() {
+void CGame::StartGameplay()
+{
 	Player()->SetPosition(8, 0);
 	Player()->SetAlive(false);
 	Player()->SetDirection(DIR_UP);
@@ -18,7 +19,8 @@ void CGame::StartGameplay() {
 	Player()->SetXVelocity(0);
 	Player()->SetYVelocity(0);
 
-	if (PlayerTwo() != NULL) {
+	if (PlayerTwo() != NULL)
+	{
 		PlayerTwo()->SetPosition(16, 0);
 		PlayerTwo()->SetAlive(false);
 		PlayerTwo()->SetDirection(DIR_UP);
@@ -209,15 +211,20 @@ void CGame::SetGameState(GAME_STATE state) {
     m_game_state = state;
 }
 
-void CGame::ProcessEvents() {
-    if(isEnd()) return;
+void CGame::ProcessEvents()
+{
+    if (isEnd()) return;
 
     SDL_Event event;
-    while(SDL_PollEvent(&event)) {
-        if(event.type == SDL_QUIT) {
+    while (SDL_PollEvent(&event))
+	{
+        if(event.type == SDL_QUIT)
+		{
             m_end_game = true;
-        } else if(event.type == SDL_KEYDOWN) {
-            if(event.key.keysym.sym == SDLK_ESCAPE) {
+        }
+		else if(event.type == SDL_KEYDOWN)
+		{
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
                 SetGameState(GS_MENU);
             } else if(event.key.keysym.sym == SDLK_UP && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_UP);
@@ -251,7 +258,9 @@ void CGame::ProcessEvents() {
                 if(m_game_state == GS_EDITOR)
                     Level()->SaveLevel();
             }
-        } else if(event.type == SDL_KEYUP) {
+        }
+		else if(event.type == SDL_KEYUP)
+		{
             if(event.key.keysym.sym == SDLK_UP) {
                 Player()->Stop(DIR_UP);
             } else if(event.key.keysym.sym == SDLK_LEFT) {
@@ -269,17 +278,26 @@ void CGame::ProcessEvents() {
             } else if(event.key.keysym.sym == SDLK_s && PlayerTwo() != NULL) {
                 PlayerTwo()->Stop(DIR_DOWN);
             }
-        } else if(event.type == SDL_MOUSEBUTTONDOWN) {
-            if(event.button.button == SDL_BUTTON_LEFT) {
-                if(m_game_state == GS_EDITOR) {
+        }
+		else if(event.type == SDL_MOUSEBUTTONDOWN)
+		{
+            if(event.button.button == SDL_BUTTON_LEFT)
+			{
+                if(m_game_state == GS_EDITOR)
+				{
                     Editor()->LMB(m_mouse.x, m_mouse.y);
                 }
-            } else if(event.button.button == SDL_BUTTON_RIGHT) {
-                if(m_game_state == GS_EDITOR) {
+            }
+			else if(event.button.button == SDL_BUTTON_RIGHT)
+			{
+                if(m_game_state == GS_EDITOR)
+				{
                     Editor()->RMB(m_mouse.x, m_mouse.y);
                 }
             }
-        } else if(m_game_state == GS_EDITOR && event.type == SDL_MOUSEMOTION) {
+        }
+		else if(m_game_state == GS_EDITOR && event.type == SDL_MOUSEMOTION)
+		{
             m_mouse.x = event.motion.x;
             m_mouse.y = event.motion.y;
         }

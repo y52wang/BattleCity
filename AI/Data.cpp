@@ -18,6 +18,10 @@ void InputData::Reset() {
 	enemies_bullet_dir.clear();
 }
 
+bool InputData::IsEmpty() {
+	return false;
+}
+
 // ------------------------------------------------------------------
 OutputData::OutputData()
 	: mov(DIR_NONE)
@@ -43,6 +47,7 @@ void CDataManager::BeginLog() {
 }
 
 void CDataManager::EndLog() {
+	if (!m_EnableLog)  return;
 }
 
 void CDataManager::LogPlayer(int pos_x, int pos_y, DIRECTION dir)
@@ -53,6 +58,10 @@ void CDataManager::LogEnemy(int pos_x, int pos_y, DIRECTION dir)
 {
 }
 
-void CDataManager::LogBullet(int pos_x, int pos_y, DIRECTION dir)
+void CDataManager::LogPlayerBullet(int pos_x, int pos_y, DIRECTION dir)
+{
+}
+
+void CDataManager::LogEnemyBullet(int pos_x, int pos_y, DIRECTION dir)
 {
 }
