@@ -18,30 +18,29 @@ void CMenu::Init() {
 }
 
 void CMenu::DrawMenu() {
-    SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
+    CRenderer* render = CGame::Get().Renderer();
 
     //Czarne tło（黑色背景）
     //Wymiary całego okna（全窗口尺寸）
-    CGame::Get().Renderer()->DrawSprite(m_Background,   0,
-        -32,    -16,    640,                    480);
+    render->DrawSprite(m_Background,   0,        -32,    -16,    640,                    480);
 
-    CGame::Get().Renderer()->DrawSprite(m_Logo,         0,
-        110,    260,    m_Logo.width,           m_Logo.height);
+    render->DrawSprite(m_Logo,         0,        110,    260,    m_Logo.width,           m_Logo.height);
 
-    CGame::Get().Renderer()->DrawSprite(m_MenuOptions,  0,
-        232,    150,    m_MenuOptions.width,    m_MenuOptions.height);
+    render->DrawSprite(m_MenuOptions,  0,        232,    150,    m_MenuOptions.width,    m_MenuOptions.height);
 
     switch(m_selected_item) {
         case 1:
-            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 205, m_Pointer.width, m_Pointer.height);
-            //SDL_SetRenderDrawColor(r, 255, 0, 0, SDL_ALPHA_OPAQUE);
-            //SDL_RenderDrawLine(r, 0, 0, 200, 200);
+            //if (m_EnableLog)  // 数据记录 开启 时，绘制填充矩形
+            //    render->FillRect(190, 205, m_Pointer.width, m_Pointer.height, render->_red);
+            render->DrawSprite(m_Pointer, 0, 190, 205, m_Pointer.width, m_Pointer.height);
+            if (m_EnableLog)  // 数据记录 开启 时，绘制矩形框
+                render->DrawRect(190, 205, m_Pointer.width, m_Pointer.height, render->_red);
             break;
         case 2:
-            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 173, m_Pointer.width, m_Pointer.height);
+            render->DrawSprite(m_Pointer, 0, 190, 173, m_Pointer.width, m_Pointer.height);
             break;
         case 3:
-            CGame::Get().Renderer()->DrawSprite(m_Pointer, 0, 190, 140, m_Pointer.width, m_Pointer.height);
+            render->DrawSprite(m_Pointer, 0, 190, 140, m_Pointer.width, m_Pointer.height);
             break;
     }
 

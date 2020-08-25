@@ -37,8 +37,16 @@ public:
         int scr_x, int scr_y, int width, int height,  // screen_x, screen_y
         COLOR color = COLOR_NONE);
 
+    void DrawRect(int scr_x, int scr_y, int width, int height, SDL_Color clr);
+    void FillRect(int scr_x, int scr_y, int width, int height, SDL_Color clr);
+
     int AtlasWidth(const string &name) { return m_atlasses[name].width; }
     int AtlasHeight(const string &name) { return m_atlasses[name].height; }
+
+    static SDL_Color    _red;
+    static SDL_Color    _green;
+    static SDL_Color    _blue;
+    static SDL_Color    _white;
 
 private:
     map<string, Atlas>      m_atlasses;

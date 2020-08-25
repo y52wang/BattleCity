@@ -11,6 +11,11 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Renderer.h"
 using namespace std;
 
+SDL_Color CRenderer::_red   = { 255, 0, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_green = { 0, 255, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_blue  = { 0, 0, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_white = { 255, 255, 255, SDL_ALPHA_OPAQUE };
+
 CRenderer::~CRenderer() {
     map<string, Atlas>::iterator iter;
     for(iter = m_atlasses.begin(); iter != m_atlasses.end(); ++iter) {
@@ -69,11 +74,11 @@ void CRenderer::LoadAtlasFromFile(const string &fileName, const string &atlasNam
 void CRenderer::StartRendering() {
     SDL_Renderer* render = CGame::Get().Window()->GetRenderer();
 
-    Uint8 r, g, b, a;
-    SDL_GetRenderDrawColor(render, &r, &g, &b, &a);
+    SDL_Color clrbk;
+    SDL_GetRenderDrawColor(render, &clrbk.r, &clrbk.g, &clrbk.b, &clrbk.a);
     SDL_SetRenderDrawColor(render, 116, 116, 116, SDL_ALPHA_OPAQUE);  // 使用灰色进行 Clear
     SDL_RenderClear(render);
-    SDL_SetRenderDrawColor(render, r, g, b, a);
+    SDL_SetRenderDrawColor(render, clrbk.r, clrbk.g, clrbk.b, clrbk.a);
 }
 
 void CRenderer::StopRendering() {
@@ -94,8 +99,8 @@ void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
     CWindow*        w = g.Window();
     SDL_Renderer*   r = w->GetRenderer();
 
-    static int offX = g.GameOffsetX();
-    static int offY = g.GameOffsetY();
+    int offX = g.GameOffsetX();
+    int offY = g.GameOffsetY();
     scr_x = offX + scr_x;
     scr_y = w->WindowHeight() - (scr_y + height) - offY;
 
@@ -124,4 +129,52 @@ void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
     //if(color != COLOR_NONE) {
     //    glColor3d(1,1,1);
     //}
+}
+
+void CRenderer::DrawRect(int scr_x, int scr_y, int width, int height, SDL_Color clr)
+{
+    CGame&          g       = CGame::Get();
+    CWindow*        w       = g.Window();
+    SDL_Renderer*   render  = w->GetRenderer();
+
+    SDL_Color clrbk;
+    SDL_GetRenderDrawColor(render, &clrbk.r, &clrbk.g, &clrbk.b, &clrbk.a);
+    SDL_SetRenderDrawColor(render, clr.r, clr.g, clr.b, clr.a);
+
+    int offX = g.GameOffsetX();
+    int offY = g.GameOffsetY();
+    scr_x = offX + scr_x;
+    scr_y = w->WindowHeight() - (scr_y + height) - offY;
+
+    SDL_Rect rect =
+    {
+        scr_x, scr_y, width, height
+    };
+    SDL_RenderDrawRect(render, &rect);
+
+    SDL_SetRenderDrawColor(render, clrbk.r, clrbk.g, clrbk.b, clrbk.a);
+}
+
+void CRenderer::FillRect(int scr_x, int scr_y, int width, int height, SDL_Color clr)
+{
+    CGame&          g       = CGame::Get();
+    CWindow*        w       = g.Window();
+    SDL_Renderer*   render  = w->GetRenderer();
+
+    SDL_Color clrbk;
+    SDL_GetRenderDrawColor(render, &clrbk.r, &clrbk.g, &clrbk.b, &clrbk.a);
+    SDL_SetRenderDrawColor(render, clr.r, clr.g, clr.b, clr.a);
+
+    int offX = g.GameOffsetX();
+    int offY = g.GameOffsetY();
+    scr_x = offX + scr_x;
+    scr_y = w->WindowHeight() - (scr_y + height) - offY;
+
+    SDL_Rect rect =
+    {
+        scr_x, scr_y, width, height
+    };
+    SDL_RenderFillRect(render, &rect);
+
+    SDL_SetRenderDrawColor(render, clrbk.r, clrbk.g, clrbk.b, clrbk.a);
 }
