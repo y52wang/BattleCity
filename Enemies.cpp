@@ -57,20 +57,20 @@ void CEnemies::CreateEnemy(ENEMY_TYPE type) {
 }
 
 void CEnemies::Draw() {
-  for(auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
-    (*iter)->Draw();
-  }
+	for (auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
+		(*iter)->Draw();
+	}
 }
 
 void CEnemies::DestroyAllEnemies(bool wipe) {
-  int ts = CGame::Get().TailSize();
-  for (auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
-    CGame::Get().Effects()->CreateEffect( (*iter)->GetX() * ts, (*iter)->GetY() * ts, EFFECT_EXPLODE);
-    delete (*iter);
-  }
-  m_Enemies.clear();
-  if (wipe)
-    m_number_of_enemies = 0;
+	int ts = CGame::Get().TailSize();
+	for (auto iter=m_Enemies.begin(); iter!=m_Enemies.end(); ++iter) {
+		CGame::Get().Effects()->CreateEffect( (*iter)->GetX() * ts, (*iter)->GetY() * ts, EFFECT_EXPLODE);
+		delete *iter;
+	}
+	m_Enemies.clear();
+	if (wipe)
+		m_number_of_enemies = 0;
 }
 
 void CEnemies::DecreaseBullet(int id) {
@@ -289,4 +289,7 @@ EnemyListIt CEnemies::DestroyEnemy(EnemyListIt iter) {
 
 void CEnemies::LogData(CDataManager* dm)
 {
+	for (auto it=m_Enemies.begin(); it!=m_Enemies.end(); ++it)  {
+		(*it)->LogData(dm);
+	}
 }

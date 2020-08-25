@@ -180,7 +180,7 @@ void CEnemy::Draw() {
 
     CSprites*     s = game.Sprites();
     CRenderer*    r = game.Renderer();
-    bool log = game.Menu()->EnableLog();
+    bool log = game.DataManager()->IsEnableLog();
     switch (m_direction) {
         case DIR_UP:
             r->DrawSprite(s->Get(m_sprite_up), frame,

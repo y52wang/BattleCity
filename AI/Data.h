@@ -6,6 +6,13 @@
 
 struct Pos {
 	int x, y;
+
+	Pos(int _x=-1, int _y=-1) : x(_x), y(_y) {}
+
+	void Reset() {
+		x = -1;
+		y = -1;
+	}
 };
 
 // 坐标系，x 向右，y 向上，原点在左下角
@@ -16,15 +23,21 @@ struct InputData {
 	Pos player_bullet_pos;
 	DIRECTION player_bullet_dir;
 	// Enermy Data
-	std::vector<Pos> enermies_pos; // length=enermy_cnt
-	std::vector<DIRECTION> enermies_dir; // length=enermy_cnt
-	std::vector<Pos> enermies_bullet_pos; // length=enermy_bullet_cnt
-	std::vector<DIRECTION> enermies_bullet_dir; // length=enermy_bullet_cnt
+	std::vector<Pos> enemies_pos; // length=enemy_cnt
+	std::vector<DIRECTION> enemies_dir; // length=enemy_cnt
+	std::vector<Pos> enemies_bullet_pos; // length=enemy_bullet_cnt
+	std::vector<DIRECTION> enemies_bullet_dir; // length=enemy_bullet_cnt
+
+	InputData();
+	void Reset();
 };
 
 struct OutputData {
 	DIRECTION mov;
 	bool shoot;
+
+	OutputData();
+	void Reset();
 };
 
 typedef std::pair<InputData, OutputData>    IOData;
@@ -37,7 +50,20 @@ public:
 	void BeginLog();
 	void EndLog();
 
+	void LogPlayer(int pos_x, int pos_y, DIRECTION dir);
+	void LogEnemy(int pos_x, int pos_y, DIRECTION dir);
+	void LogBullet(int pos_x, int pos_y, DIRECTION dir);
+
+    bool IsEnableLog()    { return m_EnableLog; }
+	void EnableLog(bool enable)	{ m_EnableLog = enable; }
+
 	IODataVec       m_IODataVec;
+
+protected:
+    bool			m_EnableLog;    // 数据记录 开启/关闭
+
+	InputData		m_InputData;
+	OutputData		m_OutputData;
 };
 
 #endif

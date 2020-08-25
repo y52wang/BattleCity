@@ -163,7 +163,7 @@ void CPlayer::Draw() {
 
     CSprites*   s = game.Sprites();
     CRenderer*  r = game.Renderer();
-    bool log = game.Menu()->EnableLog();
+    bool log = game.DataManager()->IsEnableLog();
     switch (m_direction) {
         case DIR_UP:
             r->DrawSprite(s->Get(m_sprite_up), m_frame, pos_x, pos_y, m_player_width, m_player_height);

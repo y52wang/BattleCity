@@ -16,7 +16,6 @@ class CMenu {
 public:
     CMenu()
         : m_selected_item(1)
-        , m_EnableLog(false)
     { }
 
     void Init();
@@ -27,16 +26,12 @@ public:
 
     int SelectedItem()  { return m_selected_item; }
 
-    bool EnableLog()    { return m_EnableLog; }
-
 private:
     int         m_selected_item;  //Aktualnie zaznaczona opcja
     SpriteData  m_Background;
     SpriteData  m_MenuOptions;
     SpriteData  m_Pointer;
     SpriteData  m_Logo;
-
-    bool        m_EnableLog;    // 数据记录 开启/关闭
 };
 
 #endif // MENU_H_INCLUDED

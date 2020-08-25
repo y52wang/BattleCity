@@ -9,6 +9,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Menu.h"
 #include "Renderer.h"
 
+#include "AI/Data.h"
 #include "AI/StrategyCnn.h"
 
 using namespace std;
@@ -21,7 +22,8 @@ void CMenu::Init() {
 }
 
 void CMenu::DrawMenu() {
-    CRenderer* render = CGame::Get().Renderer();
+	CGame& game = CGame::Get();
+    CRenderer* render = game.Renderer();
 
     //Czarne tło（黑色背景）
     //Wymiary całego okna（全窗口尺寸）
@@ -36,11 +38,13 @@ void CMenu::DrawMenu() {
             //if (m_EnableLog)  // 数据记录 开启 时，绘制填充矩形
             //    render->FillRect(190, 205, m_Pointer.width, m_Pointer.height, render->_red);
             render->DrawSprite(m_Pointer, 0, 190, 205, m_Pointer.width, m_Pointer.height);
-            if (m_EnableLog)  // 数据记录 开启 时，绘制矩形框
+			if (game.DataManager()->IsEnableLog())  // 数据记录 开启 时，绘制矩形框
                 render->DrawRect(190, 205, m_Pointer.width, m_Pointer.height, render->_red);
             break;
         case 2:
             render->DrawSprite(m_Pointer, 0, 190, 173, m_Pointer.width, m_Pointer.height);
+			if (game.DataManager()->IsEnableLog())  // 数据记录 开启 时，绘制矩形框
+				render->DrawRect(190, 173, m_Pointer.width, m_Pointer.height, render->_red);
             break;
         case 3:
             render->DrawSprite(m_Pointer, 0, 190, 140, m_Pointer.width, m_Pointer.height);
@@ -75,13 +79,14 @@ void CMenu::ChooseItem() {
 
 void CMenu::ProcessEvents() {
     SDL_Event event;
-
     while (SDL_PollEvent(&event)) {
+		CGame& game = CGame::Get();
+
         if (event.type == SDL_QUIT) {
-            CGame::Get().EndGame();
+            game.EndGame();
         } else if (event.type == SDL_KEYDOWN) {
             if(event.key.keysym.sym == SDLK_ESCAPE) {
-                CGame::Get().EndGame();
+                game.EndGame();
             } else if (event.key.keysym.sym == SDLK_UP) {
                 int i = SelectedItem() - 1;
                 if(i==0) i = 3;
@@ -94,7 +99,10 @@ void CMenu::ProcessEvents() {
                 ChooseItem();
             } else if (event.key.keysym.sym == SDLK_SPACE) {
                 int i = SelectedItem();
-                if (i==1 || i==2)  m_EnableLog = !m_EnableLog;
+                if (i==1 || i==2) {
+					CDataManager* dm = game.DataManager();
+					dm->EnableLog(!dm->IsEnableLog());
+				}
             } else if (event.key.keysym.sym == SDLK_t) {  // 按下 字母 t 键
                 // 读取数据，进行卷积网络的训练
             }

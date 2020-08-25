@@ -68,7 +68,7 @@ void CBullets::Draw() {
     int ts = game.TailSize();
     CSprites* s = game.Sprites();
     CRenderer* r = game.Renderer();
-    bool log = game.Menu()->EnableLog();
+    bool log = game.DataManager()->IsEnableLog();
     for (auto it=m_bullets.begin(); it!=m_bullets.end(); ++it) {
         int pos_x = it->x * ts;
         int pos_y = it->y * ts;
@@ -285,4 +285,6 @@ void CBullets::DestroyBullet(int id) {
 
 void CBullets::LogData(CDataManager* dm)
 {
+	for (auto it=m_bullets.begin(); it!=m_bullets.end(); ++it) {
+	}
 }
