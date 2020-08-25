@@ -11,13 +11,20 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Renderer.h"
 using namespace std;
 
-SDL_Color CRenderer::_red       = { 255, 0, 0, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_green     = { 0, 255, 0, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_blue      = { 0, 0, 255, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_white     = { 255, 255, 255, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_yellow    = { 255, 255, 0, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_cyan      = { 0, 255, 255, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_magenta   = { 255, 0, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_red_half      = { 127, 0, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_red           = { 255, 0, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_green_half    = { 0, 127, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_green         = { 0, 255, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_blue_half     = { 0, 0, 127, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_blue          = { 0, 0, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_white_half    = { 127, 127, 127, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_white         = { 255, 255, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_yellow_half   = { 127, 127, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_yellow        = { 255, 255, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_cyan_half     = { 0, 127, 127, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_cyan          = { 0, 255, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_magenta_half  = { 127, 0, 127, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_magenta       = { 255, 0, 255, SDL_ALPHA_OPAQUE };
 
 CRenderer::~CRenderer() {
     map<string, Atlas>::iterator iter;
@@ -132,6 +139,26 @@ void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
     //if(color != COLOR_NONE) {
     //    glColor3d(1,1,1);
     //}
+}
+
+void CRenderer::DrawPoint(int scr_x, int scr_y, SDL_Color clr)
+{
+    CGame&          g       = CGame::Get();
+    CWindow*        w       = g.Window();
+    SDL_Renderer*   render  = w->GetRenderer();
+
+    SDL_Color clrbk;
+    SDL_GetRenderDrawColor(render, &clrbk.r, &clrbk.g, &clrbk.b, &clrbk.a);
+    SDL_SetRenderDrawColor(render, clr.r, clr.g, clr.b, clr.a);
+
+    int offX = g.GameOffsetX();
+    int offY = g.GameOffsetY();
+    scr_x = offX + scr_x;
+    scr_y = w->WindowHeight() - scr_y - offY;
+
+    SDL_RenderDrawPoint(render, scr_x, scr_y);
+
+    SDL_SetRenderDrawColor(render, clrbk.r, clrbk.g, clrbk.b, clrbk.a);
 }
 
 void CRenderer::DrawRect(int scr_x, int scr_y, int width, int height, SDL_Color clr)
