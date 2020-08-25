@@ -24,10 +24,10 @@ public:
     void Init();
     void Set(int width, int height, int bits, bool fullscreen)
     {
-        m_scr_width = width;
-        m_scr_height = height;
-        m_scr_bits = bits;
-        m_scr_fullscreen = fullscreen;
+        m_scr_width         = width;
+        m_scr_height        = height;
+        m_scr_bits          = bits;
+        m_scr_fullscreen    = fullscreen;
 
         m_title = "Battle City PC 1.1";
     }

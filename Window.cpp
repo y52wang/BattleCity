@@ -19,7 +19,6 @@ void CWindow::Init() {
     else
         cout << "# Nie udalo sie zaladowac biblioteki SDL!\n";
 
-
     if(m_scr_fullscreen) {
         int res = SDL_CreateWindowAndRenderer(
             m_scr_width,

@@ -13,14 +13,15 @@ using namespace std;
 struct SpriteData {
     SpriteData() { }
     SpriteData(int frame_count, double frame_duration,
-        double left, double bottom, double width, double height,
+        int left, int bottom, int width, int height,
         bool loop, string atlas)
         : frame_count(frame_count), frame_duration(frame_duration)
         , left(left), bottom(bottom), width(width), height(height)
             , loop(loop), atlas(atlas) { }
 
     int     frame_count;
-    double  frame_duration, left, bottom, width, height;
+    double  frame_duration;
+    int     left, bottom, width, height;
     bool    loop;
     string  atlas;
 };

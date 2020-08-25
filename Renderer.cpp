@@ -77,17 +77,22 @@ void CRenderer::StopRendering() {
     SDL_Delay(1000/60);
 }
 
+// scr_x:       screen x
+// scr_y:       screen y
+// CRenderer::DrawSprite 所认为的坐标系，x 向右，y 向上，原点在左下角
+// SDL2 所认为的坐标系，x 向右，y 向下，原点在左上角
 void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
     int scr_x, int scr_y, int width, int height,
     COLOR color)
 {
-    CWindow* w = CGame::Get().Window();
-    SDL_Renderer* r = w->GetRenderer();
+    CGame&          g = CGame::Get();
+    CWindow*        w = g.Window();
+    SDL_Renderer*   r = w->GetRenderer();
 
-    static int offX = CGame::Get().GameOffsetX();
-    static int offY = CGame::Get().GameOffsetY();
-    scr_x += offX;
-    scr_y += offY;
+    static int offX = g.GameOffsetX();
+    static int offY = g.GameOffsetY();
+    scr_x = offX + scr_x;
+    scr_y = w->WindowHeight() - (scr_y + height) - offY;
 
     //if(color != COLOR_NONE) {
     //    double r,g,b;
@@ -108,7 +113,7 @@ void CRenderer::DrawSprite(SpriteData& sprite_data, int frame,
     int top      = bottom - sprite_data.height;
 
     SDL_Rect src = { left, top, sprite_data.width, sprite_data.height };
-    SDL_Rect dst = { scr_x, w->WindowHeight()-scr_y, width, height };
+    SDL_Rect dst = { scr_x, scr_y, width, height };
     SDL_RenderCopy(r, atlas.m_tex, &src, &dst);
 
     //if(color != COLOR_NONE) {

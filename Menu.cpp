@@ -11,18 +11,25 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 void CMenu::Init() {
-    m_Background = CGame::Get().Sprites()->Get("lvl_background");
-    m_Logo = CGame::Get().Sprites()->Get("menu_logo");
-    m_MenuOptions = CGame::Get().Sprites()->Get("menu_options");
-    m_Pointer = CGame::Get().Sprites()->Get("player_one_right_0");
+    m_Background    = CGame::Get().Sprites()->Get("lvl_background");
+    m_Logo          = CGame::Get().Sprites()->Get("menu_logo");
+    m_MenuOptions   = CGame::Get().Sprites()->Get("menu_options");
+    m_Pointer       = CGame::Get().Sprites()->Get("player_one_right_0");
 }
 
 void CMenu::DrawMenu() {
     SDL_Renderer* r = CGame::Get().Window()->GetRenderer();
-    //Czarne tło
-    CGame::Get().Renderer()->DrawSprite(m_Background, 0, -32, -16, 640, 480);  //Wymiary całego okna
-    CGame::Get().Renderer()->DrawSprite(m_Logo, 0, 110, 260, m_Logo.width, m_Logo.height);
-    CGame::Get().Renderer()->DrawSprite(m_MenuOptions, 0, 232, 150, m_MenuOptions.width, m_MenuOptions.height);
+
+    //Czarne tło（黑色背景）
+    //Wymiary całego okna（全窗口尺寸）
+    CGame::Get().Renderer()->DrawSprite(m_Background,   0,
+        -32,    -16,    640,                    480);
+
+    CGame::Get().Renderer()->DrawSprite(m_Logo,         0,
+        110,    260,    m_Logo.width,           m_Logo.height);
+
+    CGame::Get().Renderer()->DrawSprite(m_MenuOptions,  0,
+        232,    150,    m_MenuOptions.width,    m_MenuOptions.height);
 
     switch(m_selected_item) {
         case 1:
