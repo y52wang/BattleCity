@@ -64,20 +64,30 @@ void CBullets::CreateBullet(double x, double y, DIRECTION dir, OWNER owner, int 
 }
 
 void CBullets::Draw() {
-  for (auto it=m_bullets.begin(); it!=m_bullets.end(); ++it) {
-    double pos_x = it->x * CGame::Get().TailSize();
-    double pos_y = it->y * CGame::Get().TailSize();
+    CGame& game = CGame::Get();
+    int ts = game.TailSize();
+    CSprites* s = game.Sprites();
+    CRenderer* r = game.Renderer();
+    bool log = game.Menu()->EnableLog();
+    for (auto it=m_bullets.begin(); it!=m_bullets.end(); ++it) {
+        int pos_x = it->x * ts;
+        int pos_y = it->y * ts;
 
-    SpriteData& temp = CGame::Get().Sprites()->Get("bullet");
-    if (it->xv<0)  // W lewo（在左边）
-      CGame::Get().Renderer()->DrawSprite(temp, 3, pos_x, pos_y, temp.width, temp.height);
-    else if (it->xv>0)  // W prawo（在右面）
-      CGame::Get().Renderer()->DrawSprite(temp, 1, pos_x, pos_y, temp.width, temp.height);
-    else if(it->yv<0)  // W dol（在下面）
-			CGame::Get().Renderer()->DrawSprite(temp, 2, pos_x, pos_y, temp.width, temp.height);
-    else if (it->yv>0)  // W gore（在上面）
-			CGame::Get().Renderer()->DrawSprite(temp, 0, pos_x, pos_y, temp.width, temp.height);
-  }
+        SpriteData& temp = s->Get("bullet");
+        if (it->xv<0) { // W lewo（在左边）
+            r->DrawSprite(temp, 3, pos_x, pos_y, temp.width, temp.height);
+            if (log)  r->DrawRect(pos_x, pos_y, temp.width, temp.height, r->_cyan);
+        } else if (it->xv>0) { // W prawo（在右面）
+            r->DrawSprite(temp, 1, pos_x, pos_y, temp.width, temp.height);
+            if (log)  r->DrawRect(pos_x, pos_y, temp.width, temp.height, r->_cyan);
+        } else if (it->yv<0) { // W dol（在下面）
+			r->DrawSprite(temp, 2, pos_x, pos_y, temp.width, temp.height);
+            if (log)  r->DrawRect(pos_x, pos_y, temp.width, temp.height, r->_cyan);
+        } else if (it->yv>0) { // W gore（在上面）
+            r->DrawSprite(temp, 0, pos_x, pos_y, temp.width, temp.height);
+            if (log)  r->DrawRect(pos_x, pos_y, temp.width, temp.height, r->_cyan);
+        }
+    }
 }
 
 void CBullets::Update(double dt) {
