@@ -5,10 +5,11 @@
 #include "Level.h"
 #include "Game.h"
 
+// 第 21 关用于测试
 CLevel::CLevel()
 	: m_level_width(26)
 	, m_level_height(26)
-	, m_all_levels(20)
+	, m_all_levels(21)
 
     , m_SD_Brick(NULL)
     , m_SD_White(NULL)

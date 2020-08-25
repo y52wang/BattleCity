@@ -44,7 +44,7 @@ void CGUI::DrawGameplayStats() {
   }
 
   CGame::Get().Renderer()->DrawSprite(Flag, 0, x*ts, 3*ts, Flag.width, Flag.height);
-  RenderText(ToString(CGame::Get().GameTimer()->ShowedLevel()), (x+1)*ts, 2*ts, COLOR_BLACK);
+  RenderText(ToString(CGame::Get().GameTimer()->SelectedLevel()), (x+1)*ts, 2*ts, COLOR_BLACK);
 
   if (CGame::Get().GameLost() ) {
     RenderText("GAME", 11*ts, 14*ts, COLOR_RED);

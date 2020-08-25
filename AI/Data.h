@@ -34,6 +34,8 @@ class DataManager {
 public:
 	DataManager();
 
+
+
 	IODataVec       m_IODataVec;
 };
 

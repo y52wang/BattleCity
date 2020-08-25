@@ -41,7 +41,7 @@ void CGameTimer::SetLevelProtect(bool protect) {
 }
 
 void CGameTimer::DrawStageSelect() {
-  CGame::Get().GUI()->RenderText("STAGE " + ToString(m_showed_level), 230, 230, COLOR_BLACK);
+  CGame::Get().GUI()->RenderText("STAGE " + ToString(m_selected_level), 230, 230, COLOR_BLACK);
 }
 
 void CGameTimer::ProcessEvents() {
@@ -58,11 +58,11 @@ void CGameTimer::ProcessEvents() {
           int i = m_selected_level + 1;
           int al = CGame::Get().Level()->AllLevels();
           if(i>al) i = al;
-          m_selected_level = m_showed_level = i;
+          m_selected_level = i;
         } else if(event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT) {
           int i = m_selected_level - 1;
           if(i < 1) i = 1;
-          m_selected_level = m_showed_level = i;
+          m_selected_level = i;
         } else if(event.key.keysym.sym == SDLK_RETURN) {
           ChooseLevel();
         }
@@ -120,7 +120,6 @@ void CGameTimer::Update(double dt) {
         //Zmiana poziomu [!!!]
         CGame::Get().SetGameState(GS_STAGESELECT);
         ++m_selected_level;
-        ++m_showed_level;
         m_current_nextmap_time = 0.0;
       }
     }

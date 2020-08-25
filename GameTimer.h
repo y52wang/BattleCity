@@ -8,23 +8,21 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 
 class CGameTimer {
   public:
-    CGameTimer() : m_selected_level(1), m_showed_level(1), m_enemy_spawn_animation(false) { Init(); }
+    CGameTimer() : m_selected_level(21), m_enemy_spawn_animation(false) { Init(); }
     void Init();
     void Update(double dt);
     void SetLevelProtect(bool protect);
-    void SetSelectedLevel(int num) { m_selected_level = m_showed_level = 1; }
+    void SetSelectedLevel(int num) { m_selected_level = num; }
     void ChooseLevel();
 
     void DrawStageSelect();  //Wybór mapy / przejœcie do nastêpnej（选择地图/转到下一个）
     void ProcessEvents();  //Jeœli wybór mapy -> obs³u¿ wejœcie
 
     int SelectedLevel() { return m_selected_level; }
-    int ShowedLevel() { return m_showed_level; }
   
   private:
     int     m_enemies_at_once;
     int     m_selected_level;
-    int     m_showed_level;
 
     bool    m_levelprotect;
     bool    m_enemy_spawn_animation;
