@@ -47,6 +47,9 @@ public:
     static SDL_Color    _green;
     static SDL_Color    _blue;
     static SDL_Color    _white;
+    static SDL_Color    _yellow;
+    static SDL_Color    _cyan;
+    static SDL_Color    _magenta;
 
 private:
     map<string, Atlas>      m_atlasses;

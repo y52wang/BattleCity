@@ -11,10 +11,13 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Renderer.h"
 using namespace std;
 
-SDL_Color CRenderer::_red   = { 255, 0, 0, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_green = { 0, 255, 0, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_blue  = { 0, 0, 255, SDL_ALPHA_OPAQUE };
-SDL_Color CRenderer::_white = { 255, 255, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_red       = { 255, 0, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_green     = { 0, 255, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_blue      = { 0, 0, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_white     = { 255, 255, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_yellow    = { 255, 255, 0, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_cyan      = { 0, 255, 255, SDL_ALPHA_OPAQUE };
+SDL_Color CRenderer::_magenta   = { 255, 0, 255, SDL_ALPHA_OPAQUE };
 
 CRenderer::~CRenderer() {
     map<string, Atlas>::iterator iter;
