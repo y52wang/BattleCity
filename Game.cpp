@@ -58,7 +58,7 @@ void CGame::Init() {
 	cout << "\n\n";
 
 
-	double time_step    = 1.0/60;  //Częstotliwość odswieżania fizyki/logiki
+	double time_step    = 1.0/60;  //Częstotliwość odswieżania fizyki/logiki 
 	double accumulator  = 0.0;
 	double max_time     = 1.0;
 
@@ -68,7 +68,8 @@ void CGame::Init() {
 	while(!m_end_game) {
 		// WangLiang:
 		// 这边记录整个输入环境作为 Input
-		if (!isEnd()) {
+		if (m_game_state==GS_GAMEPLAY && !isEnd())
+		{
 			DataManager()->BeginLog();
 			Player()->LogData(DataManager());
 			Enemies()->LogData(DataManager());
@@ -94,21 +95,26 @@ void CGame::Init() {
 				break;
 		}
 
-		// 结束整个输入环境的记录
-		if (!isEnd()) {
-			DataManager()->EndLog();
-		}
-
 		//Frame Processing
-		ticks_n = SDL_GetTicks();
-		delta_time = double((ticks_n - ticks_o))/1000.0;
-		ticks_o = ticks_n;
-		if(delta_time < 0) delta_time = 0;
+		ticks_n		= SDL_GetTicks();
+		delta_time	= double((ticks_n-ticks_o))/1000.0;
+		ticks_o		= ticks_n;
+		if (delta_time<0)  delta_time = 0;
 		
 		accumulator += delta_time;
-		if(accumulator < 0)                 accumulator = 0;
-		else if(accumulator > max_time)     accumulator = max_time;
+		if (accumulator<0)				accumulator = 0;
+		else if (accumulator>max_time)	accumulator = max_time;
 
+		// 结束整个输入环境的记录
+		if (m_game_state==GS_GAMEPLAY && !isEnd()) {
+			DataManager()->EndLog(accumulator);
+
+			// 如果开启了实时策略运用，则此处使用策略
+			if (Player()->Alive() && !GameLost())
+			{
+				// 使用策略控制 Player
+			}
+		}
 
 		//FPS Counter
 		fps_time += delta_time;
@@ -132,8 +138,10 @@ void CGame::Init() {
 			Audio()->StopChunk(SOUND_ONMOVE);
 		}
 
-		while(accumulator > time_step) {
-			if(m_game_state == GS_GAMEPLAY) {
+		while (accumulator>time_step)
+		{
+			if (m_game_state==GS_GAMEPLAY)
+			{
 				GameTimer()->Update(time_step);
 				if (Player()->Alive())
 					Player()->Update(time_step);
@@ -178,6 +186,8 @@ void CGame::Init() {
 					Items()->Draw();  //Rysuje przedmiot (do zdobycia, np. życie, gwiazdkę)
 		
 				GUI()->DrawGameplayStats();  //Rysuje statystyki w trybie gry
+
+				DataManager()->Draw();
 				break;
 		
 			case GS_EDITOR:
@@ -224,22 +234,33 @@ void CGame::ProcessEvents()
         }
 		else if(event.type == SDL_KEYDOWN)
 		{
+			CDataManager* dm = DataManager();
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 SetGameState(GS_MENU);
             } else if(event.key.keysym.sym == SDLK_UP && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_UP);
                 Player()->Drive();
+
+				dm->LogPlayerMove(DIR_UP);
             } else if(event.key.keysym.sym == SDLK_LEFT && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_LEFT);
                 Player()->Drive();
+
+				dm->LogPlayerMove(DIR_LEFT);
             } else if(event.key.keysym.sym == SDLK_RIGHT && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_RIGHT);
                 Player()->Drive();
+
+				dm->LogPlayerMove(DIR_RIGHT);
             } else if(event.key.keysym.sym == SDLK_DOWN && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_DOWN);
                 Player()->Drive();
+
+				dm->LogPlayerMove(DIR_DOWN);
             } else if(event.key.keysym.sym == SDLK_SPACE && Player()->Alive() && !GameLost()) {
                 Player()->Shoot();
+
+				dm->LogPlayerShoot(true);
             } else if(event.key.keysym.sym == SDLK_w && PlayerTwo() != NULL && PlayerTwo()->Alive() && !GameLost()) {
                 PlayerTwo()->SetDirection(DIR_UP);
                 PlayerTwo()->Drive();
@@ -257,7 +278,10 @@ void CGame::ProcessEvents()
             } else if(event.key.keysym.sym == SDLK_F5) {
                 if(m_game_state == GS_EDITOR)
                     Level()->SaveLevel();
-            }
+			} else if(event.key.keysym.sym == SDLK_g) {
+				CLevel* level = CGame::Get().Level();
+				level->m_drawGrid = !level->m_drawGrid;
+			}
         }
 		else if(event.type == SDL_KEYUP)
 		{

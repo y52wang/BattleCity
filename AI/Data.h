@@ -54,7 +54,9 @@ public:
 	CDataManager();
 
 	void BeginLog();
-	void EndLog();
+	// deltaTime 间隔时间
+	// 累积间隔时间超过一定限度才进行记录
+	void EndLog(double deltaTime);
 
 	// Log Input Data
 	void LogPlayer(int pos_x, int pos_y, DIRECTION dir);
@@ -65,6 +67,8 @@ public:
 	// Log Output Data
 	void LogPlayerMove(DIRECTION dir);
 	void LogPlayerShoot(bool shoot);
+
+	void Draw();
 
     bool IsEnableLog()    { return m_EnableLog; }
 	void EnableLog(bool enable)	{ m_EnableLog = enable; }
@@ -79,6 +83,8 @@ protected:
 
 	InputData		m_InputData;
 	OutputData		m_OutputData;
+
+	double			m_accTime;
 };
 
 #endif

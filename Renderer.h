@@ -38,6 +38,7 @@ public:
         COLOR color = COLOR_NONE);
 
     void DrawPoint(int scr_x, int scr_y, SDL_Color clr);
+	void DrawLine(int scr_x0, int scr_y0, int scr_x1, int scr_y1, SDL_Color clr);
     void DrawRect(int scr_x, int scr_y, int width, int height, SDL_Color clr);
     void FillRect(int scr_x, int scr_y, int width, int height, SDL_Color clr);
 

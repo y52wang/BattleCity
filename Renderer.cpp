@@ -162,6 +162,28 @@ void CRenderer::DrawPoint(int scr_x, int scr_y, SDL_Color clr)
     SDL_SetRenderDrawColor(render, clrbk.r, clrbk.g, clrbk.b, clrbk.a);
 }
 
+void CRenderer::DrawLine(int scr_x0, int scr_y0, int scr_x1, int scr_y1, SDL_Color clr)
+{
+    CGame&          g       = CGame::Get();
+    CWindow*        w       = g.Window();
+    SDL_Renderer*   render  = w->GetRenderer();
+
+    SDL_Color clrbk;
+    SDL_GetRenderDrawColor(render, &clrbk.r, &clrbk.g, &clrbk.b, &clrbk.a);
+    SDL_SetRenderDrawColor(render, clr.r, clr.g, clr.b, clr.a);
+
+    int offX = g.GameOffsetX();
+    int offY = g.GameOffsetY();
+    scr_x0 = offX + scr_x0;
+    scr_y0 = w->WindowHeight() - scr_y0 - offY;
+	scr_x1 = offX + scr_x1;
+	scr_y1 = w->WindowHeight() - scr_y1 - offY;
+
+    SDL_RenderDrawLine(render, scr_x0, scr_y0, scr_x1, scr_y1);
+
+    SDL_SetRenderDrawColor(render, clrbk.r, clrbk.g, clrbk.b, clrbk.a);
+}
+
 void CRenderer::DrawRect(int scr_x, int scr_y, int width, int height, SDL_Color clr)
 {
     CGame&          g       = CGame::Get();

@@ -1,4 +1,6 @@
 #include "Data.h"
+#include "Game.h"
+#include <assert.h>
 #include <fstream>
 
 InputData::InputData()
@@ -40,20 +42,31 @@ void OutputData::Reset()
 // ------------------------------------------------------------------
 CDataManager::CDataManager()
 	: m_EnableLog(false)
+	, m_accTime(0.0)
 {
 	m_IODataVec.reserve(1024*8);  // 预留空间大小
-}
 
-void CDataManager::BeginLog() {
 	m_InputData.Reset();
 	m_OutputData.Reset();
 }
 
-void CDataManager::EndLog() {
+void CDataManager::BeginLog() {
 	if (!m_EnableLog)  return;
 
-	if (!m_InputData.IsEmpty())
+	m_InputData.Reset();
+	m_OutputData.Reset();
+}
+
+void CDataManager::EndLog(double deltaTime) {
+	if (!m_EnableLog)  return;
+
+	m_accTime += deltaTime;
+	if (m_accTime>0.5 && !m_InputData.IsEmpty())
+	{
+		//printf("accTime: %.3lf\n", m_accTime);
+		m_accTime = 0.0;
 		m_IODataVec.push_back(std::make_pair(m_InputData, m_OutputData));
+	}
 }
 
 void CDataManager::LogPlayer(int pos_x, int pos_y, DIRECTION dir)
@@ -90,6 +103,46 @@ void CDataManager::LogPlayerMove(DIRECTION dir)
 void CDataManager::LogPlayerShoot(bool shoot)
 {
 	m_OutputData.shoot = shoot;
+}
+
+void CDataManager::Draw()
+{
+	CLevel* level = CGame::Get().Level();
+	CRenderer* render = CGame::Get().Renderer();
+
+	int lw = level->LevelWidth();
+	int lh = level->LevelHeight();
+
+	int idx = 0;
+	// 绘制最后 4 组数据 IOData
+	for (auto it=m_IODataVec.rbegin(); it!=m_IODataVec.rend(); ++it)
+	{
+		int st_x = 500;
+		int st_y = 10 + lw*4*idx + 10*idx;
+		render->DrawRect(st_x, st_y, lw*4, lh*4, render->_cyan);
+
+		// 绘制 InputData 和 OutputData
+		{
+			const InputData& id = it->first;
+			const OutputData& od = it->second;
+
+			render->FillRect(st_x+id.player_pos.x*4,
+				st_y+id.player_pos.y*4,
+				4*2, 4*2, render->_green);
+
+			assert(id.enemies_pos.size() == id.enemies_dir.size());
+			for (size_t i=0; i<id.enemies_pos.size(); ++i)
+			{
+				const Pos& ep = id.enemies_pos[i];
+
+				render->FillRect(st_x+ep.x*4,
+					st_y+ep.y*4,
+					4*2, 4*2, render->_red);
+			}
+		}
+
+		if (++idx>=4)  break;
+	}
 }
 
 // 文件格式：

@@ -11,19 +11,22 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Sprites.h"
 using namespace std;
 
-void CPlayer::Init(int x, int y, int id) {
-    m_x = x; m_y = y; m_id = id;
-    m_speed = 5.5;
-    m_frame = 0;
-    m_frame_duration = 0.0;
-    m_player_width = 32;
-    m_player_height = 32;
-    m_can_shoot = true;
-    m_bullets_in_game = 0;
+void CPlayer::Init(int x, int y, int id)
+{
+	m_x = x; m_y = y; m_id = id;
+	m_speed				= 5.5;
+	m_frame				= 0;
+	m_inv_frame			= 0;
+	m_frame_duration	= 0.0;
+	m_current_inv_d		= 0.0;
+	m_player_width		= 32;
+	m_player_height		= 32;
+	m_can_shoot			= true;
+	m_bullets_in_game	= 0;
 
-    m_start_x = x;  m_start_y = y;
+	m_start_x = x;  m_start_y = y;
 
-    SetPlayerLevel(0);
+	SetPlayerLevel(0);
 }
 
 void CPlayer::SetPlayerLevel(int level) {
@@ -253,29 +256,30 @@ void CPlayer::Die() {
 }
 
 void CPlayer::SetInvincibility(double time) {
-    m_invincibility = true;
-    m_invincibility_remain_time = time;
+	m_invincibility = true;
+	m_invincibility_remain_time = time;
 }
 
-void CPlayer::StripInvincibility() {
-    m_invincibility = false;
-    m_invincibility_remain_time = 0.0;
-}
+//void CPlayer::StripInvincibility() {
+//	m_invincibility = false;
+//	m_invincibility_remain_time = 0.0;
+//}
 
 void CPlayer::Update(double dt)
 {
-    if (m_state==PLAYER_DRIVE && m_stopping) {
-        Stop(m_stopping_dir);
-    }
+	if (m_state==PLAYER_DRIVE && m_stopping) {
+		Stop(m_stopping_dir);
+	}
 
-    m_x = m_x + m_vx * dt * m_speed_ratio;
-    m_y = m_y + m_vy * dt * m_speed_ratio;
+	m_x = m_x + m_vx * dt * m_speed_ratio;
+	m_y = m_y + m_vy * dt * m_speed_ratio;
 
-    if (m_invincibility)
+	if (m_invincibility)
 	{
-        m_invincibility_remain_time -= dt;
-        if (m_invincibility_remain_time <= 0)    m_invincibility = false;
-    }
+		m_invincibility_remain_time -= dt;
+		// WangLiang: 下面注释掉，则一直无敌
+		if (m_invincibility_remain_time <= 0)    m_invincibility = false;
+	}
 
     //Wyjechanie poza mapę（在地图之外）
     if(m_x < 0.0)  m_x = 0.0;
@@ -543,4 +547,5 @@ void CPlayer::Update(double dt)
 
 void CPlayer::LogData(CDataManager* dm)
 {
+	dm->LogPlayer(round_double(m_x), round_double(m_y), m_direction);
 }
