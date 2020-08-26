@@ -116,8 +116,8 @@ void CDataManager::Draw()
 	// 绘制最后 4 组数据 IOData
 	for (auto it=m_IODataVec.rbegin(); it!=m_IODataVec.rend(); ++it)
 	{
-		int st_x = 500;
-		int st_y = 10 + lw*4*idx + 10*idx;
+		int st_x = 500;  // 起始位置 x
+		int st_y = 10 + lw*4*idx + 10*idx;  // 起始位置 y
 		render->DrawRect(st_x, st_y, lw*4, lh*4, render->_cyan);
 
 		// 绘制 InputData 和 OutputData
@@ -125,10 +125,12 @@ void CDataManager::Draw()
 			const InputData& id = it->first;
 			const OutputData& od = it->second;
 
+			// 绘制 我方
 			render->FillRect(st_x+id.player_pos.x*4,
 				st_y+id.player_pos.y*4,
 				4*2, 4*2, render->_green);
 
+			// 绘制 敌方
 			assert(id.enemies_pos.size() == id.enemies_dir.size());
 			for (size_t i=0; i<id.enemies_pos.size(); ++i)
 			{
@@ -137,6 +139,17 @@ void CDataManager::Draw()
 				render->FillRect(st_x+ep.x*4,
 					st_y+ep.y*4,
 					4*2, 4*2, render->_red);
+			}
+
+			// 绘制 敌方子弹
+			assert(id.enemies_bullet_pos.size() == id.enemies_bullet_dir.size());
+			for (size_t i=0; i<id.enemies_bullet_pos.size(); ++i)
+			{
+				const Pos& ebp = id.enemies_bullet_pos[i];
+
+				render->FillRect(st_x+ebp.x*4,
+					st_y+ebp.y*4,
+					4*2, 4, render->_magenta);
 			}
 		}
 
