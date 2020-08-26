@@ -1,6 +1,4 @@
 #include "StrategyCnn.h"
-#include "Data.h"
-#include <direct.h>
 
 using namespace MiniDNN;
 

@@ -84,14 +84,58 @@ void CDataManager::LogEnemy(int pos_x, int pos_y, DIRECTION dir)
 
 void CDataManager::LogPlayerBullet(int pos_x, int pos_y, DIRECTION dir)
 {
-	m_InputData.player_bullet_pos.x = pos_x;
-	m_InputData.player_bullet_pos.y = pos_y;
+	int pos_x_ = pos_x;
+	int pos_y_ = pos_y;
+
+	switch (dir)
+	{
+	case DIR_UP:
+		if (pos_x_>0)  pos_x_ -= 1;
+		if (pos_y_>0)  pos_y_ -= 1;
+		break;
+	case DIR_DOWN:
+		if (pos_x_>0)  pos_x_ -= 1;
+		break;
+	case DIR_LEFT:
+		if (pos_x_>0)  pos_x_ -= 1;
+		if (pos_y_>0)  pos_y_ -= 1;
+		break;
+	case DIR_RIGHT:
+		if (pos_y_>0)  pos_y_ -= 1;
+		break;
+	}
+	assert(pos_x_>=0);
+	assert(pos_y_>=0);
+	m_InputData.player_bullet_pos.x = pos_x_;
+	m_InputData.player_bullet_pos.y = pos_y_;
 	m_InputData.player_dir = dir;
 }
 
 void CDataManager::LogEnemyBullet(int pos_x, int pos_y, DIRECTION dir)
 {
-	m_InputData.enemies_bullet_pos.push_back(Pos(pos_x, pos_y));
+	int pos_x_ = pos_x;
+	int pos_y_ = pos_y;
+
+	switch (dir)
+	{
+	case DIR_UP:
+		if (pos_x_>0)  pos_x_ -= 1;
+		if (pos_y_>0)  pos_y_ -= 1;
+		break;
+	case DIR_DOWN:
+		if (pos_x_>0)  pos_x_ -= 1;
+		break;
+	case DIR_LEFT:
+		if (pos_x_>0)  pos_x_ -= 1;
+		if (pos_y_>0)  pos_y_ -= 1;
+		break;
+	case DIR_RIGHT:
+		if (pos_y_>0)  pos_y_ -= 1;
+		break;
+	}
+	assert(pos_x_>=0);
+	assert(pos_y_>=0);
+	m_InputData.enemies_bullet_pos.push_back(Pos(pos_x_, pos_y_));
 	m_InputData.enemies_bullet_dir.push_back(dir);
 }
 
@@ -131,6 +175,8 @@ void CDataManager::Draw()
 				st_y+id.player_pos.y*4,
 				4*2, 4*2, render->_green);
 
+			// 绘制 我方子弹
+
 			// 绘制 敌方
 			assert(id.enemies_pos.size() == id.enemies_dir.size());
 			for (size_t i=0; i<id.enemies_pos.size(); ++i)
@@ -147,10 +193,24 @@ void CDataManager::Draw()
 			for (size_t i=0; i<id.enemies_bullet_pos.size(); ++i)
 			{
 				const Pos& ebp = id.enemies_bullet_pos[i];
-
-				render->FillRect(st_x+ebp.x*4-2,
-					st_y+ebp.y*4-2,
-					4, 4, render->_magenta);
+				const DIRECTION dir = id.enemies_bullet_dir[i];
+			
+				switch (dir)
+				{
+				case DIR_UP:
+				case DIR_DOWN:
+					render->FillRect(st_x+ebp.x*4,
+						st_y+ebp.y*4,
+						8, 4, render->_magenta);
+					break;
+			
+				case DIR_LEFT:
+				case DIR_RIGHT:
+					render->FillRect(st_x+ebp.x*4,
+						st_y+ebp.y*4,
+						4, 8, render->_magenta);
+					break;
+				}
 			}
 		}
 
