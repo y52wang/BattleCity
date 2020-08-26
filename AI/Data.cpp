@@ -109,7 +109,7 @@ void CDataManager::LogPlayerBullet(int pos_x, int pos_y, DIRECTION dir)
 	assert(pos_y_>=0);
 	m_InputData.player_bullet_pos.x = pos_x_;
 	m_InputData.player_bullet_pos.y = pos_y_;
-	m_InputData.player_dir = dir;
+	m_InputData.player_bullet_dir = dir;
 }
 
 void CDataManager::LogEnemyBullet(int pos_x, int pos_y, DIRECTION dir)
@@ -177,6 +177,22 @@ void CDataManager::Draw()
 				4*2, 4*2, render->_green);
 
 			// 绘制 我方子弹
+			switch (id.player_bullet_dir)
+			{
+			case DIR_UP:
+			case DIR_DOWN:
+				render->FillRect(st_x+id.player_bullet_pos.x*4,
+					st_y+id.player_bullet_pos.y*4,
+					8, 4, render->_blue);
+				break;
+		
+			case DIR_LEFT:
+			case DIR_RIGHT:
+				render->FillRect(st_x+id.player_bullet_pos.x*4,
+					st_y+id.player_bullet_pos.y*4,
+					4, 8, render->_blue);
+				break;
+			}
 
 			// 绘制 敌方
 			assert(id.enemies_pos.size() == id.enemies_dir.size());
