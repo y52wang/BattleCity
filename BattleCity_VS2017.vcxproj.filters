@@ -19,6 +19,33 @@
     <Filter Include="源文件\AI">
       <UniqueIdentifier>{f71ee679-886a-477c-8596-4cec950f33e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\MiniDNN">
+      <UniqueIdentifier>{15676d6e-904e-4380-bff8-44d7c71335d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\Activation">
+      <UniqueIdentifier>{e831e67e-7122-46b1-90f9-61dc12ee6431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\Callback">
+      <UniqueIdentifier>{6c5519a9-7ae4-435a-b1cd-f9825539fe72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\external">
+      <UniqueIdentifier>{b4493e6b-6236-4011-8cbc-a4bda19bde4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\external\sparsepp">
+      <UniqueIdentifier>{3907b5b3-85e4-4557-ba5c-526ccfdd16d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\Layer">
+      <UniqueIdentifier>{9ef8a26b-6ed3-4f3d-91bc-4595763c686f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\Optimizer">
+      <UniqueIdentifier>{7b742a15-dc13-4ef1-8c55-95e535fae793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\Output">
+      <UniqueIdentifier>{e52ca8a9-6b13-4ee2-b108-26ebca853a0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\MiniDNN\Utils">
+      <UniqueIdentifier>{a9139474-5f50-46ae-80c6-d140255cd871}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -77,6 +104,135 @@
     </ClInclude>
     <ClInclude Include="AI\StrategyCnn.h">
       <Filter>头文件\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Callback.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Config.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Layer.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\MiniDNN.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Network.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Optimizer.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Output.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\RNG.h">
+      <Filter>头文件\MiniDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Activation\Identity.h">
+      <Filter>头文件\MiniDNN\Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Activation\Mish.h">
+      <Filter>头文件\MiniDNN\Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Activation\ReLU.h">
+      <Filter>头文件\MiniDNN\Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Activation\Sigmoid.h">
+      <Filter>头文件\MiniDNN\Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Activation\Softmax.h">
+      <Filter>头文件\MiniDNN\Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Activation\Tanh.h">
+      <Filter>头文件\MiniDNN\Activation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Callback\VerboseCallback.h">
+      <Filter>头文件\MiniDNN\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_config.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_dlalloc.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_memory.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_smartptr.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_stdint.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_timer.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_traits.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\external\sparsepp\spp_utils.h">
+      <Filter>头文件\MiniDNN\external\sparsepp</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\Assert.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\cnpy.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\Convolution.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\Enum.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\Factory.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\FindMax.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\IO.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\MiniDNNStream.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Utils\Random.h">
+      <Filter>头文件\MiniDNN\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Output\BinaryClassEntropy.h">
+      <Filter>头文件\MiniDNN\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Output\MultiClassEntropy.h">
+      <Filter>头文件\MiniDNN\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Output\RegressionMSE.h">
+      <Filter>头文件\MiniDNN\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Optimizer\AdaGrad.h">
+      <Filter>头文件\MiniDNN\Optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Optimizer\Adam.h">
+      <Filter>头文件\MiniDNN\Optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Optimizer\RMSProp.h">
+      <Filter>头文件\MiniDNN\Optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Optimizer\SGD.h">
+      <Filter>头文件\MiniDNN\Optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Layer\Convolutional.h">
+      <Filter>头文件\MiniDNN\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Layer\FullyConnected.h">
+      <Filter>头文件\MiniDNN\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MiniDNN\Layer\MaxPooling.h">
+      <Filter>头文件\MiniDNN\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
