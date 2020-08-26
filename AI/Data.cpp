@@ -39,6 +39,7 @@ void OutputData::Reset()
 // ------------------------------------------------------------------
 CDataManager::CDataManager()
 	: m_EnableLog(false)
+	, m_accTime(0.0)
 {
 	m_IODataVec.reserve(1024*8);  // Ô¤Áô¿Õ¼ä´óÐ¡
 }
@@ -48,11 +49,16 @@ void CDataManager::BeginLog() {
 	m_OutputData.Reset();
 }
 
-void CDataManager::EndLog() {
+void CDataManager::EndLog(double deltaTime) {
 	if (!m_EnableLog)  return;
 
-	if (!m_InputData.IsEmpty())
+	m_accTime += deltaTime;
+	if (m_accTime>0.5 && !m_InputData.IsEmpty())
+	{
+		//printf("accTime: %.3lf\n", m_accTime);
+		m_accTime = 0.0;
 		m_IODataVec.push_back(std::make_pair(m_InputData, m_OutputData));
+	}
 }
 
 void CDataManager::LogPlayer(int pos_x, int pos_y, DIRECTION dir)

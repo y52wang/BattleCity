@@ -54,7 +54,9 @@ public:
 	CDataManager();
 
 	void BeginLog();
-	void EndLog();
+	// deltaTime 间隔时间
+	// 累积间隔时间超过一定限度才进行记录
+	void EndLog(double deltaTime);
 
 	// Log Input Data
 	void LogPlayer(int pos_x, int pos_y, DIRECTION dir);
@@ -79,6 +81,8 @@ protected:
 
 	InputData		m_InputData;
 	OutputData		m_OutputData;
+
+	double			m_accTime;
 };
 
 #endif

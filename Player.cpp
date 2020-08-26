@@ -11,19 +11,22 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Sprites.h"
 using namespace std;
 
-void CPlayer::Init(int x, int y, int id) {
-    m_x = x; m_y = y; m_id = id;
-    m_speed = 5.5;
-    m_frame = 0;
-    m_frame_duration = 0.0;
-    m_player_width = 32;
-    m_player_height = 32;
-    m_can_shoot = true;
-    m_bullets_in_game = 0;
+void CPlayer::Init(int x, int y, int id)
+{
+	m_x = x; m_y = y; m_id = id;
+	m_speed				= 5.5;
+	m_frame				= 0;
+	m_inv_frame			= 0;
+	m_frame_duration	= 0.0;
+	m_current_inv_d		= 0.0;
+	m_player_width		= 32;
+	m_player_height		= 32;
+	m_can_shoot			= true;
+	m_bullets_in_game	= 0;
 
-    m_start_x = x;  m_start_y = y;
+	m_start_x = x;  m_start_y = y;
 
-    SetPlayerLevel(0);
+	SetPlayerLevel(0);
 }
 
 void CPlayer::SetPlayerLevel(int level) {
@@ -543,4 +546,5 @@ void CPlayer::Update(double dt)
 
 void CPlayer::LogData(CDataManager* dm)
 {
+	dm->LogPlayer(round_double(m_x), round_double(m_y), m_direction);
 }
