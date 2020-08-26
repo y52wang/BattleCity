@@ -24,7 +24,7 @@ private:
 	void SetupNetwork();
 	void ConvertData(const InputData& id);  // 野割 Matrix input
 	void ConvertData(const OutputData& od); // 野割 Matrix output
-	void StrategyCNN::FillObjectToInputMatrix(int layer, const Pos& pos, DIRECTION dir, int baseValue);
+	void StrategyCNN::FillObjectToInputMatrix(int layer, const Pos& pos, DIRECTION dir, float baseValue, float addValue);
 };
 
 #endif

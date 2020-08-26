@@ -78,6 +78,7 @@ void CDataManager::LogPlayer(int pos_x, int pos_y, DIRECTION dir)
 
 void CDataManager::LogEnemy(int pos_x, int pos_y, DIRECTION dir)
 {
+	assert(pos_x!=-1 && pos_y!=-1);
 	m_InputData.enemies_pos.push_back(Pos(pos_x, pos_y));
 	m_InputData.enemies_dir.push_back(dir);
 }
@@ -240,6 +241,8 @@ void CDataManager::Save(const std::string fileName)
 		fs.write((char*)&enemyCount, sizeof(int));
 		for (int i = 0; i < enemyCount; i++)
 		{
+			assert(id.enemies_pos[i].x!=-1);
+			assert(id.enemies_pos[i].y!=-1);
 			fs.write((char*)&id.enemies_pos[i], sizeof(Pos));
 			fs.write((char*)&id.enemies_dir[i], sizeof(DIRECTION));
 		}
@@ -285,8 +288,10 @@ void CDataManager::Load(const std::string fileName)
 			DIRECTION dir;
 			fs.read((char*)&pos, sizeof(Pos));
 			fs.read((char*)&dir, sizeof(DIRECTION));
-			enemies_pos.push_back(pos);
-			enemies_dir.push_back(dir);
+			assert(pos.x != -1);
+			assert(pos.y != -1);
+			enemies_pos[i] = pos;
+			enemies_dir[i] = dir;
 		}
 		id.enemies_pos = enemies_pos;
 		id.enemies_dir = enemies_dir;
@@ -301,8 +306,8 @@ void CDataManager::Load(const std::string fileName)
 			DIRECTION dir;
 			fs.read((char*)&pos, sizeof(Pos));
 			fs.read((char*)&dir, sizeof(DIRECTION));
-			enemies_bullet_pos.push_back(pos);
-			enemies_bullet_dir.push_back(dir);
+			enemies_bullet_pos[i] = pos;
+			enemies_bullet_dir[i] = dir;
 		}
 		id.enemies_bullet_pos = enemies_bullet_pos;
 		id.enemies_bullet_dir = enemies_bullet_dir;
