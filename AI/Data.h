@@ -68,6 +68,8 @@ public:
 	void LogPlayerMove(DIRECTION dir);
 	void LogPlayerShoot(bool shoot);
 
+	void Draw();
+
     bool IsEnableLog()    { return m_EnableLog; }
 	void EnableLog(bool enable)	{ m_EnableLog = enable; }
 

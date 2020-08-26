@@ -256,29 +256,30 @@ void CPlayer::Die() {
 }
 
 void CPlayer::SetInvincibility(double time) {
-    m_invincibility = true;
-    m_invincibility_remain_time = time;
+	m_invincibility = true;
+	m_invincibility_remain_time = time;
 }
 
-void CPlayer::StripInvincibility() {
-    m_invincibility = false;
-    m_invincibility_remain_time = 0.0;
-}
+//void CPlayer::StripInvincibility() {
+//	m_invincibility = false;
+//	m_invincibility_remain_time = 0.0;
+//}
 
 void CPlayer::Update(double dt)
 {
-    if (m_state==PLAYER_DRIVE && m_stopping) {
-        Stop(m_stopping_dir);
-    }
+	if (m_state==PLAYER_DRIVE && m_stopping) {
+		Stop(m_stopping_dir);
+	}
 
-    m_x = m_x + m_vx * dt * m_speed_ratio;
-    m_y = m_y + m_vy * dt * m_speed_ratio;
+	m_x = m_x + m_vx * dt * m_speed_ratio;
+	m_y = m_y + m_vy * dt * m_speed_ratio;
 
-    if (m_invincibility)
+	if (m_invincibility)
 	{
-        m_invincibility_remain_time -= dt;
-        if (m_invincibility_remain_time <= 0)    m_invincibility = false;
-    }
+		m_invincibility_remain_time -= dt;
+		// WangLiang: 下面注释掉，则一直无敌
+		if (m_invincibility_remain_time <= 0)    m_invincibility = false;
+	}
 
     //Wyjechanie poza mapę（在地图之外）
     if(m_x < 0.0)  m_x = 0.0;

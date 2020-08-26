@@ -186,6 +186,8 @@ void CGame::Init() {
 					Items()->Draw();  //Rysuje przedmiot (do zdobycia, np. życie, gwiazdkę)
 		
 				GUI()->DrawGameplayStats();  //Rysuje statystyki w trybie gry
+
+				DataManager()->Draw();
 				break;
 		
 			case GS_EDITOR:

@@ -31,7 +31,7 @@ public:
 	void EarnStar();
 	void EarnLife();
 	void SetInvincibility(double time = 15.0);
-	void StripInvincibility();
+	//void StripInvincibility();
 
 	int Lifes()                 { return m_lifes; }
 	void LoseLife()             { --m_lifes; }
