@@ -165,13 +165,36 @@ void CDataManager::Save(const std::string fileName)
 	std::ofstream fs(fileName, std::ios::out | std::ios::binary);
 	int dataCount = m_IODataVec.size();
 	fs.write((char*)&dataCount, sizeof(int));
-	for (auto it=m_IODataVec.begin(); it!=m_IODataVec.end(); ++it)
+	for (auto it = m_IODataVec.begin(); it != m_IODataVec.end(); ++it)
 	{
 		const InputData& id = it->first;
 		const OutputData& od = it->second;
 
-		fs.write((char*)&id, sizeof(InputData));
-		fs.write((char*)&id, sizeof(OutputData));
+		// input data
+		fs.write((char*)&id.player_pos, sizeof(Pos));
+		fs.write((char*)&id.player_dir, sizeof(DIRECTION));
+		fs.write((char*)&id.player_bullet_pos, sizeof(Pos));
+		fs.write((char*)&id.player_bullet_dir, sizeof(DIRECTION));
+
+		int enemyCount = id.enemies_pos.size();
+		fs.write((char*)&enemyCount, sizeof(int));
+		for (int i = 0; i < enemyCount; i++)
+		{
+			fs.write((char*)&id.enemies_pos[i], sizeof(Pos));
+			fs.write((char*)&id.enemies_dir[i], sizeof(DIRECTION));
+		}
+
+		int enemyBulletCount = id.enemies_bullet_pos.size();
+		fs.write((char*)&enemyBulletCount, sizeof(int));
+		for (int i = 0; i < enemyBulletCount; i++)
+		{
+			fs.write((char*)&id.enemies_bullet_pos[i], sizeof(Pos));
+			fs.write((char*)&id.enemies_bullet_dir[i], sizeof(DIRECTION));
+		}
+
+		// output data
+		fs.write((char*)&od.mov, sizeof(DIRECTION));
+		fs.write((char*)&od.shoot, sizeof(bool));
 	}
 	fs.close();
 }
@@ -185,8 +208,51 @@ void CDataManager::Load(const std::string fileName)
 	for (int i = 0; i < dataCount; ++i)
 	{
 		IOData data;
-		fs.read((char*)&data.first, sizeof(InputData));
-		fs.read((char*)&data.second, sizeof(OutputData));
+		InputData id;
+		OutputData od;
+		fs.read((char*)&id.player_pos, sizeof(Pos));
+		fs.read((char*)&id.player_dir, sizeof(DIRECTION));
+		fs.read((char*)&id.player_bullet_pos, sizeof(Pos));
+		fs.read((char*)&id.player_bullet_dir, sizeof(DIRECTION));
+
+		int enemyCount(0);
+		fs.read((char*)&enemyCount, sizeof(int));
+		std::vector<Pos> enemies_pos(enemyCount);
+		std::vector<DIRECTION> enemies_dir(enemyCount);
+		for (int i = 0; i < enemyCount; i++)
+		{
+			Pos pos;
+			DIRECTION dir;
+			fs.read((char*)&pos, sizeof(Pos));
+			fs.read((char*)&dir, sizeof(DIRECTION));
+			enemies_pos.push_back(pos);
+			enemies_dir.push_back(dir);
+		}
+		id.enemies_pos = enemies_pos;
+		id.enemies_dir = enemies_dir;
+
+		int enemyBulletCount(0);
+		fs.read((char*)&enemyBulletCount, sizeof(int));
+		std::vector<Pos> enemies_bullet_pos(enemyBulletCount);
+		std::vector<DIRECTION> enemies_bullet_dir(enemyBulletCount);
+		for (int i = 0; i < enemyBulletCount; i++)
+		{
+			Pos pos;
+			DIRECTION dir;
+			fs.read((char*)&pos, sizeof(Pos));
+			fs.read((char*)&dir, sizeof(DIRECTION));
+			enemies_bullet_pos.push_back(pos);
+			enemies_bullet_dir.push_back(dir);
+		}
+		id.enemies_bullet_pos = enemies_bullet_pos;
+		id.enemies_bullet_dir = enemies_bullet_dir;
+
+		// output data
+		fs.read((char*)&od.mov, sizeof(DIRECTION));
+		fs.read((char*)&od.shoot, sizeof(bool));
+
+		data.first = id;
+		data.second = od;
 		m_IODataVec.push_back(data);
 	}
 }

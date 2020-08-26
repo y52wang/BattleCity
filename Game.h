@@ -23,6 +23,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "GUI.h"
 #include "Effects.h"
 #include "AI/Data.h"
+#include "AI/StrategyCnn.h"
 
 struct Mouse { int x, y; };
 
@@ -67,6 +68,7 @@ public: //Metody
     CGUI*			GUI()			{ return m_GUI; }           // -||-
     CEffects*		Effects()		{ return m_Effects; }       // -||-
 	CDataManager*	DataManager()	{ return m_DataMgr; }		//
+	StrategyCNN*	Strategy()		{ return m_Stg; }
 
 private: //Metody
     CGame() {
@@ -78,7 +80,7 @@ private: //Metody
         m_Enemies = new CEnemies;           m_Menu = new CMenu;
         m_GameTimer = new CGameTimer;       m_Items = new CItems;
         m_GUI = new CGUI;                   m_Effects = new CEffects;
-		m_DataMgr = new CDataManager;
+		m_DataMgr = new CDataManager;		m_Stg = new StrategyCNN();
 
         m_end_game = false;
         //Rozmiar 1 klocka w budowaniu poziomu
@@ -102,6 +104,7 @@ private: //Metody
         delete m_Effects;   m_Effects   = NULL;
         delete m_Sprites;   m_Sprites   = NULL;
 		delete m_DataMgr;	m_DataMgr	= NULL;
+		delete m_Stg;		m_Stg		= NULL;
     }
 
 private:
@@ -139,6 +142,7 @@ private:
     CGUI*			m_GUI;			//Obiekt GUI
     CEffects*		m_Effects;		//Obiekt efektów
 	CDataManager*	m_DataMgr;
+	StrategyCNN*	m_Stg;
 };
 
 /* Funkcja sprawdzająca kolizję między 2 prostokątami */
