@@ -50,7 +50,12 @@ inline std::string to_string(const NumberType& num)
 inline bool create_directory(const std::string& dir)
 {
 #ifdef _WIN32
-    return 0 == _mkdir(dir.c_str());
+	if (0 == _mkdir(dir.c_str()))  return true;
+	else
+	{
+		if (errno==EEXIST)  return true;
+		return false;
+	}
 #else
     return 0 == mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
 #endif
