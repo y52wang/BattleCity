@@ -12,7 +12,7 @@ public:
 	bool valid;
 
 	StrategyCNN();
-	OutputData& MakeDecision(const InputData& id);
+	OutputData MakeDecision(const InputData& id);
 	void Train(const IODataVec& database, std::string folder, std::string fileName);
 	void LoadParameters(std::string folder, std::string fileName);
 

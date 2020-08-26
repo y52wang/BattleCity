@@ -15,7 +15,7 @@ StrategyCNN::StrategyCNN()
 	valid = false;
 }
 
-OutputData & StrategyCNN::MakeDecision(const InputData & id)
+OutputData StrategyCNN::MakeDecision(const InputData & id)
 {
 	OutputData od;
 	if (!valid)
