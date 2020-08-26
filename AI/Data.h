@@ -1,6 +1,7 @@
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
+#include <string>
 #include <vector>
 #include "Types.h"
 
@@ -55,13 +56,21 @@ public:
 	void BeginLog();
 	void EndLog();
 
+	// Log Input Data
 	void LogPlayer(int pos_x, int pos_y, DIRECTION dir);
 	void LogEnemy(int pos_x, int pos_y, DIRECTION dir);
 	void LogPlayerBullet(int pos_x, int pos_y, DIRECTION dir);
 	void LogEnemyBullet(int pos_x, int pos_y, DIRECTION dir);
 
+	// Log Output Data
+	void LogPlayerMove(DIRECTION dir);
+	void LogPlayerShoot(bool shoot);
+
     bool IsEnableLog()    { return m_EnableLog; }
 	void EnableLog(bool enable)	{ m_EnableLog = enable; }
+
+	void Save(const std::string fileName);
+	void Load(const std::string fileName);
 
 	IODataVec       m_IODataVec;
 

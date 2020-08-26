@@ -440,4 +440,5 @@ void CEnemy::ChooseDirection(bool collision) {
 
 void CEnemy::LogData(CDataManager* dm)
 {
+	dm->LogEnemy(round_double(m_x), round_double(m_y), m_direction);
 }

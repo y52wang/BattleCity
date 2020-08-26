@@ -62,7 +62,7 @@ class CPlayer {
 
     private:
         DIRECTION m_direction;  //w którą stronę się patrzy
-        DIRECTION m_stopping_dir;   //Kierunek hamowania
+        DIRECTION m_stopping_dir;   //Kierunek hamowania（制动方向）
         PLAYER_STATE m_state;   //stan gracza（玩家状态）
 
         int m_id;               //id gracza（玩家 id）

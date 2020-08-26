@@ -106,7 +106,7 @@ void CPlayer::Stop(DIRECTION dir)
 		&& level->LevelField(int(m_x + 1), int(m_y + 1)) == LVL_SLIDE)
 		is_on_slide = true;  // 在冰块上面个
 
-	if (!is_on_slide)
+	if (!is_on_slide)  // 不在冰块上的处理
 	{
 		if (dir == DIR_LEFT || dir == DIR_RIGHT)
 			SetXVelocity(0);
@@ -115,7 +115,7 @@ void CPlayer::Stop(DIRECTION dir)
 
 		SetState(PLAYER_STOP);
 	}
-	else
+	else  // 在冰块上的处理
 	{
 		if (dir == DIR_LEFT || dir == DIR_RIGHT) {
 			m_vx = m_vx / 1.05;
