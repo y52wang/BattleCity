@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "StrategyCnn.h"
 
 using namespace MiniDNN;

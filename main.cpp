@@ -3,6 +3,8 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
+#include "stdafx.h"
+
 #pragma comment(lib, "SDL2")
 #pragma comment(lib, "SDL2main")
 #pragma comment(lib, "SDL2_mixer")

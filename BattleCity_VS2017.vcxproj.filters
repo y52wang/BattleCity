@@ -293,5 +293,8 @@
     <ClCompile Include="AI\StrategyCnn.cpp">
       <Filter>源文件\AI</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

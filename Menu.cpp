@@ -3,6 +3,7 @@ Autor: Damian "RippeR" Dyńdo
 URL: http://warsztat.gd/projects.php?x=view&id=2063
 **************************************************/
 
+#include "stdafx.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "Game.h"
