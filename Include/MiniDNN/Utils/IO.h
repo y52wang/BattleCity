@@ -70,6 +70,8 @@ inline void write_vector_to_file(
     if (ofs.fail())
         throw std::runtime_error("Error while opening file");
 
+	if (vec.empty())  return;
+
     std::ostream_iterator<char> osi(ofs);
     const char* begin_byte = reinterpret_cast<const char*>(&vec[0]);
     const char* end_byte = begin_byte + vec.size() * sizeof(Scalar);
