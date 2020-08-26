@@ -78,6 +78,9 @@
     <ClInclude Include="AI\StrategyCnn.h">
       <Filter>头文件\AI</Filter>
     </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="AI\StrategyCnn.cpp">
       <Filter>源文件\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
