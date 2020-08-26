@@ -1,6 +1,7 @@
 #include "Data.h"
 #include "Game.h"
 #include <assert.h>
+#include <fstream>
 
 InputData::InputData()
 	: player_dir(DIR_NONE)
@@ -157,16 +158,35 @@ void CDataManager::Draw()
 	}
 }
 
+// 文件格式：
+// 开头四个字节表示数据的数量，后面对应数量的结构体对(InputData, OutputData)
 void CDataManager::Save(const std::string fileName)
 {
+	std::ofstream fs(fileName, std::ios::out | std::ios::binary);
+	int dataCount = m_IODataVec.size();
+	fs.write((char*)&dataCount, sizeof(int));
 	for (auto it=m_IODataVec.begin(); it!=m_IODataVec.end(); ++it)
 	{
 		const InputData& id = it->first;
 		const OutputData& od = it->second;
+
+		fs.write((char*)&id, sizeof(InputData));
+		fs.write((char*)&id, sizeof(OutputData));
 	}
+	fs.close();
 }
 
 void CDataManager::Load(const std::string fileName)
 {
 	m_IODataVec.clear();
+	std::ifstream fs(fileName, std::ios::in | std::ios::binary);
+	int dataCount(0);
+	fs.read((char*)&dataCount, sizeof(int));
+	for (int i = 0; i < dataCount; ++i)
+	{
+		IOData data;
+		fs.read((char*)&data.first, sizeof(InputData));
+		fs.read((char*)&data.second, sizeof(OutputData));
+		m_IODataVec.push_back(data);
+	}
 }
