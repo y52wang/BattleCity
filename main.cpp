@@ -16,7 +16,7 @@ int main() {
     srand(time(NULL));
 
     CGame &Game = CGame::Get();
-    Game.Window()->Set(640, 480, 32, false);
+    Game.Window()->Set(960, 480, 32, false);
     Game.Init();
 
     return 0;

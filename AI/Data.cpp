@@ -42,9 +42,14 @@ CDataManager::CDataManager()
 	, m_accTime(0.0)
 {
 	m_IODataVec.reserve(1024*8);  // ‘§¡Ùø’º‰¥Û–°
+
+	m_InputData.Reset();
+	m_OutputData.Reset();
 }
 
 void CDataManager::BeginLog() {
+	if (!m_EnableLog)  return;
+
 	m_InputData.Reset();
 	m_OutputData.Reset();
 }

@@ -108,6 +108,12 @@ void CGame::Init() {
 		// 结束整个输入环境的记录
 		if (m_game_state==GS_GAMEPLAY && !isEnd()) {
 			DataManager()->EndLog(accumulator);
+
+			// 如果开启了实时策略运用，则此处使用策略
+			if (Player()->Alive() && !GameLost())
+			{
+				// 使用策略控制 Player
+			}
 		}
 
 		//FPS Counter
