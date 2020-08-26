@@ -19,7 +19,7 @@ void CGameTimer::Init() {
 
     m_levelprotect = false;
 
-    m_enemies_at_once = 4;
+    m_enemies_at_once = 4;  // 最大敌人数量
     m_ressurection_player = 0.5;
 }
 
