@@ -7,7 +7,8 @@
 
 // 第 21 关用于测试
 CLevel::CLevel()
-	: m_level_width(26)
+	: m_drawGrid(false)
+	, m_level_width(26)
 	, m_level_height(26)
 	, m_all_levels(21)
 
@@ -87,22 +88,35 @@ void CLevel::LoadLevel(const string fileName)
 // level 分两层，up 用于控制绘制顺序
 void CLevel::DrawLevel(bool up)
 {
-  auto filter = [up](LVL_FIELD lf) {
-    return up ? lf==LVL_BUSH : lf!=LVL_BUSH;
-  };
+	auto filter = [up](LVL_FIELD lf) {
+		return up ? lf==LVL_BUSH : lf!=LVL_BUSH;
+	};
 
-  int ts = CGame::Get().TailSize();
+	int ts = CGame::Get().TailSize();
+	CRenderer* render = CGame::Get().Renderer();
 	for (size_t i=0; i<m_level.data.size(); ++i) {
 		for (size_t j=0; j<m_level.data[i].size(); ++j) {
-      double pos_x = j * ts;
-      double pos_y = i * ts;
+			double pos_x = j * ts;
+			double pos_y = i * ts;
 
-      LVL_FIELD lf = m_level.data[i][j];
-      if (filter(lf) ) {
-        SpriteData* sd = GetSpriteData(lf);
-        if (sd!=NULL)
-          CGame::Get().Renderer()->DrawSprite(*sd, 0, pos_x, pos_y, ts, ts);
-      }
+			LVL_FIELD lf = m_level.data[i][j];
+			if (filter(lf) ) {
+				SpriteData* sd = GetSpriteData(lf);
+				if (sd!=NULL)
+					render->DrawSprite(*sd, 0, pos_x, pos_y, ts, ts);
+			}
+		}
+	}
+
+	if (up && m_drawGrid)
+	{
+		for (int i=1; i<m_level_height; ++i)
+		{
+			render->DrawLine(0, i*ts, ts*m_level_width, i*ts, render->_yellow_half);
+		}
+		for (int i=1; i<m_level_width; ++i)
+		{
+			render->DrawLine(i*ts, 0, i*ts, ts*m_level_height, render->_yellow_half);
 		}
 	}
 }

@@ -270,7 +270,10 @@ void CGame::ProcessEvents()
             } else if(event.key.keysym.sym == SDLK_F5) {
                 if(m_game_state == GS_EDITOR)
                     Level()->SaveLevel();
-            }
+			} else if(event.key.keysym.sym == SDLK_g) {
+				CLevel* level = CGame::Get().Level();
+				level->m_drawGrid = !level->m_drawGrid;
+			}
         }
 		else if(event.type == SDL_KEYUP)
 		{
