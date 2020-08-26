@@ -7,7 +7,6 @@ using namespace MiniDNN;
 
 StrategyCNN::StrategyCNN()
 {
-	SetupNetwork();
 	input = Matrix::Zero(26 * 26 * CHANNEL, 1); // (player, enemies, enemies' bullet)
 	output = Matrix::Zero(5, 1); // 4 Move Direction & None
 	valid = false;
@@ -44,6 +43,8 @@ OutputData StrategyCNN::MakeDecision(const InputData & id)
 
 void StrategyCNN::Train(const IODataVec & database, std::string folder, std::string fileName)
 {
+	SetupNetwork();
+
 	int dataCount = database.size();
 	int featureCount = 26 * 26 * CHANNEL;
 
