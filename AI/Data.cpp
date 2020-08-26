@@ -148,9 +148,9 @@ void CDataManager::Draw()
 			{
 				const Pos& ebp = id.enemies_bullet_pos[i];
 
-				render->FillRect(st_x+ebp.x*4,
-					st_y+ebp.y*4,
-					4*2, 4, render->_magenta);
+				render->FillRect(st_x+ebp.x*4-2,
+					st_y+ebp.y*4-2,
+					4, 4, render->_magenta);
 			}
 		}
 
