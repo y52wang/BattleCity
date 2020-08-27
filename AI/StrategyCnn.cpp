@@ -4,7 +4,7 @@
 using namespace MiniDNN;
 
 #define CHANNEL 3
-#define INDEX(x,y,z) (x*26*3+y*3+z)
+#define INDEX(x,y,z) ((x)*26*3+(y)*3+(z))
 
 StrategyCNN::StrategyCNN()
 {
