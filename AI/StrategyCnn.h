@@ -18,7 +18,7 @@ public:
 private:
 	MiniDNN::Network network;
 	Matrix input; //列向量(26 * 26 * channel, 1)
-	Matrix output; //列向量(5, 1)
+	Matrix output; //列向量(6, 1)
 
 	void SetupNetwork();
 	void ConvertData(const InputData& id);  // 填充 Matrix input

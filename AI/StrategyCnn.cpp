@@ -20,7 +20,7 @@ using namespace MiniDNN;
 StrategyCNN::StrategyCNN()
 {
 	input = Matrix::Zero(26 * 26 * CHANNEL, 1); // (player, enemies, enemies' bullet)
-	output = Matrix::Zero(5, 1); // 4 Move Direction & None
+	output = Matrix::Zero(6, 1); // 4 Move Direction & None & shoot
 	valid = false;
 }
 
@@ -48,7 +48,7 @@ OutputData StrategyCNN::MakeDecision(const InputData & id)
 		}
 	}
 	od.mov = (DIRECTION)label;
-	od.shoot = false; // 暂时不考虑攻击
+	od.shoot = output(5, 0) > 0.5 ? true : false;
 
 	return od;
 }
@@ -61,7 +61,7 @@ void StrategyCNN::Train(const IODataVec & database, std::string folder, std::str
 	int featureCount = 26 * 26 * CHANNEL;
 
 	Matrix x(featureCount, dataCount);
-	Matrix y(5, dataCount);
+	Matrix y(6, dataCount);
 
 	for (int i = 0; i < dataCount; i++)
 	{
@@ -69,7 +69,7 @@ void StrategyCNN::Train(const IODataVec & database, std::string folder, std::str
 		ConvertData(database[i].second);
 
 		for (int k = 0; k < featureCount; k++) x(k, i) = input(k, 0);
-		for (int k = 0; k < 5; k++) y(k, i) = output(k, 0);
+		for (int k = 0; k < 6; k++) y(k, i) = output(k, 0);
 	}
 
 	Adam opt;
@@ -84,7 +84,7 @@ void StrategyCNN::Train(const IODataVec & database, std::string folder, std::str
 
 	valid = true;
 
-	// export_net文件夹已存在时会报错，把Network.h中对应行注释掉，自己创建文件夹，或训练前把文件夹删除
+	// export_net文件夹已存在时会报错，把Network.h中对应行注释掉，自己创建文件夹，或训练前把文件夹删除 （已修复）
 	network.export_net(folder, fileName);
 }
 
@@ -112,7 +112,7 @@ void StrategyCNN::SetupNetwork()
 
 	//Layer* fully1 = new FullyConnected<ReLU>(4 * 4 * 64, 512);
 	Layer* fully1 = new FullyConnected<ReLU>(5 * 5 * 16, 128);
-	Layer* out = new FullyConnected<Sigmoid>(128, 5);
+	Layer* out = new FullyConnected<Sigmoid>(128, 6);
 
 	network.add_layer(conv1);
 	network.add_layer(pool1);
@@ -183,4 +183,6 @@ void StrategyCNN::ConvertData(const OutputData & od)
 	output.fill(0);
 
 	output(od.mov, 0) = 1;
+
+	if (od.shoot) output(5, 0) = 1;
 }
