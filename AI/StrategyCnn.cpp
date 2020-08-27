@@ -3,8 +3,19 @@
 
 using namespace MiniDNN;
 
+/* CNN：一个如下的输入数据
+ * ########################################
+ * #   1   2   #   5   6   #  9   10  # 
+ * #   3   4   #   7   8   #  11  12  #
+ * #########################################
+ * |<channel 1>|<channel 2>|<channel 3>
+ *
+ * 应该转化为如下的列向量
+ * (1,2,3,4,5,6,7,8,9,10,11,12)T
+ */
+
 #define CHANNEL 3
-#define INDEX(x,y,z) ((x)*26*3+(y)*3+(z))
+#define INDEX(x,y,c) ((c)*26*26+(x)*26+(y)) // c: channel
 
 StrategyCNN::StrategyCNN()
 {
@@ -118,17 +129,17 @@ void StrategyCNN::ConvertData(const InputData & id)
 	// clear input matrix
 	input.fill(0);
 
-	// layer0: player position
+	// channel0: player position
 	FillObjectToInputMatrix(0, id.player_pos, id.player_dir, 0.5f, 0.5f);
 
-	// layer1: enemies' position
+	// channel1: enemies' position
 	int enemyCount = id.enemies_pos.size();
 	for (int i = 0; i < enemyCount; i++)
 	{
 		FillObjectToInputMatrix(1, id.enemies_pos[i], id.enemies_dir[i], 0.5f, 0.5f);
 	}
 
-	// layer2: enemies' bullet
+	// channel2: enemies' bullet
 	int enemyBulletCount = id.enemies_bullet_pos.size();
 	for (int i = 0; i < enemyBulletCount; i++)
 	{
@@ -136,29 +147,29 @@ void StrategyCNN::ConvertData(const InputData & id)
 	}
 } 
 
-void StrategyCNN::FillObjectToInputMatrix(int layer, const Pos& pos, DIRECTION dir, float baseValue, float addValue)
+void StrategyCNN::FillObjectToInputMatrix(int channel, const Pos& pos, DIRECTION dir, float baseValue, float addValue)
 {
-	input(INDEX(pos.x, pos.y, layer), 0) = baseValue;
-	input(INDEX(pos.x + 1, pos.y, layer), 0) = baseValue;
-	input(INDEX(pos.x, pos.y + 1, layer), 0) = baseValue;
-	input(INDEX(pos.x + 1, pos.y + 1, layer), 0) = baseValue;
+	input(INDEX(pos.x, pos.y, channel), 0) = baseValue;
+	input(INDEX(pos.x + 1, pos.y, channel), 0) = baseValue;
+	input(INDEX(pos.x, pos.y + 1, channel), 0) = baseValue;
+	input(INDEX(pos.x + 1, pos.y + 1, channel), 0) = baseValue;
 	switch (dir)
 	{
 	case DIR_UP:
-		input(INDEX(pos.x, pos.y + 1, layer), 0) += addValue;
-		input(INDEX(pos.x + 1, pos.y + 1, layer), 0) += addValue;
+		input(INDEX(pos.x, pos.y + 1, channel), 0) += addValue;
+		input(INDEX(pos.x + 1, pos.y + 1, channel), 0) += addValue;
 		break;
 	case DIR_RIGHT:
-		input(INDEX(pos.x + 1, pos.y, layer), 0) += addValue;
-		input(INDEX(pos.x + 1, pos.y + 1, layer), 0) += addValue;
+		input(INDEX(pos.x + 1, pos.y, channel), 0) += addValue;
+		input(INDEX(pos.x + 1, pos.y + 1, channel), 0) += addValue;
 		break;
 	case DIR_DOWN:
-		input(INDEX(pos.x, pos.y, layer), 0) += addValue;
-		input(INDEX(pos.x + 1, pos.y, layer), 0) += addValue;
+		input(INDEX(pos.x, pos.y, channel), 0) += addValue;
+		input(INDEX(pos.x + 1, pos.y, channel), 0) += addValue;
 		break;
 	case DIR_LEFT:
-		input(INDEX(pos.x, pos.y, layer), 0) += addValue;
-		input(INDEX(pos.x, pos.y + 1, layer), 0) += addValue;
+		input(INDEX(pos.x, pos.y, channel), 0) += addValue;
+		input(INDEX(pos.x, pos.y + 1, channel), 0) += addValue;
 		break;
 	default:
 		std::cout << "[Strategy] ConvertInputData Error. Direction is None.\n";
