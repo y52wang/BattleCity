@@ -256,25 +256,30 @@ void CGame::ProcessEvents()
                 Player()->Drive();
 
 				dm->LogPlayerMove(DIR_UP);
+				dm->ForceLog();
             } else if(event.key.keysym.sym == SDLK_LEFT && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_LEFT);
                 Player()->Drive();
 
 				dm->LogPlayerMove(DIR_LEFT);
+				dm->ForceLog();
             } else if(event.key.keysym.sym == SDLK_RIGHT && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_RIGHT);
                 Player()->Drive();
 
 				dm->LogPlayerMove(DIR_RIGHT);
+				dm->ForceLog();
             } else if(event.key.keysym.sym == SDLK_DOWN && Player()->Alive() && !GameLost()) {
                 Player()->SetDirection(DIR_DOWN);
                 Player()->Drive();
 
 				dm->LogPlayerMove(DIR_DOWN);
+				dm->ForceLog();
             } else if(event.key.keysym.sym == SDLK_SPACE && Player()->Alive() && !GameLost()) {
                 Player()->Shoot();
 
 				dm->LogPlayerShoot(true);
+				dm->ForceLog();
             } else if(event.key.keysym.sym == SDLK_w && PlayerTwo() != NULL && PlayerTwo()->Alive() && !GameLost()) {
                 PlayerTwo()->SetDirection(DIR_UP);
                 PlayerTwo()->Drive();

@@ -57,16 +57,22 @@ void CDataManager::BeginLog() {
 
 	m_InputData.Reset();
 	m_OutputData.Reset();
+
+	m_Force = false;
+}
+
+void CDataManager::ForceLog() {
+	m_Force = true;
 }
 
 void CDataManager::EndLog(double deltaTime) {
 	if (!m_EnableLog)  return;  // 记录开启的情况下才记录
 
 	m_accTime += deltaTime;
-	if (m_accTime>0.5 && !m_InputData.IsEmpty())
+	if ((m_Force || m_accTime>0.5) && !m_InputData.IsEmpty())
 	{
 		//printf("accTime: %.3lf\n", m_accTime);
-		m_accTime = 0.0;
+		if (!m_Force)  m_accTime = 0.0;
 		m_IODataVec.push_back(std::make_pair(m_InputData, m_OutputData));
 	}
 }

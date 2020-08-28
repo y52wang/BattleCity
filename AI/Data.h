@@ -54,6 +54,7 @@ public:
 	CDataManager();
 
 	void BeginLog();
+	void ForceLog();
 	// deltaTime 间隔时间
 	// 累积间隔时间超过一定限度才进行记录
 	void EndLog(double deltaTime);
@@ -83,6 +84,7 @@ public:
 
 protected:
     bool			m_EnableLog;    // 数据记录 开启/关闭
+	bool			m_Force;  // 本次 Log 忽略 m_accTime 的累积时间，强制写入
 	double			m_accTime;
 };
 
