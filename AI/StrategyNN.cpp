@@ -5,11 +5,11 @@
 
 using namespace MiniDNN;
 
-#define VIEW_SIZE 2 // 视野大小
-#define MAP_WIDTH 6 // MAP_WIDTH = VIEW_SIZE * 2 + 2
-#define MAP_SIZE 36 // MAP_SIZE = (VIEW_SIZE * 2 + 2)^2
+#define VIEW_SIZE 4 // 视野大小
+#define MAP_WIDTH 10 // MAP_WIDTH = VIEW_SIZE * 2 + 2
+#define MAP_SIZE 100 // MAP_SIZE = (VIEW_SIZE * 2 + 2)^2
 #define ACTION 5    // 动作空间大小
-#define HDIM 20		// 隐层神经元个数
+#define HDIM 100		// 隐层神经元个数
 
 #define EDGE -1					// 边缘势力影响
 #define ENEMY_INFLUENCE -1		// 敌方坦克势力影响基数
@@ -17,7 +17,7 @@ using namespace MiniDNN;
 #define BULLET_INFLUENCE -2		// 子弹势力影响基数
 #define BULLET_FADE 0.8			// 子弹势力影响衰减率
 
-#define INDEX(x,y) ((x)*6+(y))
+#define INDEX(x,y) ((x)*10+(y))
 
 StrategyNN::StrategyNN() : CStrategy(MAP_SIZE, ACTION) {}
 
