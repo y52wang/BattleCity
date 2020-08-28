@@ -24,6 +24,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Effects.h"
 #include "AI/Data.h"
 #include "AI/StrategyCnn.h"
+#include "AI/StrategyNN.h"
 #include "AI/Strategy.h"
 
 struct Mouse { int x, y; };
@@ -81,7 +82,7 @@ private: //Metody
         m_Enemies = new CEnemies;           m_Menu = new CMenu;
         m_GameTimer = new CGameTimer;       m_Items = new CItems;
         m_GUI = new CGUI;                   m_Effects = new CEffects;
-		m_DataMgr = new CDataManager;		m_Stg = new StrategyCNN();
+		m_DataMgr = new CDataManager;		m_Stg = new StrategyNN();
 
         m_end_game = false;
         //Rozmiar 1 klocka w budowaniu poziomu
