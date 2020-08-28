@@ -25,35 +25,6 @@ StrategyCNN::StrategyCNN() : CStrategy()
 	output = Matrix::Zero(ACTIONNUM, 1); // 4 Move Direction & None & shoot
 }
 
-OutputData StrategyCNN::MakeDecision(const InputData & id)
-{
-	OutputData od;
-	if (!valid)
-	{
-		std::cout << "[StrategyCnn] MakeDecision Failed. Network is not valid.\n";
-		return od;
-	}
-	ConvertData(id);
-	output = network.predict(input);
-	
-	// 找到最大概率的移动方向
-	int label = 4; // 默认为None
-	float max = -1.0f;
-	for (int i = 0; i < 5; i++)
-	{
-		float value = output(i, 0);
-		if (value > max)
-		{
-			max = value;
-			label = i;
-		}
-	}
-	od.mov = (DIRECTION)label;
-	//od.shoot = output(5, 0) > 0.5 ? true : false;
-	//std::cout << od.mov << std::endl;
-	return od;
-}
-
 void StrategyCNN::Draw()
 {
 	int st_x = 620;
@@ -82,55 +53,6 @@ void StrategyCNN::Draw()
 			if (abs(input(enemyBulletIdx, 0) - 0.5f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_blue_half);
 			if (abs(input(enemyBulletIdx, 0) - 1.0f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_blue);
 		}
-	}
-}
-
-void StrategyCNN::Train(const IODataVec & database, std::string folder, std::string fileName)
-{
-	SetupNetwork();
-
-	int dataCount = database.size();
-	int featureCount = 26 * 26 * CHANNEL;
-
-	Matrix x(featureCount, dataCount);
-	Matrix y(ACTIONNUM, dataCount);
-
-	for (int i = 0; i < dataCount; i++)
-	{
-		ConvertData(database[i].first);
-		ConvertData(database[i].second);
-
-		for (int k = 0; k < featureCount; k++) x(k, i) = input(k, 0);
-		for (int k = 0; k < ACTIONNUM; k++) y(k, i) = output(k, 0);
-	}
-
-	Adam opt;
-	opt.m_lrate = 0.001;
-
-	VerboseCallback callback;
-	network.set_callback(callback);
-
-	network.init(0, 0.01, 123);
-
-	network.fit(opt, x, y, 32, 30);
-
-	valid = true;
-
-	// export_net文件夹已存在时会报错，把Network.h中对应行注释掉，自己创建文件夹，或训练前把文件夹删除 （已修复）
-	network.export_net(folder, fileName);
-}
-
-void StrategyCNN::LoadParameters(std::string folder, std::string fileName)
-{
-	try
-	{
-		network.read_net(folder, fileName);
-		valid = true;
-	}
-	catch(std::exception e)
-	{
-		std::cerr << "[Strategy] LoadParameters Error.\n";
-		valid = false;
 	}
 }
 

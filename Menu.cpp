@@ -108,7 +108,7 @@ void CMenu::ProcessEvents() {
                 // 读取数据，进行卷积网络的训练
 				CDataManager* dm = game.DataManager();
 				dm->Load("data/IOData.dat");
-				game.Strategy()->Train(dm->m_IODataVec, "data", "StgCnn");
+				game.Strategy()->Train(dm->m_IODataVec, "data", "StgCnn", 0, 0);
             } else if (event.key.keysym.sym == SDLK_s) {  // 按下 字母 s 键
 				// 保存数据
 				game.DataManager()->Save("data/IOData.dat");
