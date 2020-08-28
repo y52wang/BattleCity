@@ -95,9 +95,9 @@ void StrategyNN::ConvertData(const InputData & id)
 	int y_max = id.player_pos.y + VIEW_SIZE + 1; // 坦克占四格，这里要加一
 
 	// Fill Input Matrix
-	for (int i = x_min; i < x_max; i++)
+	for (int i = x_min; i <= x_max; i++)
 	{
-		for (int j = y_min; j < y_max; j++)
+		for (int j = y_min; j <= y_max; j++)
 		{
 			if(i < 0 || j < 0 || i > 25 || j > 25			 // 边缘
 				|| (i >= 11 && i <= 14 && j >= 0 && j <= 2)) // 基地范围不能走
