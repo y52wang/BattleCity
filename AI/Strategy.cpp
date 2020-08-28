@@ -28,7 +28,7 @@ OutputData CStrategy::MakeDecision(const InputData& id)
 	//od.shoot = output(5, 0) > 0.5 ? true : false;
 	return od;
 }
-void CStrategy::Train(const IODataVec& database, std::string folder, std::string fileName, int x_dim, int y_dim, float learning_rate, int batch_size, int epoch)
+void CStrategy::Train(const IODataVec& database, std::string folder, std::string fileName, float learning_rate, int batch_size, int epoch)
 {
 	SetupNetwork();
 

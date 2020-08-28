@@ -19,11 +19,7 @@ using namespace MiniDNN;
 #define ACTIONNUM 5
 #define INDEX(x,y,c) ((c)*26*26+(x)*26+(y)) // c: channel
 
-StrategyCNN::StrategyCNN() : CStrategy()
-{
-	input = Matrix::Zero(26 * 26 * CHANNEL, 1); // (player, enemies, enemies' bullet)
-	output = Matrix::Zero(ACTIONNUM, 1); // 4 Move Direction & None & shoot
-}
+StrategyCNN::StrategyCNN() : CStrategy(26 * 26 * CHANNEL, ACTIONNUM) {}
 
 void StrategyCNN::Draw()
 {
