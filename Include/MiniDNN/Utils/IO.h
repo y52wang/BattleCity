@@ -120,6 +120,9 @@ inline std::vector<Scalar> read_vector_from_file(const std::string& filename)
     std::istreambuf_iterator<char> end;
     std::copy(iter, end, std::back_inserter(buffer));
     std::vector<Scalar> vec(buffer.size() / sizeof(Scalar));
+
+	if (vec.empty())  return vec;
+
     std::copy(&buffer[0], &buffer[0] + buffer.size(), reinterpret_cast<char*>(&vec[0]));
     return vec;
 }
