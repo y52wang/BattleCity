@@ -304,13 +304,13 @@ void CGame::ProcessEvents()
         }
 		else if(event.type == SDL_KEYUP)
 		{
-            if(event.key.keysym.sym == SDLK_UP) {
+            if(event.key.keysym.sym == SDLK_UP && Player()->Alive()) {
                 Player()->Stop(DIR_UP);
-            } else if(event.key.keysym.sym == SDLK_LEFT) {
+            } else if(event.key.keysym.sym == SDLK_LEFT && Player()->Alive()) {
                 Player()->Stop(DIR_LEFT);
-            } else if(event.key.keysym.sym == SDLK_RIGHT) {
+            } else if(event.key.keysym.sym == SDLK_RIGHT && Player()->Alive()) {
                 Player()->Stop(DIR_RIGHT);
-            } else if(event.key.keysym.sym == SDLK_DOWN) {
+            } else if(event.key.keysym.sym == SDLK_DOWN && Player()->Alive()) {
                 Player()->Stop(DIR_DOWN);
             } else if(event.key.keysym.sym == SDLK_w && PlayerTwo() != NULL) {
                 PlayerTwo()->Stop(DIR_UP);
