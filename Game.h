@@ -24,6 +24,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Effects.h"
 #include "AI/Data.h"
 #include "AI/StrategyCnn.h"
+#include "AI/Strategy.h"
 
 struct Mouse { int x, y; };
 
@@ -68,7 +69,7 @@ public: //Metody
     CGUI*			GUI()			{ return m_GUI; }           // -||-
     CEffects*		Effects()		{ return m_Effects; }       // -||-
 	CDataManager*	DataManager()	{ return m_DataMgr; }		//
-	StrategyCNN*	Strategy()		{ return m_Stg; }
+	CStrategy*		Strategy()		{ return m_Stg; }
 
 private: //Metody
     CGame() {
@@ -142,7 +143,7 @@ private:
     CGUI*			m_GUI;			//Obiekt GUI
     CEffects*		m_Effects;		//Obiekt efektów
 	CDataManager*	m_DataMgr;
-	StrategyCNN*	m_Stg;
+	CStrategy*		m_Stg;
 };
 
 /* Funkcja sprawdzająca kolizję między 2 prostokątami */

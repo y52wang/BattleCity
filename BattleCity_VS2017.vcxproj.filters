@@ -234,6 +234,9 @@
     <ClInclude Include="Include\MiniDNN\Layer\MaxPooling.h">
       <Filter>头文件\MiniDNN\Layer</Filter>
     </ClInclude>
+    <ClInclude Include="AI\Strategy.h">
+      <Filter>头文件\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">

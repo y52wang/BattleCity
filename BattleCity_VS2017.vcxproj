@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AI\Data.h" />
+    <ClInclude Include="AI\Strategy.h" />
     <ClInclude Include="AI\StrategyCnn.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Bullets.h" />

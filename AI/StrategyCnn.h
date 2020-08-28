@@ -1,22 +1,20 @@
-#ifndef STRATEGY_H_INCLUDED
-#define STRATEGY_H_INCLUDED
+#ifndef STRATEGYCNN_H_INCLUDED
+#define STRATEGYCNN_H_INCLUDED
 
+#include "Strategy.h"
 #include "Data.h"
 
-typedef Eigen::MatrixXf Matrix;
-
-class StrategyCNN
+class StrategyCNN : public CStrategy
 {
 public:
-	bool valid;
-
 	StrategyCNN();
-	OutputData MakeDecision(const InputData& id);
-	void Train(const IODataVec& database, std::string folder, std::string fileName);
-	void LoadParameters(std::string folder, std::string fileName);
+	virtual ~StrategyCNN() {};
+	virtual OutputData MakeDecision(const InputData& id);
+	virtual void Train(const IODataVec& database, std::string folder, std::string fileName);
+	virtual void LoadParameters(std::string folder, std::string fileName);
+	virtual void Draw();
 
-private:
-	MiniDNN::Network network;
+protected:
 	Matrix input; //列向量(26 * 26 * channel, 1)
 	Matrix output; //列向量(6, 1)
 

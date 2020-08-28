@@ -108,12 +108,24 @@ void CGame::Init() {
 
 		// 结束整个输入环境的记录
 		if (m_game_state==GS_GAMEPLAY && !isEnd()) {
-			DataManager()->EndLog(accumulator);
+			CDataManager* dm = DataManager();
+			dm->EndLog(accumulator);
 
 			// 如果开启了实时策略运用，则此处使用策略
 			if (Player()->Alive() && !GameLost())
 			{
-				// 使用策略控制 Player
+				if (m_Stg->valid)
+				{
+					// 使用策略控制 Player
+					OutputData od = m_Stg->MakeDecision(dm->m_InputData);
+					switch (od.mov) {
+					case DIR_UP:	Player()->SetDirection(DIR_UP);		Player()->Drive();  break;
+					case DIR_DOWN:	Player()->SetDirection(DIR_DOWN);	Player()->Drive();  break;
+					case DIR_LEFT:	Player()->SetDirection(DIR_LEFT);	Player()->Drive();  break;
+					case DIR_RIGHT:	Player()->SetDirection(DIR_RIGHT);	Player()->Drive();  break;
+					case DIR_NONE:	Player()->Stop(Player()->GetDirection());  break;
+					}
+				}
 			}
 		}
 
@@ -189,6 +201,7 @@ void CGame::Init() {
 				GUI()->DrawGameplayStats();  //Rysuje statystyki w trybie gry
 
 				DataManager()->Draw();
+				Strategy()->Draw();
 				break;
 		
 			case GS_EDITOR:

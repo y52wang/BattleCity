@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "StrategyCnn.h"
+#include "Game.h"
 
 using namespace MiniDNN;
 
@@ -15,13 +16,13 @@ using namespace MiniDNN;
  */
 
 #define CHANNEL 3
+#define ACTIONNUM 5
 #define INDEX(x,y,c) ((c)*26*26+(x)*26+(y)) // c: channel
 
-StrategyCNN::StrategyCNN()
+StrategyCNN::StrategyCNN() : CStrategy()
 {
 	input = Matrix::Zero(26 * 26 * CHANNEL, 1); // (player, enemies, enemies' bullet)
-	output = Matrix::Zero(6, 1); // 4 Move Direction & None & shoot
-	valid = false;
+	output = Matrix::Zero(ACTIONNUM, 1); // 4 Move Direction & None & shoot
 }
 
 OutputData StrategyCNN::MakeDecision(const InputData & id)
@@ -48,9 +49,40 @@ OutputData StrategyCNN::MakeDecision(const InputData & id)
 		}
 	}
 	od.mov = (DIRECTION)label;
-	od.shoot = output(5, 0) > 0.5 ? true : false;
-
+	//od.shoot = output(5, 0) > 0.5 ? true : false;
+	//std::cout << od.mov << std::endl;
 	return od;
+}
+
+void StrategyCNN::Draw()
+{
+	int st_x = 620;
+	int st_y = 10;
+	int pixel_size = 4;
+	CRenderer* render = CGame::Get().Renderer();
+	// ªÊ÷∆±ﬂøÚ
+	render->DrawRect(st_x, st_y, 26 * pixel_size, 26 * pixel_size, render->_white);
+	
+	for (int i = 0; i < 26; i++)
+	{
+		for (int j = 0; j < 26; j++)
+		{
+			int playerIdx = INDEX(i, j, 0);
+			int enemyIdx = INDEX(i, j, 1);
+			int enemyBulletIdx = INDEX(i, j, 2);
+			int pixel_x = st_x + i * pixel_size;
+			int pixel_y = st_y + j * pixel_size;
+			// ªÊ÷∆player≤„
+			if (abs(input(playerIdx, 0) - 0.5f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_red_half);
+			if (abs(input(playerIdx, 0) - 1.0f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_red);
+			// ªÊ÷∆enemy≤„
+			if (abs(input(enemyIdx, 0) - 0.5f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_green_half);
+			if (abs(input(enemyIdx, 0) - 1.0f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_green);
+			// ªÊ÷∆enemy bullet≤„
+			if (abs(input(enemyBulletIdx, 0) - 0.5f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_blue_half);
+			if (abs(input(enemyBulletIdx, 0) - 1.0f) < 0.1f) render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, render->_blue);
+		}
+	}
 }
 
 void StrategyCNN::Train(const IODataVec & database, std::string folder, std::string fileName)
@@ -61,7 +93,7 @@ void StrategyCNN::Train(const IODataVec & database, std::string folder, std::str
 	int featureCount = 26 * 26 * CHANNEL;
 
 	Matrix x(featureCount, dataCount);
-	Matrix y(6, dataCount);
+	Matrix y(ACTIONNUM, dataCount);
 
 	for (int i = 0; i < dataCount; i++)
 	{
@@ -69,7 +101,7 @@ void StrategyCNN::Train(const IODataVec & database, std::string folder, std::str
 		ConvertData(database[i].second);
 
 		for (int k = 0; k < featureCount; k++) x(k, i) = input(k, 0);
-		for (int k = 0; k < 6; k++) y(k, i) = output(k, 0);
+		for (int k = 0; k < ACTIONNUM; k++) y(k, i) = output(k, 0);
 	}
 
 	Adam opt;
@@ -80,7 +112,7 @@ void StrategyCNN::Train(const IODataVec & database, std::string folder, std::str
 
 	network.init(0, 0.01, 123);
 
-	network.fit(opt, x, y, 64, 5);
+	network.fit(opt, x, y, 32, 30);
 
 	valid = true;
 
@@ -104,21 +136,22 @@ void StrategyCNN::LoadParameters(std::string folder, std::string fileName)
 
 void StrategyCNN::SetupNetwork()
 {
-	Layer* conv1 = new Convolutional<ReLU>(26, 26, CHANNEL, 16, 7, 7);
-	Layer* pool1 = new MaxPooling<Identity>(20, 20, 16, 4, 4);
+	Layer* conv1 = new Convolutional<ReLU>(26, 26, CHANNEL, 16, 3, 3);
+	Layer* pool1 = new MaxPooling<Identity>(24, 24, 16, 2, 2);
 
-	//Layer* conv2 = new Convolutional<ReLU>(12, 12, 32, 64, 5, 5);
-	//Layer* pool2 = new MaxPooling<Identity>(8, 8, 64, 2, 2);
+	//Layer* conv2 = new Convolutional<ReLU>(12, 12, 16, 32, 5, 5);
+	//Layer* pool2 = new MaxPooling<Identity>(8, 8, 32, 2, 2);
 
-	//Layer* fully1 = new FullyConnected<ReLU>(4 * 4 * 64, 512);
-	Layer* fully1 = new FullyConnected<ReLU>(5 * 5 * 16, 128);
-	Layer* out = new FullyConnected<Sigmoid>(128, 6);
+	//Layer* fully = new FullyConnected<ReLU>(8 * 8 * 32, 64);
+	//Layer* fully1 = new FullyConnected<ReLU>(64, 64);
+	Layer* out = new FullyConnected<Softmax>(12 * 12 * 16, ACTIONNUM);
 
 	network.add_layer(conv1);
 	network.add_layer(pool1);
 	//network.add_layer(conv2);
 	//network.add_layer(pool2);
-	network.add_layer(fully1);
+	//network.add_layer(fully);
+	//network.add_layer(fully1);
 	network.add_layer(out);
 
 	network.set_output(new MultiClassEntropy());
@@ -149,27 +182,29 @@ void StrategyCNN::ConvertData(const InputData & id)
 
 void StrategyCNN::FillObjectToInputMatrix(int channel, const Pos& pos, DIRECTION dir, float baseValue, float addValue)
 {
-	input(INDEX(pos.x, pos.y, channel), 0) = baseValue;
-	input(INDEX(pos.x + 1, pos.y, channel), 0) = baseValue;
-	input(INDEX(pos.x, pos.y + 1, channel), 0) = baseValue;
-	input(INDEX(pos.x + 1, pos.y + 1, channel), 0) = baseValue;
+	int x = pos.x; if (x > 24) x = 24;
+	int y = pos.y; if (y > 24) y = 24;
+	input(INDEX(x, y, channel), 0) = baseValue;
+	input(INDEX(x + 1, y, channel), 0) = baseValue;
+	input(INDEX(x, y + 1, channel), 0) = baseValue;
+	input(INDEX(x + 1, y + 1, channel), 0) = baseValue;
 	switch (dir)
 	{
 	case DIR_UP:
-		input(INDEX(pos.x, pos.y + 1, channel), 0) += addValue;
-		input(INDEX(pos.x + 1, pos.y + 1, channel), 0) += addValue;
+		input(INDEX(x, y + 1, channel), 0) += addValue;
+		input(INDEX(x + 1, y + 1, channel), 0) += addValue;
 		break;
 	case DIR_RIGHT:
-		input(INDEX(pos.x + 1, pos.y, channel), 0) += addValue;
-		input(INDEX(pos.x + 1, pos.y + 1, channel), 0) += addValue;
+		input(INDEX(x + 1, y, channel), 0) += addValue;
+		input(INDEX(x + 1, y + 1, channel), 0) += addValue;
 		break;
 	case DIR_DOWN:
-		input(INDEX(pos.x, pos.y, channel), 0) += addValue;
-		input(INDEX(pos.x + 1, pos.y, channel), 0) += addValue;
+		input(INDEX(x, y, channel), 0) += addValue;
+		input(INDEX(x + 1, y, channel), 0) += addValue;
 		break;
 	case DIR_LEFT:
-		input(INDEX(pos.x, pos.y, channel), 0) += addValue;
-		input(INDEX(pos.x, pos.y + 1, channel), 0) += addValue;
+		input(INDEX(x, y, channel), 0) += addValue;
+		input(INDEX(x, y + 1, channel), 0) += addValue;
 		break;
 	default:
 		std::cout << "[Strategy] ConvertInputData Error. Direction is None.\n";
@@ -184,5 +219,5 @@ void StrategyCNN::ConvertData(const OutputData & od)
 
 	output(od.mov, 0) = 1;
 
-	if (od.shoot) output(5, 0) = 1;
+	//if (od.shoot) output(5, 0) = 1;
 }
