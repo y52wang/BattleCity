@@ -78,12 +78,11 @@ public:
 
 	IODataVec       m_IODataVec;
 
-protected:
-    bool			m_EnableLog;    // 数据记录 开启/关闭
-
 	InputData		m_InputData;
 	OutputData		m_OutputData;
 
+protected:
+    bool			m_EnableLog;    // 数据记录 开启/关闭
 	double			m_accTime;
 };
 

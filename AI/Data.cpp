@@ -52,14 +52,15 @@ CDataManager::CDataManager()
 }
 
 void CDataManager::BeginLog() {
-	if (!m_EnableLog)  return;
+	// 每次都清空
+	//if (!m_EnableLog)  return;
 
 	m_InputData.Reset();
 	m_OutputData.Reset();
 }
 
 void CDataManager::EndLog(double deltaTime) {
-	if (!m_EnableLog)  return;
+	if (!m_EnableLog)  return;  // 记录开启的情况下才记录
 
 	m_accTime += deltaTime;
 	if (m_accTime>0.5 && !m_InputData.IsEmpty())
