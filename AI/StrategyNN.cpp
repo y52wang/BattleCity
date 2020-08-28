@@ -9,7 +9,7 @@ using namespace MiniDNN;
 #define MAP_WIDTH 6 // MAP_WIDTH = VIEW_SIZE * 2 + 2
 #define MAP_SIZE 36 // MAP_SIZE = (VIEW_SIZE * 2 + 2)^2
 #define ACTION 5    // 动作空间大小
-#define HDIM 200		// 隐层神经元个数
+#define HDIM 10		// 隐层神经元个数
 
 #define EDGE -1					// 边缘势力影响
 #define ENEMY_INFLUENCE -1		// 敌方坦克势力影响基数
@@ -40,7 +40,7 @@ void StrategyNN::Draw()
 			
 			int influence = -influence_map[i][j] * 256;
 			if (influence > 256) influence = 255;
-			SDL_Color color { influence, 0, 0, SDL_ALPHA_OPAQUE };
+			SDL_Color color { (Uint8)influence, 0, 0, SDL_ALPHA_OPAQUE };
 			render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, color);
 		}
 	}
@@ -61,7 +61,7 @@ void StrategyNN::Draw()
 
 				int influence = -input(INDEX(i, j), 0) * 256;
 				if (influence > 256) influence = 255;
-				SDL_Color color{ influence, 0, 0, SDL_ALPHA_OPAQUE };
+				SDL_Color color{ (Uint8)influence, 0, 0, SDL_ALPHA_OPAQUE };
 				render->FillRect(pixel_x, pixel_y, pixel_size, pixel_size, color);
 			}
 		}
