@@ -1,7 +1,6 @@
 #ifndef STRATEGY_H_INCLUDED
 #define STRATEGY_H_INCLUDED
 
-#include "stdafx.h"
 #include "Data.h"
 
 typedef Eigen::MatrixXf Matrix;

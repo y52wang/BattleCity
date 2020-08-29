@@ -2,7 +2,6 @@
 #define STRATEGYCNN_H_INCLUDED
 
 #include "Strategy.h"
-#include "Data.h"
 
 class StrategyCNN : public CStrategy
 {

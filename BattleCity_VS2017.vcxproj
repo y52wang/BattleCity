@@ -90,6 +90,7 @@
     <ClInclude Include="AI\Strategy.h" />
     <ClInclude Include="AI\StrategyCnn.h" />
     <ClInclude Include="AI\StrategyNN.h" />
+    <ClInclude Include="AI\StrategyWL.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Bullets.h" />
     <ClInclude Include="Editor.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="AI\Strategy.cpp" />
     <ClCompile Include="AI\StrategyCnn.cpp" />
     <ClCompile Include="AI\StrategyNN.cpp" />
+    <ClCompile Include="AI\StrategyWL.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Bullets.cpp" />
     <ClCompile Include="Editor.cpp" />

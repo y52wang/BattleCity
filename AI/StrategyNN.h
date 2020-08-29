@@ -1,7 +1,6 @@
 #ifndef STRATEGYNN_H_HEAD
 #define STRATEGYNN_H_HEAD
 
-#include "Data.h"
 #include "Strategy.h"
 
 class StrategyNN : public CStrategy
@@ -17,9 +16,9 @@ public:
 protected:
 	float influence_map[26][26]; // È«¾ÖÊÆÁ¦Í¼
 
-	void SetupNetwork();
-	void ConvertData(const InputData& id);  // Ìî³ä Matrix input
-	void ConvertData(const OutputData& od); // Ìî³ä Matrix output
+	virtual void SetupNetwork();
+	virtual void ConvertData(const InputData& id);  // Ìî³ä Matrix input
+	virtual void ConvertData(const OutputData& od); // Ìî³ä Matrix output
 
 	void UpdateInfluenceMap(const InputData& id);
 };

@@ -240,6 +240,9 @@
     <ClInclude Include="AI\StrategyNN.h">
       <Filter>头文件\AI</Filter>
     </ClInclude>
+    <ClInclude Include="AI\StrategyWL.h">
+      <Filter>头文件\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -306,6 +309,9 @@
       <Filter>源文件\AI</Filter>
     </ClCompile>
     <ClCompile Include="AI\Strategy.cpp">
+      <Filter>源文件\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\StrategyWL.cpp">
       <Filter>源文件\AI</Filter>
     </ClCompile>
   </ItemGroup>
