@@ -27,6 +27,34 @@ bool InputData::IsEmpty() {
 	return false;
 }
 
+InputData InputData::Normalize() const
+{
+	InputData nid = *this;
+
+	int px = nid.player_pos.x;
+	int py = nid.player_pos.y;
+
+	nid.player_bullet_pos.x -= px;
+	nid.player_bullet_pos.y -= py;
+
+	for (auto it=nid.enemies_pos.begin(); it!= nid.enemies_pos.end(); ++it)
+	{
+		it->x -= px;
+		it->y -= py;
+	}
+
+	for (auto it=nid.enemies_bullet_pos.begin(); it!=nid.enemies_bullet_pos.end(); ++it)
+	{
+		it->x -= px;
+		it->y -= py;
+	}
+
+	nid.player_pos.x = 0;
+	nid.player_pos.y = 0;
+
+	return nid;
+}
+
 // ------------------------------------------------------------------
 OutputData::OutputData()
 	: mov(DIR_NONE)
@@ -185,6 +213,20 @@ void CDataManager::Draw()
 				4*2, 4*2, render->_green);
 
 			// 绘制势力图格子
+			// 画 2 条横线
+			render->DrawLine(st_x+0, st_y+id.player_pos.y*4,
+				st_x+lw*4, st_y+id.player_pos.y*4,
+				render->_yellow);
+			render->DrawLine(st_x+0, st_y+id.player_pos.y*4+4*2,
+				st_x+lw*4, st_y+id.player_pos.y*4+4*2,
+				render->_yellow);
+			// 画 2 条纵线
+			render->DrawLine(st_x+id.player_pos.x*4, st_y+0,
+				st_x+id.player_pos.x*4, st_y+lh*4,
+				render->_yellow);
+			render->DrawLine(st_x+id.player_pos.x*4+4*2, st_y+0,
+				st_x+id.player_pos.x*4+4*2, st_y+lh*4,
+				render->_yellow);
 
 			// 绘制 我方子弹
 			switch (id.player_bullet_dir)

@@ -23,19 +23,22 @@ struct Pos {
 // 坐标系，x 向右，y 向上，原点在左下角
 struct InputData {
 	// Player Data
-	Pos player_pos; // 占四个格子的坐标，这边给出的是左下角坐标
-	DIRECTION player_dir; // enum DIRECTION
-	Pos player_bullet_pos;
-	DIRECTION player_bullet_dir;
+	Pos						player_pos; // 占四个格子的坐标，这边给出的是左下角坐标
+	DIRECTION				player_dir; // enum DIRECTION
+	Pos						player_bullet_pos;
+	DIRECTION				player_bullet_dir;
 	// Enermy Data
-	std::vector<Pos> enemies_pos; // length=enemy_cnt
-	std::vector<DIRECTION> enemies_dir; // length=enemy_cnt
-	std::vector<Pos> enemies_bullet_pos; // length=enemy_bullet_cnt
-	std::vector<DIRECTION> enemies_bullet_dir; // length=enemy_bullet_cnt
+	std::vector<Pos>		enemies_pos; // length=enemy_cnt
+	std::vector<DIRECTION>	enemies_dir; // length=enemy_cnt
+	std::vector<Pos>		enemies_bullet_pos; // length=enemy_bullet_cnt
+	std::vector<DIRECTION>	enemies_bullet_dir; // length=enemy_bullet_cnt
 
 	InputData();
 	void Reset();
 	bool IsEmpty();
+
+	// 标准化处理，player_pos 设置为原点
+	InputData Normalize() const;
 };
 
 struct OutputData {
