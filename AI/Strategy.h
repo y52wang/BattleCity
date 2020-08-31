@@ -16,6 +16,7 @@ public:
 	virtual void Train(const IODataVec& database, std::string folder, std::string fileName, float learning_rate = 0.001f, int batch_size = 32, int epoch = 20);
 	virtual void LoadParameters(std::string folder, std::string fileName);
 	virtual void Draw() {};
+	virtual void AnalyzeData(const IODataVec& database) {};
 
 protected:
 	MiniDNN::Network network;
