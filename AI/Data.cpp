@@ -184,6 +184,8 @@ void CDataManager::Draw()
 				st_y+id.player_pos.y*4,
 				4*2, 4*2, render->_green);
 
+			// 绘制势力图格子
+
 			// 绘制 我方子弹
 			switch (id.player_bullet_dir)
 			{

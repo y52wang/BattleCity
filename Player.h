@@ -62,6 +62,9 @@ public:
 	void SetXVelocity(double v)         { m_vx = v; }
 	void SetYVelocity(double v)         { m_vy = v; }
 
+	int GetPlayerWidth()	{ return m_player_width; }
+	int GetPlayerHeight()	{ return m_player_height; }
+
 	void LogData(CDataManager* dm);
 
 private:

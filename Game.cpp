@@ -298,8 +298,10 @@ void CGame::ProcessEvents()
                 if(m_game_state == GS_EDITOR)
                     Level()->SaveLevel();
 			} else if(event.key.keysym.sym == SDLK_g) {
-				CLevel* level = CGame::Get().Level();
-				level->m_drawGrid = !level->m_drawGrid;
+
+				// CLevel 中全局势力图，固定不变的网格显示
+				//CLevel* level = CGame::Get().Level();
+				//level->m_drawGrid = !level->m_drawGrid;
 			}
         }
 		else if(event.type == SDL_KEYUP)
