@@ -109,7 +109,7 @@ void CLevel::DrawLevel(bool up)
 		}
 	}
 
-	if (up && m_drawGrid)
+	if (up && m_drawGrid)  // 绘制网格
 	{
 		for (int i=1; i<m_level_height; ++i)
 		{

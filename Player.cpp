@@ -167,8 +167,9 @@ void CPlayer::DecreaseBullet() {
 
 void CPlayer::Draw() {
     CGame& game = CGame::Get();
-    int pos_x = m_x * game.TailSize();
-    int pos_y = m_y * game.TailSize();
+	int ts = game.TailSize();
+    int pos_x = m_x * ts;
+    int pos_y = m_y * ts;
 
     // m_x 取值范围 [0.0, 24.0]
     // m_y 取值范围 [0.0, 24.0]
@@ -177,6 +178,7 @@ void CPlayer::Draw() {
 
     CSprites*   s = game.Sprites();
     CRenderer*  r = game.Renderer();
+	CLevel*		lvl = game.Level();
     bool log = game.DataManager()->IsEnableLog();
     switch (m_direction) {
         case DIR_UP:
