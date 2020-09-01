@@ -37,7 +37,7 @@ InputData InputData::Normalize() const
 	nid.player_bullet_pos.x -= px;
 	nid.player_bullet_pos.y -= py;
 
-	for (auto it=nid.enemies_pos.begin(); it!= nid.enemies_pos.end(); ++it)
+	for (auto it=nid.enemies_pos.begin(); it!=nid.enemies_pos.end(); ++it)
 	{
 		it->x -= px;
 		it->y -= py;
@@ -55,6 +55,41 @@ InputData InputData::Normalize() const
 	return nid;
 }
 
+InputData InputData::MirrorLR() const
+{
+	InputData mlrid = *this;
+
+	auto procPosTank = [](Pos& pos)
+	{
+		pos.x = 26 - pos.x - 2;
+	};
+
+	auto procPosBullet = [](Pos& pos)
+	{
+		pos.x = 26 - pos.x - 2;
+	};
+
+	auto procDir = [](DIRECTION& dir)
+	{
+		if (dir==DIR_LEFT)			dir = DIR_RIGHT;
+		else if (dir==DIR_RIGHT)	dir = DIR_LEFT;
+	};
+
+	procPosTank(mlrid.player_pos);
+	procDir(mlrid.player_dir);
+
+	procPosBullet(mlrid.player_bullet_pos);
+	procDir(mlrid.player_bullet_dir);
+
+	std::for_each(mlrid.enemies_pos.begin(), mlrid.enemies_pos.end(), procPosTank);
+	std::for_each(mlrid.enemies_dir.begin(), mlrid.enemies_dir.end(), procDir);
+
+	std::for_each(mlrid.enemies_bullet_pos.begin(), mlrid.enemies_bullet_pos.end(), procPosBullet);
+	std::for_each(mlrid.enemies_bullet_dir.begin(), mlrid.enemies_bullet_dir.end(), procDir);
+
+	return mlrid;
+}
+
 // ------------------------------------------------------------------
 OutputData::OutputData()
 	: mov(DIR_NONE)
@@ -66,6 +101,16 @@ void OutputData::Reset()
 {
 	mov = DIR_NONE;
 	shoot = false;
+}
+
+OutputData OutputData::MirrorLR() const
+{
+	OutputData mlrod = *this;
+
+	if (mlrod.mov==DIR_LEFT)		mlrod.mov = DIR_RIGHT;
+	else if (mlrod.mov==DIR_RIGHT)	mlrod.mov = DIR_LEFT;
+
+	return mlrod;
 }
 
 // ------------------------------------------------------------------
@@ -206,6 +251,9 @@ void CDataManager::Draw()
 		{
 			const InputData& id = it->first;
 			const OutputData& od = it->second;
+
+			// 注释掉上上行，打开下面这行，则显示镜像数据
+			//const InputData& id = it->first.MirrorLR();
 
 			// 绘制 我方
 			render->FillRect(st_x+id.player_pos.x*4,
@@ -387,5 +435,7 @@ void CDataManager::Load(const std::string fileName)
 		data.first = id;
 		data.second = od;
 		m_IODataVec.push_back(data);
+
+		//m_IODataVec.push_back(IOData(id.MirrorLR(), od.MirrorLR() ) );
 	}
 }

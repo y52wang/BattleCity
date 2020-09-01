@@ -38,6 +38,7 @@ static SDL_Rect GetBulletRect(const Pos& pos, const DIRECTION dir)
 }
 
 // 9 宫格势力图，势力计算 ---------------------------------------------------------------
+// 玩家所在左下角为 (0, 0)，整个势力图的左下角 (-12, -12)
 static SDL_Rect GetRectInfluence9(const int idx)
 {
 	switch (idx)
@@ -230,30 +231,30 @@ void StrategyWL::Draw()
 
 	// 九宫格左上方（编号 0）
 	r->DrawRect(cx-4*12, cy+4*2, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx-4*12+1, cy+4*2+1, 4*12-1, 4*12-1, Fade(r->_red, ary[0]) );
+	r->FillRect(cx-4*12+1, cy+4*2+1, 4*12-2, 4*12-2, Fade(r->_red, ary[0]) );
 	// 九宫格上方（编号 1）
 	r->DrawRect(cx, cy+4*2, 4*2, 4*12, r->_yellow);
-	r->FillRect(cx+1, cy+4*2+1, 4*2-1, 4*12-1, Fade(r->_red, ary[1]) );
+	r->FillRect(cx+1, cy+4*2+1, 4*2-2, 4*12-2, Fade(r->_red, ary[1]) );
 	// 九宫格右上方（编号 2）
 	r->DrawRect(cx+4*2, cy+4*2, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx+4*2+1, cy+4*2+1, 4*12-1, 4*12-1, Fade(r->_red, ary[2]) );
+	r->FillRect(cx+4*2+1, cy+4*2+1, 4*12-2, 4*12-2, Fade(r->_red, ary[2]) );
 
 	// 九宫格左方（编号 3）
 	r->DrawRect(cx-4*12, cy, 4*12, 4*2, r->_yellow);
-	r->FillRect(cx-4*12+1, cy+1, 4*12-1, 4*2-1, Fade(r->_red, ary[3]) );
+	r->FillRect(cx-4*12+1, cy+1, 4*12-2, 4*2-2, Fade(r->_red, ary[3]) );
 	// 九宫格右方（编号 5）
 	r->DrawRect(cx+4*2, cy, 4*12, 4*2, r->_yellow);
-	r->FillRect(cx+4*2+1, cy+1, 4*12-1, 4*2-1, Fade(r->_red, ary[5]) );
+	r->FillRect(cx+4*2+1, cy+1, 4*12-2, 4*2-2, Fade(r->_red, ary[5]) );
 
 	// 九宫格左下方（编号 6）
 	r->DrawRect(cx-4*12, cy-4*12, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx-4*12+1, cy-4*12+1, 4*12-1, 4*12-1, Fade(r->_red, ary[6]) );
+	r->FillRect(cx-4*12+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, ary[6]) );
 	// 九宫格下方（编号 7）
 	r->DrawRect(cx, cy-4*12, 4*2, 4*12, r->_yellow);
-	r->FillRect(cx+1, cy-4*12+1, 4*2-1, 4*12-1, Fade(r->_red, ary[7]) );
+	r->FillRect(cx+1, cy-4*12+1, 4*2-2, 4*12-2, Fade(r->_red, ary[7]) );
 	// 九宫格右下方（编号 8）
 	r->DrawRect(cx+4*2, cy-4*12, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx+4*2+1, cy-4*12+1, 4*12-1, 4*12-1, Fade(r->_red, ary[8]) );
+	r->FillRect(cx+4*2+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, ary[8]) );
 }
 
 void StrategyWL::SetupNetwork()

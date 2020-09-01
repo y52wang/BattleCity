@@ -34,6 +34,8 @@ void CBullets::CreateBullet(double x, double y, DIRECTION dir, OWNER owner, int 
 
 	if (speed == 0)  speed = m_speed;
 
+	// tile_size 16，坦克 32 占 2 个 tile_size
+	// 子弹从坦克朝向的当中发射出去，子弹贴图尺寸 8*8
 	switch(dir) {
 	case DIR_UP:
 		temp_bullet.x  = x + (12/double(tile_size) );
@@ -63,7 +65,7 @@ void CBullets::CreateBullet(double x, double y, DIRECTION dir, OWNER owner, int 
 		temp_bullet.yv = 0.0;
 		break;
 	}
-
+	//printf("%.2lf, %.2lf\n", temp_bullet.x, temp_bullet.y);
 	m_bullets.insert(m_bullets.end(), temp_bullet);
 }
 

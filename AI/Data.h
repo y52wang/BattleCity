@@ -25,7 +25,7 @@ struct InputData {
 	// Player Data
 	Pos						player_pos; // 占四个格子的坐标，这边给出的是左下角坐标
 	DIRECTION				player_dir; // enum DIRECTION
-	Pos						player_bullet_pos;
+	Pos						player_bullet_pos;  // 占二个格子，给出的是左下角坐标
 	DIRECTION				player_bullet_dir;
 	// Enermy Data
 	std::vector<Pos>		enemies_pos; // length=enemy_cnt
@@ -38,15 +38,20 @@ struct InputData {
 	bool IsEmpty();
 
 	// 标准化处理，player_pos 设置为原点
-	InputData Normalize() const;
+	InputData Normalize() const;  // Normalize 后 MirrorLR 不再支持
+	// 镜像数据（左右）
+	InputData MirrorLR() const;
 };
 
 struct OutputData {
-	DIRECTION mov;
-	bool shoot;
+	DIRECTION	mov;
+	bool		shoot;
 
 	OutputData();
 	void Reset();
+
+	// 镜像数据（左右）
+	OutputData MirrorLR() const;
 };
 
 typedef std::pair<InputData, OutputData>    IOData;
