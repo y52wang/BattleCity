@@ -7,7 +7,7 @@ using namespace MiniDNN;
 
 #define REGION_CNT	8	// 总的区域
 #define ACTION		5	// 移动 5 个，Shoot 1 个
-#define HIDDEN		16	// 隐层单元个数
+#define HIDDEN		4	// 隐层单元个数
 
 static SDL_Color Fade(SDL_Color c, float alpha)
 {
@@ -260,19 +260,42 @@ void StrategyWL::SetupNetwork()
 {
 	Layer* layer1 = new FullyConnected<ReLU>(REGION_CNT,	HIDDEN);
 	Layer* layer2 = new FullyConnected<ReLU>(HIDDEN,		HIDDEN);
-	Layer* layer3 = new FullyConnected<Sigmoid>(HIDDEN,		ACTION);
+	Layer* layer3 = new FullyConnected<Softmax>(HIDDEN,		ACTION);
 
 	network.add_layer(layer1);
 	network.add_layer(layer2);
 	network.add_layer(layer3);
 
-	network.set_output(new RegressionMSE());
+	network.set_output(new MultiClassEntropy() );
 }
 
 void StrategyWL::ConvertData(const InputData& id)
 {
+	input.fill(0);
+
+	InputData nid = id.Normalize();
+	float ary[9];
+	CalcInfluence9(nid, ary);
+
+	input(0, 0) = ary[0];
+	input(1, 0) = ary[1];
+	input(2, 0) = ary[2];
+	input(3, 0) = ary[3];
+	input(4, 0) = ary[5];
+	input(5, 0) = ary[6];
+	input(6, 0) = ary[7];
+	input(7, 0) = ary[8];
+
+	printf("%.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f\n",
+		ary[0], ary[1], ary[2], ary[3],
+		ary[5], ary[6], ary[7], ary[8]);
 }
 
 void StrategyWL::ConvertData(const OutputData& od)
 {
+	output.fill(0);
+
+	output(od.mov, 0) = 1;
+
+	printf("%d\n", od.mov);
 }
