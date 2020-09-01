@@ -47,7 +47,7 @@ void InfluenceMethod9::CalcInfluence(const InputData& nid, std::vector<float>& o
 
 	for (size_t i=0; i<nid.enemies_pos.size(); ++i)
 	{
-		for (int idx=0; idx<9; ++idx)
+		for (int idx=0; idx<_region_cnt; ++idx)
 		{
 			if (idx==4)  continue;  // 自己所占位置不处理
 
@@ -176,6 +176,7 @@ void InfluenceMethod9::DebugDraw(const InputData& nid, const int cx, const int c
 }
 
 // 玩家所在左下角为 (0, 0)，整个势力图的左下角 (-12, -12)
+// 如果离开势力图很远很远，就不考虑了，因为和矩形没有任何相交
 SDL_Rect InfluenceMethod9::GetRectInfluence(const int idx)
 {
 	switch (idx)
@@ -203,8 +204,180 @@ SDL_Rect InfluenceMethod9::GetRectInfluence(const int idx)
 		return SDL_Rect{ 0, 0, 0, 0 };
 	}
 }
-// --------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------
+// 横向：近中远*上中下*左右
+// 纵向：近中远*左中右*上下
+// 左上角，右上角，左下角，右下角
+const int InfluenceMethodVerHorSquares::_region_cnt = 3*3*2 + 3*3*2 + 4;
+
+void InfluenceMethodVerHorSquares::CalcInfluence(const InputData& nid, std::vector<float>& out)
+{
+	out.resize(_region_cnt);
+	for (size_t i=0; i<out.size(); ++i)
+		out[i] = 0.0f;
+
+	for (int idx=0; idx<_region_cnt; ++idx)
+		out[idx] = std::min<float>(1.0f, out[idx]);
+}
+
+void InfluenceMethodVerHorSquares::DebugDraw(const InputData& nid, const int cx, const int cy)
+{
+	CGame&		game	= CGame::Get();
+	CRenderer*	r		= game.Renderer();
+
+	// 4 表示放大倍数
+	//r->DrawRect(cx, cy, 4*2, 4*2, r->_yellow);  绘制自己所在的原点位置
+	for (int i=0; i<_region_cnt; ++i)
+	{
+		int yoffset = 0;
+		if (3*3*2<=i && i<3*3*2*2)
+			yoffset = 115;  // 分开显示，看得清楚一点
+		else if (3*3*2*2<=i)
+			yoffset = -115;
+		SDL_Rect rect = GetRectInfluence(i);
+		r->DrawRect(cx+4*rect.x, cy+yoffset+4*rect.y, 4*rect.w, 4*rect.h, r->_yellow);
+	}
+}
+
+// 玩家所在左下角为 (0, 0)，整个势力图的左下角 (-12, -12)
+// 如果离开势力图很远很远，就不考虑了，因为和矩形没有任何相交
+SDL_Rect InfluenceMethodVerHorSquares::GetRectInfluence(const int idx)
+{
+	assert(0<=idx && idx<_region_cnt);
+
+	if (0<=idx && idx<3*3*2)
+	{
+		/*
+		-------------------------------------
+		|  0  |  1  |  2  |  9  | 10  | 11  |
+		-------------------------------------
+		|  3  |  4  |  5  | 12  | 13  | 14  |
+		-------------------------------------
+		|  6  |  7  |  8  | 15  | 16  | 17  |
+		-------------------------------------
+		玩家的位置在 5，12 的中间，玩家左下角坐标 (0, 0)
+		*/
+		switch (idx)
+		{
+		case 0:
+			return SDL_Rect { -12,  2, 5, 2 };
+		case 1:
+			return SDL_Rect {  -7,  2, 4, 2 };
+		case 2:
+			return SDL_Rect {  -3,  2, 4, 2 };
+		case 3:
+			return SDL_Rect { -12,  0, 5, 2 };
+		case 4:
+			return SDL_Rect {  -7,  0, 4, 2 };
+		case 5:
+			return SDL_Rect {  -3,  0, 4, 2 };
+		case 6:
+			return SDL_Rect { -12, -2, 5, 2 };
+		case 7:
+			return SDL_Rect {  -7, -2, 4, 2 };
+		case 8:
+			return SDL_Rect {  -3, -2, 4, 2 };
+
+		case 9:
+			return SDL_Rect {   1,  2, 4, 2 };
+		case 10:
+			return SDL_Rect {   5,  2, 4, 2 };
+		case 11:
+			return SDL_Rect {   9,  2, 5, 2 };
+		case 12:
+			return SDL_Rect {   1,  0, 4, 2 };
+		case 13:
+			return SDL_Rect {   5,  0, 4, 2 };
+		case 14:
+			return SDL_Rect {   9,  0, 5, 2 };
+		case 15:
+			return SDL_Rect {   1, -2, 4, 2 };
+		case 16:
+			return SDL_Rect {   5, -2, 4, 2 };
+		case 17:
+			return SDL_Rect {   9, -2, 5, 2 };
+		}
+	}
+	else if (3*3*2<=idx && idx<_region_cnt-4)
+	{
+		/*
+		-------------------
+		| 18  | 19  | 20  |
+		-------------------
+		| 21  | 22  | 23  |
+		-------------------
+		| 24  | 25  | 26  |
+		-------------------
+		| 27  | 28  | 29  |
+		-------------------
+		| 30  | 31  | 32  |
+		-------------------
+		| 33  | 34  | 35  |
+		-------------------
+		玩家的位置在 25，28 的中间，玩家左下角坐标 (0, 0)
+		*/
+		switch (idx)
+		{
+		case 18:
+			return SDL_Rect { -2,   9, 2, 5 };
+		case 19:
+			return SDL_Rect {  0,   9, 2, 5 };
+		case 20:
+			return SDL_Rect {  2,   9, 2, 5 };
+		case 21:
+			return SDL_Rect { -2,   5, 2, 4 };
+		case 22:  
+			return SDL_Rect {  0,   5, 2, 4 };
+		case 23:  
+			return SDL_Rect {  2,   5, 2, 4 };
+		case 24:
+			return SDL_Rect { -2,   1, 2, 4 };
+		case 25:
+			return SDL_Rect {  0,   1, 2, 4 };
+		case 26:
+			return SDL_Rect {  2,   1, 2, 4 };
+		case 27:
+			return SDL_Rect { -2,  -3, 2, 4 };
+		case 28:
+			return SDL_Rect {  0,  -3, 2, 4 };
+		case 29:
+			return SDL_Rect {  2,  -3, 2, 4 };
+		case 30:
+			return SDL_Rect { -2,  -7, 2, 4 };
+		case 31:
+			return SDL_Rect {  0,  -7, 2, 4 };
+		case 32:
+			return SDL_Rect {  2,  -7, 2, 4 };
+		case 33:
+			return SDL_Rect { -2, -12, 2, 5 };
+		case 34:
+			return SDL_Rect {  0, -12, 2, 5 };
+		case 35:
+			return SDL_Rect {  2, -12, 2, 5 };
+		}
+	}
+	else if (idx==_region_cnt-4)
+	{
+		return SDL_Rect { -12,   4, 10, 10 };
+	}
+	else if (idx==_region_cnt-3)
+	{
+		return SDL_Rect {   4,   4, 10, 10 };
+	}
+	else if (idx==_region_cnt-2)
+	{
+		return SDL_Rect { -12, -12, 10, 10 };
+	}
+	else if (idx==_region_cnt-1)
+	{
+		return SDL_Rect {   4, -12, 10, 10 };
+	}
+
+	return SDL_Rect { 0, 0, 0, 0 };
+}
+
+// --------------------------------------------------------------------------------------
 template <typename InfluenceMethod>
 StrategyWL<InfluenceMethod>::StrategyWL()
 	: CStrategy(InfluenceMethod::_region_cnt, ACTION)
@@ -298,9 +471,11 @@ void StrategyWL<InfluenceMethod>::ConvertData(const InputData& id)
 		input(i, 0) = out[i];
 	}
 
-	printf("%.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f\n",
-		out[0], out[1], out[2], out[3],
-		out[5], out[6], out[7], out[8]);
+	for (size_t i=0; i<out.size(); ++i)
+	{
+		printf("%.1f, ", out[i]);
+	}
+	printf("\n");
 }
 
 template <typename InfluenceMethod>
