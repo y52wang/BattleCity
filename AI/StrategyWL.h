@@ -2,7 +2,27 @@
 #define STRATEGYWL_H_INCLUDED
 
 #include "Strategy.h"
+#include <SDL2/SDL_rect.h>
 
+struct InfluenceMethod9
+{
+	static const int _region_cnt;
+
+	static void CalcInfluence(const InputData& nid, std::vector<float>& out);
+	static void DebugDraw(const InputData& nid, const int cx, const int cy);
+
+protected:
+	static SDL_Rect GetRectInfluence(const int idx);
+};
+
+struct InfluenceMethodVerHorSquares
+{
+	static const int _region_cnt;
+
+	static void CalcInfluence(const InputData& nid, std::vector<float> out);
+};
+
+template <typename InfluenceMethod>
 class StrategyWL : public CStrategy
 {
 public:

@@ -5,7 +5,6 @@
 
 using namespace MiniDNN;
 
-#define REGION_CNT	8	// 总的区域
 #define ACTION		5	// 移动 5 个，Shoot 1 个
 #define HIDDEN		4	// 隐层单元个数
 
@@ -38,8 +37,146 @@ static SDL_Rect GetBulletRect(const Pos& pos, const DIRECTION dir)
 }
 
 // 9 宫格势力图，势力计算 ---------------------------------------------------------------
+const int InfluenceMethod9::_region_cnt = 9;  // 总的区域
+
+void InfluenceMethod9::CalcInfluence(const InputData& nid, std::vector<float>& out)
+{
+	out.resize(_region_cnt);
+	for (size_t i=0; i<out.size(); ++i)
+		out[i] = 0.0f;
+
+	for (size_t i=0; i<nid.enemies_pos.size(); ++i)
+	{
+		for (int idx=0; idx<9; ++idx)
+		{
+			if (idx==4)  continue;  // 自己所占位置不处理
+
+			SDL_Rect region = GetRectInfluence(idx);
+			SDL_Rect rect { nid.enemies_pos[i].x, nid.enemies_pos[i].y, 2, 2 };
+			bool isInter = SDL_HasIntersection(&region, &rect);
+			if (!isInter)  continue;
+
+			out[idx] += 0.1f;
+			switch (idx)
+			{
+			case 1:
+				if (nid.enemies_dir[i]==DIR_DOWN)
+					out[idx] += 0.2f;
+			case 3:
+				if (nid.enemies_dir[i]==DIR_RIGHT)
+					out[idx] += 0.2f;
+			case 5:
+				if (nid.enemies_dir[i]==DIR_LEFT)
+					out[idx] += 0.2f;
+			case 7:
+				if (nid.enemies_dir[i]==DIR_UP)
+					out[idx] += 0.2f;
+			}
+		}
+	}
+
+	for (size_t i=0; i<nid.enemies_bullet_pos.size(); ++i)
+	{
+		for (int idx=0; idx<_region_cnt; ++idx)
+		{
+			if (idx==4)  continue;  // 自己所占位置不处理
+
+			SDL_Rect region = GetRectInfluence(idx);
+			DIRECTION dir = nid.enemies_bullet_dir[i];
+			SDL_Rect rect = GetBulletRect(nid.enemies_bullet_pos[i], dir);
+			bool isInter = SDL_HasIntersection(&region, &rect);
+			if (!isInter)  continue;
+
+			switch (idx)
+			{
+			case 0:
+				if (dir==DIR_RIGHT || dir==DIR_DOWN)
+					out[idx] += 0.1f;
+				break;
+
+			case 1:
+				if (dir==DIR_DOWN)
+					out[idx] += 0.3f;
+				break;
+
+			case 2:
+				if (dir==DIR_LEFT || dir==DIR_DOWN)
+					out[idx] += 0.1f;
+				break;
+
+			case 3:
+				if (dir==DIR_RIGHT)
+					out[idx] += 0.3f;
+				break;
+
+			case 5:
+				if (dir==DIR_LEFT)
+					out[idx] += 0.3f;
+				break;
+
+			case 6:
+				if (dir==DIR_RIGHT || dir==DIR_UP)
+					out[idx] += 0.1f;
+				break;
+
+			case 7:
+				if (dir==DIR_UP)
+					out[idx] += 0.3f;
+				break;
+
+			case 8:
+				if (dir==DIR_LEFT || dir==DIR_UP)
+					out[idx] += 0.1f;
+				break;
+			}
+		}
+	}
+
+	for (int idx=0; idx<_region_cnt; ++idx)
+		out[idx] = std::min<float>(1.0f, out[idx]);
+}
+
+void InfluenceMethod9::DebugDraw(const InputData& nid, const int cx, const int cy)
+{
+	CGame&			game	= CGame::Get();
+	CRenderer*		r		= game.Renderer();
+
+	std::vector<float> out;
+	CalcInfluence(nid, out);
+
+	// 画 自己 所在的方格（以此为中心）
+	r->DrawRect(cx, cy, 4*2, 4*2, r->_yellow);
+
+	// 九宫格左上方（编号 0）
+	r->DrawRect(cx-4*12, cy+4*2, 4*12, 4*12, r->_yellow);
+	r->FillRect(cx-4*12+1, cy+4*2+1, 4*12-2, 4*12-2, Fade(r->_red, out[0]) );
+	// 九宫格上方（编号 1）
+	r->DrawRect(cx, cy+4*2, 4*2, 4*12, r->_yellow);
+	r->FillRect(cx+1, cy+4*2+1, 4*2-2, 4*12-2, Fade(r->_red, out[1]) );
+	// 九宫格右上方（编号 2）
+	r->DrawRect(cx+4*2, cy+4*2, 4*12, 4*12, r->_yellow);
+	r->FillRect(cx+4*2+1, cy+4*2+1, 4*12-2, 4*12-2, Fade(r->_red, out[2]) );
+
+	// 九宫格左方（编号 3）
+	r->DrawRect(cx-4*12, cy, 4*12, 4*2, r->_yellow);
+	r->FillRect(cx-4*12+1, cy+1, 4*12-2, 4*2-2, Fade(r->_red, out[3]) );
+	// 九宫格右方（编号 5）
+	r->DrawRect(cx+4*2, cy, 4*12, 4*2, r->_yellow);
+	r->FillRect(cx+4*2+1, cy+1, 4*12-2, 4*2-2, Fade(r->_red, out[5]) );
+
+	// 九宫格左下方（编号 6）
+	r->DrawRect(cx-4*12, cy-4*12, 4*12, 4*12, r->_yellow);
+	r->FillRect(cx-4*12+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, out[6]) );
+	// 九宫格下方（编号 7）
+	r->DrawRect(cx, cy-4*12, 4*2, 4*12, r->_yellow);
+	r->FillRect(cx+1, cy-4*12+1, 4*2-2, 4*12-2, Fade(r->_red, out[7]) );
+	// 九宫格右下方（编号 8）
+	r->DrawRect(cx+4*2, cy-4*12, 4*12, 4*12, r->_yellow);
+	r->FillRect(cx+4*2+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, out[8]) );
+}
+
 // 玩家所在左下角为 (0, 0)，整个势力图的左下角 (-12, -12)
-static SDL_Rect GetRectInfluence9(const int idx)
+SDL_Rect InfluenceMethod9::GetRectInfluence(const int idx)
 {
 	switch (idx)
 	{
@@ -66,110 +203,16 @@ static SDL_Rect GetRectInfluence9(const int idx)
 		return SDL_Rect{ 0, 0, 0, 0 };
 	}
 }
-
-static void CalcInfluence9(const InputData& nid, float (&ary)[9])
-{
-	memset(ary, 0, sizeof(ary) );
-
-	for (size_t i=0; i<nid.enemies_pos.size(); ++i)
-	{
-		for (int idx=0; idx<9; ++idx)
-		{
-			if (idx==4)  continue;  // 自己所占位置不处理
-
-			SDL_Rect region = GetRectInfluence9(idx);
-			SDL_Rect rect { nid.enemies_pos[i].x, nid.enemies_pos[i].y, 2, 2 };
-			bool isInter = SDL_HasIntersection(&region, &rect);
-			if (!isInter)  continue;
-
-			ary[idx] += 0.1f;
-			switch (idx)
-			{
-			case 1:
-				if (nid.enemies_dir[i]==DIR_DOWN)
-					ary[idx] += 0.2f;
-			case 3:
-				if (nid.enemies_dir[i]==DIR_RIGHT)
-					ary[idx] += 0.2f;
-			case 5:
-				if (nid.enemies_dir[i]==DIR_LEFT)
-					ary[idx] += 0.2f;
-			case 7:
-				if (nid.enemies_dir[i]==DIR_UP)
-					ary[idx] += 0.2f;
-			}
-		}
-	}
-
-	for (size_t i=0; i<nid.enemies_bullet_pos.size(); ++i)
-	{
-		for (int idx=0; idx<9; ++idx)
-		{
-			if (idx==4)  continue;  // 自己所占位置不处理
-
-			SDL_Rect region = GetRectInfluence9(idx);
-			DIRECTION dir = nid.enemies_bullet_dir[i];
-			SDL_Rect rect = GetBulletRect(nid.enemies_bullet_pos[i], dir);
-			bool isInter = SDL_HasIntersection(&region, &rect);
-			if (!isInter)  continue;
-
-			switch (idx)
-			{
-			case 0:
-				if (dir==DIR_RIGHT || dir==DIR_DOWN)
-					ary[idx] += 0.1f;
-				break;
-
-			case 1:
-				if (dir==DIR_DOWN)
-					ary[idx] += 0.3f;
-				break;
-
-			case 2:
-				if (dir==DIR_LEFT || dir==DIR_DOWN)
-					ary[idx] += 0.1f;
-				break;
-
-			case 3:
-				if (dir==DIR_RIGHT)
-					ary[idx] += 0.3f;
-				break;
-
-			case 5:
-				if (dir==DIR_LEFT)
-					ary[idx] += 0.3f;
-				break;
-
-			case 6:
-				if (dir==DIR_RIGHT || dir==DIR_UP)
-					ary[idx] += 0.1f;
-				break;
-
-			case 7:
-				if (dir==DIR_UP)
-					ary[idx] += 0.3f;
-				break;
-
-			case 8:
-				if (dir==DIR_LEFT || dir==DIR_UP)
-					ary[idx] += 0.1f;
-				break;
-			}
-		}
-	}
-
-	for (int idx=0; idx<9; ++idx)
-		ary[idx] = std::min<float>(1.0f, ary[idx]);
-}
-
 // --------------------------------------------------------------------------------------
 
-StrategyWL::StrategyWL()
-	: CStrategy(REGION_CNT, ACTION)
+template <typename InfluenceMethod>
+StrategyWL<InfluenceMethod>::StrategyWL()
+	: CStrategy(InfluenceMethod::_region_cnt, ACTION)
 {
 }
 
-void StrategyWL::Draw()
+template <typename InfluenceMethod>
+void StrategyWL<InfluenceMethod>::Draw()
 {
 	CGame&			game	= CGame::Get();
 	CRenderer*		r		= game.Renderer();
@@ -219,49 +262,20 @@ void StrategyWL::Draw()
 	const OutputData&	od		= iodata.second;
 
 	InputData nid = id.Normalize();
-	float ary[9];
-	CalcInfluence9(nid, ary);
 
 	// 绘制以 player 为中心的势力图
 	int cx = 700;  // 中心左下角 x 坐标
 	int cy = 286;  // 中心左下角 y 坐标
-	
-	// 画 自己 所在的方格（以此为中心）
-	r->DrawRect(cx, cy, 4*2, 4*2, r->_yellow);
 
-	// 九宫格左上方（编号 0）
-	r->DrawRect(cx-4*12, cy+4*2, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx-4*12+1, cy+4*2+1, 4*12-2, 4*12-2, Fade(r->_red, ary[0]) );
-	// 九宫格上方（编号 1）
-	r->DrawRect(cx, cy+4*2, 4*2, 4*12, r->_yellow);
-	r->FillRect(cx+1, cy+4*2+1, 4*2-2, 4*12-2, Fade(r->_red, ary[1]) );
-	// 九宫格右上方（编号 2）
-	r->DrawRect(cx+4*2, cy+4*2, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx+4*2+1, cy+4*2+1, 4*12-2, 4*12-2, Fade(r->_red, ary[2]) );
-
-	// 九宫格左方（编号 3）
-	r->DrawRect(cx-4*12, cy, 4*12, 4*2, r->_yellow);
-	r->FillRect(cx-4*12+1, cy+1, 4*12-2, 4*2-2, Fade(r->_red, ary[3]) );
-	// 九宫格右方（编号 5）
-	r->DrawRect(cx+4*2, cy, 4*12, 4*2, r->_yellow);
-	r->FillRect(cx+4*2+1, cy+1, 4*12-2, 4*2-2, Fade(r->_red, ary[5]) );
-
-	// 九宫格左下方（编号 6）
-	r->DrawRect(cx-4*12, cy-4*12, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx-4*12+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, ary[6]) );
-	// 九宫格下方（编号 7）
-	r->DrawRect(cx, cy-4*12, 4*2, 4*12, r->_yellow);
-	r->FillRect(cx+1, cy-4*12+1, 4*2-2, 4*12-2, Fade(r->_red, ary[7]) );
-	// 九宫格右下方（编号 8）
-	r->DrawRect(cx+4*2, cy-4*12, 4*12, 4*12, r->_yellow);
-	r->FillRect(cx+4*2+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, ary[8]) );
+	InfluenceMethod::DebugDraw(nid, cx, cy);
 }
 
-void StrategyWL::SetupNetwork()
+template <typename InfluenceMethod>
+void StrategyWL<InfluenceMethod>::SetupNetwork()
 {
-	Layer* layer1 = new FullyConnected<ReLU>(REGION_CNT,	HIDDEN);
-	Layer* layer2 = new FullyConnected<ReLU>(HIDDEN,		HIDDEN);
-	Layer* layer3 = new FullyConnected<Softmax>(HIDDEN,		ACTION);
+	Layer* layer1 = new FullyConnected<ReLU>(InfluenceMethod::_region_cnt, HIDDEN);
+	Layer* layer2 = new FullyConnected<ReLU>(HIDDEN, HIDDEN);
+	Layer* layer3 = new FullyConnected<Softmax>(HIDDEN, ACTION);
 
 	network.add_layer(layer1);
 	network.add_layer(layer2);
@@ -270,29 +284,27 @@ void StrategyWL::SetupNetwork()
 	network.set_output(new MultiClassEntropy() );
 }
 
-void StrategyWL::ConvertData(const InputData& id)
+template <typename InfluenceMethod>
+void StrategyWL<InfluenceMethod>::ConvertData(const InputData& id)
 {
 	input.fill(0);
 
 	InputData nid = id.Normalize();
-	float ary[9];
-	CalcInfluence9(nid, ary);
+	std::vector<float> out;
+	InfluenceMethod::CalcInfluence(nid, out);
 
-	input(0, 0) = ary[0];
-	input(1, 0) = ary[1];
-	input(2, 0) = ary[2];
-	input(3, 0) = ary[3];
-	input(4, 0) = ary[5];
-	input(5, 0) = ary[6];
-	input(6, 0) = ary[7];
-	input(7, 0) = ary[8];
+	for (int i=0; i<InfluenceMethod::_region_cnt; ++i)
+	{
+		input(i, 0) = out[i];
+	}
 
 	printf("%.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f\n",
-		ary[0], ary[1], ary[2], ary[3],
-		ary[5], ary[6], ary[7], ary[8]);
+		out[0], out[1], out[2], out[3],
+		out[5], out[6], out[7], out[8]);
 }
 
-void StrategyWL::ConvertData(const OutputData& od)
+template <typename InfluenceMethod>
+void StrategyWL<InfluenceMethod>::ConvertData(const OutputData& od)
 {
 	output.fill(0);
 
