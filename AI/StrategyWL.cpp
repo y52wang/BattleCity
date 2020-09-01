@@ -42,13 +42,15 @@ static SDL_Rect GetBulletRect(const Pos& pos, const DIRECTION dir)
 }
 
 // 9 宫格势力图，势力计算 ---------------------------------------------------------------
+const int InfluenceMethod9::_moving_hint_cnt = 4;
 const int InfluenceMethod9::_region_cnt = 9;  // 总的区域
+const int InfluenceMethod9::_feature_cnt = 13;
 
 void InfluenceMethod9::CalcInfluence(const InputData& id, std::vector<float>& out)
 {
 	InputData nid = id.Normalize();
 
-	out.resize(_region_cnt);
+	out.resize(_feature_cnt);
 	for (size_t i=0; i<out.size(); ++i)
 		out[i] = 0.0f;
 
@@ -141,6 +143,11 @@ void InfluenceMethod9::CalcInfluence(const InputData& id, std::vector<float>& ou
 
 	for (int idx=0; idx<_region_cnt; ++idx)
 		out[idx] = std::min<float>(1.0f, out[idx]);
+
+	out[_region_cnt]	= 1.0f-id.player_pos.x/24.0f;  // 左
+	out[_region_cnt+1]	= 1.0f-(26.0f-(id.player_pos.y+2))/24.0f;  // 上
+	out[_region_cnt+2]	= 1.0f-(26.0f-(id.player_pos.x+2))/24.0f;  // 右
+	out[_region_cnt+3]	= 1.0f-id.player_pos.y/24.0f;  // 下
 }
 
 void InfluenceMethod9::DebugDraw(const InputData& id, const int cx, const int cy)
@@ -150,7 +157,7 @@ void InfluenceMethod9::DebugDraw(const InputData& id, const int cx, const int cy
 	InputData		nid		= id.Normalize();
 
 	std::vector<float> out;
-	CalcInfluence(nid, out);
+	CalcInfluence(id, out);
 
 	// 画 自己 所在的方格（以此为中心）
 	r->DrawRect(cx, cy, 4*2, 4*2, r->_yellow);
@@ -181,6 +188,19 @@ void InfluenceMethod9::DebugDraw(const InputData& id, const int cx, const int cy
 	// 九宫格右下方（编号 8）
 	r->DrawRect(cx+4*2, cy-4*12, 4*12, 4*12, r->_yellow);
 	r->FillRect(cx+4*2+1, cy-4*12+1, 4*12-2, 4*12-2, Fade(r->_red, out[8]) );
+
+	// 左方移动障碍情况
+	r->DrawRect(cx-4*14, cy, 4*2, 4*2, r->_yellow);
+	r->FillRect(cx-4*14+1, cy+1, 4*2-2, 4*2-2, Fade(r->_red, out[9]) );
+	// 上方移动障碍情况
+	r->DrawRect(cx, cy+4*14, 4*2, 4*2, r->_yellow);
+	r->FillRect(cx+1, cy+4*14+1, 4*2-2, 4*2-2, Fade(r->_red, out[10]) );
+	// 右方移动障碍情况
+	r->DrawRect(cx+4*14, cy, 4*2, 4*2, r->_yellow);
+	r->FillRect(cx+4*14+1, cy+1, 4*2-2, 4*2-2, Fade(r->_red, out[11]) );
+	// 下方移动障碍情况
+	r->DrawRect(cx, cy-4*14, 4*2, 4*2, r->_yellow);
+	r->FillRect(cx+1, cy-4*14+1, 4*2-2, 4*2-2, Fade(r->_red, out[12]) );
 }
 
 // 玩家所在左下角为 (0, 0)，整个势力图的左下角 (-12, -12)
@@ -218,6 +238,7 @@ SDL_Rect InfluenceMethod9::GetRectInfluence(const int idx)
 // 纵向：近中远*左中右*上下
 // 左上角，右上角，左下角，右下角
 const int InfluenceMethodVerHorSquares::_region_cnt = 3*3*2 + 3*3*2 + 4;
+const int InfluenceMethodVerHorSquares::_feature_cnt = 3*3*2 + 3*3*2 + 4;
 
 void InfluenceMethodVerHorSquares::CalcInfluence(const InputData& id, std::vector<float>& out)
 {
@@ -265,7 +286,7 @@ void InfluenceMethodVerHorSquares::DebugDraw(const InputData& id, const int cx, 
 	InputData	nid		= id.Normalize();
 
 	std::vector<float> out;
-	CalcInfluence(nid, out);
+	CalcInfluence(id, out);
 
 	// 4 表示放大倍数
 	//r->DrawRect(cx, cy, 4*2, 4*2, r->_yellow);  绘制自己所在的原点位置
@@ -422,7 +443,7 @@ SDL_Rect InfluenceMethodVerHorSquares::GetRectInfluence(const int idx)
 // --------------------------------------------------------------------------------------
 template <typename InfluenceMethod>
 StrategyWL<InfluenceMethod>::StrategyWL()
-	: CStrategy(InfluenceMethod::_region_cnt, ACTION)
+	: CStrategy(InfluenceMethod::_feature_cnt, ACTION)
 {
 }
 
@@ -486,7 +507,7 @@ void StrategyWL<InfluenceMethod>::Draw()
 template <typename InfluenceMethod>
 void StrategyWL<InfluenceMethod>::SetupNetwork()
 {
-	Layer* layer1 = new FullyConnected<ReLU>(InfluenceMethod::_region_cnt, HIDDEN);
+	Layer* layer1 = new FullyConnected<ReLU>(InfluenceMethod::_feature_cnt, HIDDEN);
 	Layer* layer2 = new FullyConnected<ReLU>(HIDDEN, HIDDEN);
 	Layer* layer3 = new FullyConnected<Softmax>(HIDDEN, ACTION);
 

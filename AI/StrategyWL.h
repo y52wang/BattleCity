@@ -7,7 +7,9 @@
 // ----------------------------------------------------------------------------
 struct InfluenceMethod9
 {
+	static const int _moving_hint_cnt;
 	static const int _region_cnt;
+	static const int _feature_cnt;
 
 	static void CalcInfluence(const InputData& id, std::vector<float>& out);
 	static void DebugDraw(const InputData& id, const int cx, const int cy);
@@ -20,6 +22,7 @@ protected:
 struct InfluenceMethodVerHorSquares
 {
 	static const int _region_cnt;
+	static const int _feature_cnt;
 
 	static void CalcInfluence(const InputData& id, std::vector<float>& out);
 	static void DebugDraw(const InputData& id, const int cx, const int cy);
