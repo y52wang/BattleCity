@@ -225,7 +225,7 @@ void StrategyCNN::ConvertData(const OutputData & od)
 void StrategyCNN::UpdateInfluenceMap(const InputData & id)
 {
 	// Clear
-	memset(influence_map, 0, 26 * 26 * 3 * sizeof(float));
+	memset(influence_map, 0, 26 * 26 * 2 * sizeof(float));
 
 	int enemy_num = id.enemies_pos.size();
 	int bullet_num = id.enemies_bullet_pos.size();
