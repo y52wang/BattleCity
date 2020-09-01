@@ -9,8 +9,8 @@ struct InfluenceMethod9
 {
 	static const int _region_cnt;
 
-	static void CalcInfluence(const InputData& nid, std::vector<float>& out);
-	static void DebugDraw(const InputData& nid, const int cx, const int cy);
+	static void CalcInfluence(const InputData& id, std::vector<float>& out);
+	static void DebugDraw(const InputData& id, const int cx, const int cy);
 
 protected:
 	static SDL_Rect GetRectInfluence(const int idx);
@@ -21,8 +21,8 @@ struct InfluenceMethodVerHorSquares
 {
 	static const int _region_cnt;
 
-	static void CalcInfluence(const InputData& nid, std::vector<float>& out);
-	static void DebugDraw(const InputData& nid, const int cx, const int cy);
+	static void CalcInfluence(const InputData& id, std::vector<float>& out);
+	static void DebugDraw(const InputData& id, const int cx, const int cy);
 
 protected:
 	static SDL_Rect GetRectInfluence(const int idx);

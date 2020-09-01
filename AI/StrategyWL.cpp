@@ -17,6 +17,11 @@ static SDL_Color Fade(SDL_Color c, float alpha)
 	return c;
 }
 
+static SDL_Rect GetTankRect(const Pos& pos)
+{
+	return SDL_Rect { pos.x, pos.y, 2, 2 };
+}
+
 static SDL_Rect GetBulletRect(const Pos& pos, const DIRECTION dir)
 {
 	SDL_Rect rect { pos.x, pos.y, 1, 1 };
@@ -39,8 +44,10 @@ static SDL_Rect GetBulletRect(const Pos& pos, const DIRECTION dir)
 // 9 宫格势力图，势力计算 ---------------------------------------------------------------
 const int InfluenceMethod9::_region_cnt = 9;  // 总的区域
 
-void InfluenceMethod9::CalcInfluence(const InputData& nid, std::vector<float>& out)
+void InfluenceMethod9::CalcInfluence(const InputData& id, std::vector<float>& out)
 {
+	InputData nid = id.Normalize();
+
 	out.resize(_region_cnt);
 	for (size_t i=0; i<out.size(); ++i)
 		out[i] = 0.0f;
@@ -52,7 +59,7 @@ void InfluenceMethod9::CalcInfluence(const InputData& nid, std::vector<float>& o
 			if (idx==4)  continue;  // 自己所占位置不处理
 
 			SDL_Rect region = GetRectInfluence(idx);
-			SDL_Rect rect { nid.enemies_pos[i].x, nid.enemies_pos[i].y, 2, 2 };
+			SDL_Rect rect = GetTankRect(nid.enemies_pos[i]);
 			bool isInter = SDL_HasIntersection(&region, &rect);
 			if (!isInter)  continue;
 
@@ -136,10 +143,11 @@ void InfluenceMethod9::CalcInfluence(const InputData& nid, std::vector<float>& o
 		out[idx] = std::min<float>(1.0f, out[idx]);
 }
 
-void InfluenceMethod9::DebugDraw(const InputData& nid, const int cx, const int cy)
+void InfluenceMethod9::DebugDraw(const InputData& id, const int cx, const int cy)
 {
 	CGame&			game	= CGame::Get();
 	CRenderer*		r		= game.Renderer();
+	InputData		nid		= id.Normalize();
 
 	std::vector<float> out;
 	CalcInfluence(nid, out);
@@ -211,20 +219,53 @@ SDL_Rect InfluenceMethod9::GetRectInfluence(const int idx)
 // 左上角，右上角，左下角，右下角
 const int InfluenceMethodVerHorSquares::_region_cnt = 3*3*2 + 3*3*2 + 4;
 
-void InfluenceMethodVerHorSquares::CalcInfluence(const InputData& nid, std::vector<float>& out)
+void InfluenceMethodVerHorSquares::CalcInfluence(const InputData& id, std::vector<float>& out)
 {
+	InputData nid = id.Normalize();
+
 	out.resize(_region_cnt);
 	for (size_t i=0; i<out.size(); ++i)
 		out[i] = 0.0f;
+
+	for (size_t i=0; i<nid.enemies_pos.size(); ++i)
+	{
+		for (int idx=0; idx<_region_cnt; ++idx)
+		{
+			SDL_Rect region = GetRectInfluence(idx);
+			SDL_Rect rect = GetTankRect(nid.enemies_pos[i]);
+			bool isInter = SDL_HasIntersection(&region, &rect);
+			if (!isInter)  continue;
+
+			out[idx] += 0.1f;
+		}
+	}
+
+	for (size_t i=0; i<nid.enemies_bullet_pos.size(); ++i)
+	{
+		for (int idx=0; idx<_region_cnt; ++idx)
+		{
+			SDL_Rect region = GetRectInfluence(idx);
+			DIRECTION dir = nid.enemies_bullet_dir[i];
+			SDL_Rect rect = GetBulletRect(nid.enemies_bullet_pos[i], dir);
+			bool isInter = SDL_HasIntersection(&region, &rect);
+			if (!isInter)  continue;
+
+			out[idx] += 0.15f;
+		}
+	}
 
 	for (int idx=0; idx<_region_cnt; ++idx)
 		out[idx] = std::min<float>(1.0f, out[idx]);
 }
 
-void InfluenceMethodVerHorSquares::DebugDraw(const InputData& nid, const int cx, const int cy)
+void InfluenceMethodVerHorSquares::DebugDraw(const InputData& id, const int cx, const int cy)
 {
 	CGame&		game	= CGame::Get();
 	CRenderer*	r		= game.Renderer();
+	InputData	nid		= id.Normalize();
+
+	std::vector<float> out;
+	CalcInfluence(nid, out);
 
 	// 4 表示放大倍数
 	//r->DrawRect(cx, cy, 4*2, 4*2, r->_yellow);  绘制自己所在的原点位置
@@ -237,6 +278,7 @@ void InfluenceMethodVerHorSquares::DebugDraw(const InputData& nid, const int cx,
 			yoffset = -115;
 		SDL_Rect rect = GetRectInfluence(i);
 		r->DrawRect(cx+4*rect.x, cy+yoffset+4*rect.y, 4*rect.w, 4*rect.h, r->_yellow);
+		r->FillRect(cx+4*rect.x+1, cy+yoffset+4*rect.y+1, 4*rect.w-2, 4*rect.h-2, Fade(r->_red, out[i]) );
 	}
 }
 
@@ -434,13 +476,11 @@ void StrategyWL<InfluenceMethod>::Draw()
 	const InputData&	id		= iodata.first;
 	const OutputData&	od		= iodata.second;
 
-	InputData nid = id.Normalize();
-
 	// 绘制以 player 为中心的势力图
 	int cx = 700;  // 中心左下角 x 坐标
 	int cy = 286;  // 中心左下角 y 坐标
 
-	InfluenceMethod::DebugDraw(nid, cx, cy);
+	InfluenceMethod::DebugDraw(id, cx, cy);
 }
 
 template <typename InfluenceMethod>
@@ -462,9 +502,8 @@ void StrategyWL<InfluenceMethod>::ConvertData(const InputData& id)
 {
 	input.fill(0);
 
-	InputData nid = id.Normalize();
 	std::vector<float> out;
-	InfluenceMethod::CalcInfluence(nid, out);
+	InfluenceMethod::CalcInfluence(id, out);
 
 	for (int i=0; i<InfluenceMethod::_region_cnt; ++i)
 	{
