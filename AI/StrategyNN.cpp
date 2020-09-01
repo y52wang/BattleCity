@@ -5,19 +5,21 @@
 
 using namespace MiniDNN;
 
-#define VIEW_SIZE 4 // 视野大小
-#define MAP_WIDTH 10 // MAP_WIDTH = VIEW_SIZE * 2 + 2
-#define MAP_SIZE 100 // MAP_SIZE = (VIEW_SIZE * 2 + 2)^2
+#define VIEW_SIZE 6 // 视野大小
+#define MAP_WIDTH 14 // MAP_WIDTH = VIEW_SIZE * 2 + 2
+#define MAP_SIZE 196 // MAP_SIZE = (VIEW_SIZE * 2 + 2)^2
 #define ACTION 5    // 动作空间大小
-#define HDIM 100		// 隐层神经元个数
+#define HDIM 200		// 隐层神经元个数
 
 #define EDGE -1					// 边缘势力影响
 #define ENEMY_INFLUENCE -1		// 敌方坦克势力影响基数
 #define ENEMY_FADE 0.3			// 敌方坦克势力影响衰减率
+#define ENEMY_DIRECTION_INFLUENCE -1			// 敌方坦克势力影响衰减率
+#define ENEMY_DIRECTION_FADE 0.5			// 敌方坦克势力影响衰减率
 #define BULLET_INFLUENCE -2		// 子弹势力影响基数
 #define BULLET_FADE 0.8			// 子弹势力影响衰减率
 
-#define INDEX(x,y) ((x)*10+(y))
+#define INDEX(x,y) ((x)*14+(y))
 
 StrategyNN::StrategyNN() : CStrategy(MAP_SIZE, ACTION) {}
 
@@ -70,10 +72,15 @@ void StrategyNN::Draw()
 
 void StrategyNN::SetupNetwork()
 {
+	//Layer* conv1 = new Convolutional<ReLU>(14, 14, 1, 16, 3, 3);
+	//Layer* pool1 = new MaxPooling<Identity>(12, 12, 16, 2, 2);
+	//Layer* layer1 = new FullyConnected<ReLU>(6*6*16, HDIM);
 	Layer* layer1 = new FullyConnected<ReLU>(MAP_SIZE, HDIM);
 	Layer* layer11 = new FullyConnected<ReLU>(HDIM, HDIM);
 	Layer* layer2 = new FullyConnected<Softmax>(HDIM, ACTION);
 
+	//network.add_layer(conv1);
+	//network.add_layer(pool1);
 	network.add_layer(layer1);
 	network.add_layer(layer11);
 	network.add_layer(layer2);
@@ -153,6 +160,48 @@ void StrategyNN::UpdateInfluenceMap(const InputData & id)
 				int dist_y = min(abs(y - ey), abs(y - ey - 1));
 				int dist = dist_x + dist_y;
 				influence_map[x][y] += ENEMY_INFLUENCE * pow(ENEMY_FADE, dist);
+			}
+
+			// Enemy Direction Influence
+			for (int i = 0; i < enemy_num; i++)
+			{
+				int bx = id.enemies_pos[i].x;
+				int by = id.enemies_pos[i].y;
+
+				// 敌人朝发射方向射出一个宽度为2的影响带，随距离衰减
+				// 下图以向右的朝向为例
+				// 1 0.99 0.98 0.97 0.96 ...
+				// 1 0.99 0.98 0.97 0.96 ...
+				switch (id.enemies_dir[i])
+				{
+				case DIR_UP:
+					if ((x == bx || x == bx + 1) && y > by)
+					{
+						influence_map[x][y] += ENEMY_DIRECTION_INFLUENCE * pow(ENEMY_DIRECTION_FADE, abs(y - by - 1));
+					}
+					break;
+				case DIR_DOWN:
+					if ((x == bx || x == bx + 1) && y <= by)
+					{
+						influence_map[x][y] += ENEMY_DIRECTION_INFLUENCE * pow(ENEMY_DIRECTION_FADE, abs(y - by));
+					}
+					break;
+				case DIR_LEFT:
+					if ((y == by || y == by + 1) && x <= bx)
+					{
+						influence_map[x][y] += ENEMY_DIRECTION_INFLUENCE * pow(ENEMY_DIRECTION_FADE, abs(x - bx));
+					}
+					break;
+				case DIR_RIGHT:
+					if ((y == by || y == by + 1) && x > bx)
+					{
+						influence_map[x][y] += ENEMY_DIRECTION_INFLUENCE * pow(ENEMY_DIRECTION_FADE, abs(x - bx - 1));
+					}
+					break;
+				default:
+					std::cerr << "Enemy Bullet Direction Error!" << std::endl;
+					break;
+				}
 			}
 
 			// Bullet Influence
