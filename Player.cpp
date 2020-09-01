@@ -12,6 +12,8 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Sprites.h"
 using namespace std;
 
+const int CPlayer::_MaxHisPoses = 500;
+
 void CPlayer::Init(int x, int y, int id)
 {
 	m_x = x; m_y = y; m_id = id;
@@ -28,6 +30,7 @@ void CPlayer::Init(int x, int y, int id)
 	m_start_x = x;  m_start_y = y;
 
 	SetPlayerLevel(0);
+	m_HisPoses = std::queue<HisPos>();  // 清空
 }
 
 void CPlayer::SetPlayerLevel(int level) {
@@ -546,6 +549,11 @@ void CPlayer::Update(double dt)
 			m_frame_duration = 0.0;
 		}
     }
+
+	m_HisPoses.push(HisPos(m_x, m_y) );
+	if (m_HisPoses.size() > _MaxHisPoses)
+		m_HisPoses.pop();
+	//printf("%d\n", m_HisPoses.size() );
 }
 
 void CPlayer::LogData(CDataManager* dm)

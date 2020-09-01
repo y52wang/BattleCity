@@ -7,6 +7,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #define PLAYER_H_INCLUDED
 
 #include "Types.h"
+#include <queue>
 #include <string>
 using namespace std;
 
@@ -68,6 +69,14 @@ public:
 	void LogData(CDataManager* dm);
 
 private:
+	struct HisPos
+	{
+		double posx, posy;
+
+		HisPos(double _px, double _py) : posx(_px), posy(_py)
+		{}
+	};
+
 	DIRECTION		m_direction;	//w którą stronę się patrzy
 	DIRECTION		m_stopping_dir;	//Kierunek hamowania（制动方向）
 	PLAYER_STATE	m_state;		//stan gracza（玩家状态）
@@ -93,7 +102,7 @@ private:
 
 	bool	m_stopping;		//Czy hamuje?
 	double	m_speed;		//prędkość bazowa
-	double	m_x, m_y;		//pozycja gracza
+	double	m_x, m_y;		//pozycja gracza（玩家位置）
 	double	m_vx, m_vy;		//prędkość gracza
 	double	m_speed_ratio;	//wspolczynnik szybkosci
 	double	m_bullet_speed;	//predkosc pocisku
@@ -106,6 +115,10 @@ private:
 
 	int m_player_width;		//wysokość gracza w pixelach
 	int m_player_height;	//wysokość gracza w pixelach
+
+	std::queue<HisPos>	m_HisPoses;
+
+	static const int	_MaxHisPoses;
 };
 
 #endif // PLAYER_H_INCLUDED
