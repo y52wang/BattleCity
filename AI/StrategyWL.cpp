@@ -6,7 +6,7 @@
 using namespace MiniDNN;
 
 #define ACTION		5	// 移动 5 个，Shoot 1 个
-#define HIDDEN		4	// 隐层单元个数
+#define HIDDEN		16	// 隐层单元个数
 
 static SDL_Color Fade(SDL_Color c, float alpha)
 {
@@ -42,9 +42,10 @@ static SDL_Rect GetBulletRect(const Pos& pos, const DIRECTION dir)
 }
 
 // 9 宫格势力图，势力计算 ---------------------------------------------------------------
+const int InfluenceMethod9::_traj_cnt = InputData::HisPosesCnt*2;
 const int InfluenceMethod9::_moving_hint_cnt = 4;
 const int InfluenceMethod9::_region_cnt = 9;  // 总的区域
-const int InfluenceMethod9::_feature_cnt = 13;
+const int InfluenceMethod9::_feature_cnt = 13 + InfluenceMethod9::_traj_cnt;
 
 void InfluenceMethod9::CalcInfluence(const InputData& id, std::vector<float>& out)
 {
@@ -148,6 +149,12 @@ void InfluenceMethod9::CalcInfluence(const InputData& id, std::vector<float>& ou
 	out[_region_cnt+1]	= 1.0f-(26.0f-(id.player_pos.y+2))/24.0f;  // 上
 	out[_region_cnt+2]	= 1.0f-(26.0f-(id.player_pos.x+2))/24.0f;  // 右
 	out[_region_cnt+3]	= 1.0f-id.player_pos.y/24.0f;  // 下
+
+	for (int idx=0; idx<InputData::HisPosesCnt; ++idx)
+	{
+		out[_moving_hint_cnt + _region_cnt + idx*2]		= nid.player_his_poses[idx].x / 24.0f;
+		out[_moving_hint_cnt + _region_cnt + idx*2 + 1]	= nid.player_his_poses[idx].y / 24.0f;
+	}
 }
 
 void InfluenceMethod9::DebugDraw(const InputData& id, const int cx, const int cy)
@@ -201,6 +208,13 @@ void InfluenceMethod9::DebugDraw(const InputData& id, const int cx, const int cy
 	// 下方移动障碍情况
 	r->DrawRect(cx, cy-4*14, 4*2, 4*2, r->_yellow);
 	r->FillRect(cx+1, cy-4*14+1, 4*2-2, 4*2-2, Fade(r->_red, out[12]) );
+
+	// 画 历史轨迹
+	for (int i=0; i<InputData::HisPosesCnt; ++i)
+	{
+		r->FillRect(cx+nid.player_his_poses[i].x*4, cy+nid.player_his_poses[i].y*4,
+			4, 4, r->_cyan);
+	}
 }
 
 // 玩家所在左下角为 (0, 0)，整个势力图的左下角 (-12, -12)
@@ -533,7 +547,7 @@ void StrategyWL<InfluenceMethod>::ConvertData(const InputData& id)
 
 	for (size_t i=0; i<out.size(); ++i)
 	{
-		printf("%.1f, ", out[i]);
+		printf("%.2f, ", out[i]);
 	}
 	printf("\n");
 }
