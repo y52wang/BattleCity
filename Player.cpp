@@ -13,7 +13,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 using namespace std;
 
 const int CPlayer::_HisPosDelta = 30;
-const int CPlayer::_MaxHisPoses = 160;
+const int CPlayer::_MaxHisPoses = 220;
 
 void CPlayer::Init(int x, int y, int id)
 {
@@ -224,7 +224,7 @@ void CPlayer::Draw() {
 	ListHisPosIt it = m_HisPosesList.begin();
 	while (true)
 	{
-		r->FillRect(it->posx*ts, it->posy*ts, 2, 2, r->_cyan);
+		r->FillRect(it->posx*ts, it->posy*ts, 4, 4, r->_cyan);
 
 		if (idx+_HisPosDelta < cnt)
 		{
@@ -578,4 +578,36 @@ void CPlayer::Update(double dt)
 void CPlayer::LogData(CDataManager* dm)
 {
 	dm->LogPlayer(round_double(m_x), round_double(m_y), m_direction);
+
+	int poses_x[InputData::HisPosesCnt];
+	int poses_y[InputData::HisPosesCnt];
+
+	size_t idx = 0;
+	size_t cnt = m_HisPosesList.size();
+	ListHisPosIt it = m_HisPosesList.begin();
+	for (int i=0; i<InputData::HisPosesCnt; ++i)
+	{
+		if (idx+_HisPosDelta < cnt)
+		{
+			idx += _HisPosDelta;
+			advance(it, _HisPosDelta);
+
+			poses_x[i] = round_double(it->posx);
+			poses_y[i] = round_double(it->posy);
+		}
+		else
+		{
+			if (m_HisPosesList.empty() )
+			{
+				poses_x[i] = round_double(m_x);
+				poses_y[i] = round_double(m_y);
+			}
+			else
+			{
+				poses_x[i] = round_double(m_HisPosesList.back().posx);
+				poses_y[i] = round_double(m_HisPosesList.back().posy);
+			}
+		}
+	}
+	dm->LogPlayerHisPoses(poses_x, poses_y);
 }

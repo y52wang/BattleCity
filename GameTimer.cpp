@@ -73,28 +73,30 @@ void CGameTimer::ProcessEvents() {
 }
 
 void CGameTimer::ChooseLevel() {
-  if(m_selected_level > CGame::Get().Level()->AllLevels()) m_selected_level = 1;
-  string level = "data/levels/" + ToString(m_selected_level) + ".lvl";
+	if (m_selected_level > CGame::Get().Level()->AllLevels()) m_selected_level = 1;
+	string level = "data/levels/" + ToString(m_selected_level) + ".lvl";
 
-  CGame::Get().Level()->LoadLevel(level);
-  CGame::Get().Audio()->PlayChunk(SOUND_GAMESTART);
+	CGame::Get().DataManager()->m_ListInputData.clear();
 
-  CGame::Get().Bullets()->DestroyAllBullets();
-  CGame::Get().Effects()->DestroyAllEffects();
-  CGame::Get().Enemies()->DestroyAllEnemies();
-  CGame::Get().Enemies()->UnPause();
+	CGame::Get().Level()->LoadLevel(level);
+	CGame::Get().Audio()->PlayChunk(SOUND_GAMESTART);
 
-  CGame::Get().Player()->SetInvincibility(5);
-  CGame::Get().Player()->Born();
-  if(CGame::Get().PlayerTwo() != NULL) {
-      CGame::Get().PlayerTwo()->SetInvincibility(5);
-      CGame::Get().PlayerTwo()->Born();
-  }
+	CGame::Get().Bullets()->DestroyAllBullets();
+	CGame::Get().Effects()->DestroyAllEffects();
+	CGame::Get().Enemies()->DestroyAllEnemies();
+	CGame::Get().Enemies()->UnPause();
 
-  CGame::Get().Items()->DestroyItem();
-  CGame::Get().StartGameplay();
-  CGame::Get().SetGameState(GS_GAMEPLAY);
-  Init();
+	CGame::Get().Player()->SetInvincibility(5);
+	CGame::Get().Player()->Born();
+	if (CGame::Get().PlayerTwo() != NULL) {
+		CGame::Get().PlayerTwo()->SetInvincibility(5);
+		CGame::Get().PlayerTwo()->Born();
+	}
+
+	CGame::Get().Items()->DestroyItem();
+	CGame::Get().StartGameplay();
+	CGame::Get().SetGameState(GS_GAMEPLAY);
+	Init();
 }
 
 // 和时间相关的更新

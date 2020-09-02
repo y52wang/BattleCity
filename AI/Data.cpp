@@ -16,6 +16,9 @@ void InputData::Reset() {
 	player_bullet_pos.Reset();
 	player_bullet_dir = DIR_NONE;
 
+	for (int i=0; i<InputData::HisPosesCnt; ++i)
+		player_his_poses[i].Reset();
+
 	enemies_pos.clear();
 	enemies_dir.clear();
 	enemies_bullet_pos.clear();
@@ -114,6 +117,8 @@ OutputData OutputData::MirrorLR() const
 }
 
 // ------------------------------------------------------------------
+const int CDataManager::_MaxListInputData = 180;
+
 CDataManager::CDataManager()
 	: m_EnableLog(false)
 	, m_accTime(0.0)
@@ -139,6 +144,12 @@ void CDataManager::ForceLog() {
 }
 
 void CDataManager::EndLog(double deltaTime) {
+	m_ListInputData.push_front(m_InputData);
+	if (m_ListInputData.size() > _MaxListInputData)
+		m_ListInputData.pop_back();
+
+	//printf("%ld\n", m_ListInputData.size() );
+
 	if (!m_EnableLog)  return;  // 记录开启的情况下才记录
 
 	m_accTime += deltaTime;
@@ -155,6 +166,16 @@ void CDataManager::LogPlayer(int pos_x, int pos_y, DIRECTION dir)
 	m_InputData.player_pos.x = pos_x;
 	m_InputData.player_pos.y = pos_y;
 	m_InputData.player_dir = dir;
+}
+
+void CDataManager::LogPlayerHisPoses(const int (&poses_x)[InputData::HisPosesCnt],
+	const int (&poses_y)[InputData::HisPosesCnt])
+{
+	for (int i=0; i<InputData::HisPosesCnt; ++i)
+	{
+		m_InputData.player_his_poses[i].x = poses_x[i];
+		m_InputData.player_his_poses[i].y = poses_y[i];
+	}
 }
 
 void CDataManager::LogEnemy(int pos_x, int pos_y, DIRECTION dir)

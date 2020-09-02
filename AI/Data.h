@@ -1,6 +1,7 @@
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
+#include <list>
 #include <string>
 #include <vector>
 #include "Types.h"
@@ -22,11 +23,18 @@ struct Pos {
 
 // 坐标系，x 向右，y 向上，原点在左下角
 struct InputData {
+	enum
+	{
+		HisPosesCnt = 5,
+	};
+
 	// Player Data
 	Pos						player_pos; // 占四个格子的坐标，这边给出的是左下角坐标
 	DIRECTION				player_dir; // enum DIRECTION
 	Pos						player_bullet_pos;  // 占二个格子，给出的是左下角坐标
 	DIRECTION				player_bullet_dir;
+	Pos						player_his_poses[HisPosesCnt];
+
 	// Enermy Data
 	std::vector<Pos>		enemies_pos; // length=enemy_cnt
 	std::vector<DIRECTION>	enemies_dir; // length=enemy_cnt
@@ -57,6 +65,9 @@ struct OutputData {
 typedef std::pair<InputData, OutputData>    IOData;
 typedef std::vector<IOData>                 IODataVec;
 
+typedef std::list<InputData>				ListInputData;
+typedef ListInputData::iterator				ListInputDataIter;
+
 class CDataManager {
 public:
 	CDataManager();
@@ -69,7 +80,9 @@ public:
 
 	// Log Input Data
 	void LogPlayer(int pos_x, int pos_y, DIRECTION dir);
+	void LogPlayerHisPoses(const int (&poses_x)[InputData::HisPosesCnt], const int (&poses_y)[InputData::HisPosesCnt]);
 	void LogEnemy(int pos_x, int pos_y, DIRECTION dir);
+
 	void LogPlayerBullet(int pos_x, int pos_y, DIRECTION dir);
 	void LogEnemyBullet(int pos_x, int pos_y, DIRECTION dir);
 
@@ -89,6 +102,10 @@ public:
 
 	InputData		m_InputData;
 	OutputData		m_OutputData;
+
+	ListInputData	m_ListInputData;
+
+	static const int	_MaxListInputData;
 
 protected:
     bool			m_EnableLog;    // 数据记录 开启/关闭
