@@ -7,7 +7,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #define PLAYER_H_INCLUDED
 
 #include "Types.h"
-#include <queue>
+#include <list>
 #include <string>
 using namespace std;
 
@@ -116,8 +116,12 @@ private:
 	int m_player_width;		//wysokość gracza w pixelach
 	int m_player_height;	//wysokość gracza w pixelach
 
-	std::queue<HisPos>	m_HisPoses;
+	typedef std::list<HisPos>			ListHisPos;
+	typedef ListHisPos::iterator		ListHisPosIt;
 
+	ListHisPos			m_HisPosesList;
+
+	static const int	_HisPosDelta;
 	static const int	_MaxHisPoses;
 };
 

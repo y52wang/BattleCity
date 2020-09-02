@@ -12,7 +12,8 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "Sprites.h"
 using namespace std;
 
-const int CPlayer::_MaxHisPoses = 500;
+const int CPlayer::_HisPosDelta = 30;
+const int CPlayer::_MaxHisPoses = 160;
 
 void CPlayer::Init(int x, int y, int id)
 {
@@ -30,7 +31,7 @@ void CPlayer::Init(int x, int y, int id)
 	m_start_x = x;  m_start_y = y;
 
 	SetPlayerLevel(0);
-	m_HisPoses = std::queue<HisPos>();  // 清空
+	m_HisPosesList.clear();  // 清空
 }
 
 void CPlayer::SetPlayerLevel(int level) {
@@ -216,6 +217,25 @@ void CPlayer::Draw() {
     if (m_invincibility) {
         r->DrawSprite(s->Get("player_border"), m_inv_frame, pos_x, pos_y, m_player_width, m_player_height);
     }
+
+	// 绘制轨迹
+	size_t idx = 0;
+	size_t cnt = m_HisPosesList.size();
+	ListHisPosIt it = m_HisPosesList.begin();
+	while (true)
+	{
+		r->FillRect(it->posx*ts, it->posy*ts, 2, 2, r->_cyan);
+
+		if (idx+_HisPosDelta < cnt)
+		{
+			idx += _HisPosDelta;
+			advance(it, _HisPosDelta);
+		}
+		else
+		{
+			break;
+		}
+	}
 }
 
 void CPlayer::EarnStar() {
@@ -550,10 +570,9 @@ void CPlayer::Update(double dt)
 		}
     }
 
-	m_HisPoses.push(HisPos(m_x, m_y) );
-	if (m_HisPoses.size() > _MaxHisPoses)
-		m_HisPoses.pop();
-	//printf("%d\n", m_HisPoses.size() );
+	m_HisPosesList.push_front(HisPos(m_x, m_y) );
+	if (m_HisPosesList.size() > _MaxHisPoses)
+		m_HisPosesList.pop_back();
 }
 
 void CPlayer::LogData(CDataManager* dm)
