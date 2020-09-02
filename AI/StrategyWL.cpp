@@ -540,7 +540,7 @@ void StrategyWL<InfluenceMethod>::ConvertData(const InputData& id)
 	std::vector<float> out;
 	InfluenceMethod::CalcInfluence(id, out);
 
-	for (int i=0; i<InfluenceMethod::_region_cnt; ++i)
+	for (int i=0; i<InfluenceMethod::_feature_cnt; ++i)
 	{
 		input(i, 0) = out[i];
 	}

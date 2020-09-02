@@ -363,9 +363,39 @@ void CDataManager::Draw()
 	}
 }
 
+void CDataManager::DumpTrainDataToCSV(const std::string& fileName, CStrategy* stg)
+{
+	FILE* fp = fopen(fileName.c_str(), "w");
+	if (fp==NULL)  return;
+
+	for (auto it=m_IODataVec.begin(); it!=m_IODataVec.end(); ++it)
+	{
+		const InputData& id = it->first;
+		const OutputData& od = it->second;
+
+		stg->ConvertData(id);
+		stg->ConvertData(od);
+
+		for (int i=0; i<stg->input.rows(); ++i)
+		{
+			fprintf(fp, "%8.4f,", stg->input(i, 0) );
+		}
+		for (int i=0; i<stg->output.rows(); ++i)
+		{
+			fprintf(fp, "%8.4f", stg->output(i, 0) );
+			if (i==stg->output.rows()-1)
+				fprintf(fp, "\n");
+			else
+				fprintf(fp, ",");
+		}
+	}
+
+	fclose(fp);
+}
+
 // 文件格式：
 // 开头四个字节表示数据的数量，后面对应数量的结构体对(InputData, OutputData)
-void CDataManager::Save(const std::string fileName)
+void CDataManager::Save(const std::string& fileName)
 {
 	std::ofstream fs(fileName, std::ios::out | std::ios::binary);
 	int dataCount = m_IODataVec.size();
@@ -409,7 +439,7 @@ void CDataManager::Save(const std::string fileName)
 	fs.close();
 }
 
-void CDataManager::Load(const std::string fileName)
+void CDataManager::Load(const std::string& fileName)
 {
 	m_IODataVec.clear();
 	std::ifstream fs(fileName, std::ios::in | std::ios::binary);

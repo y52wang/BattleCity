@@ -68,6 +68,8 @@ typedef std::vector<IOData>                 IODataVec;
 typedef std::list<InputData>				ListInputData;
 typedef ListInputData::iterator				ListInputDataIter;
 
+class CStrategy;
+
 class CDataManager {
 public:
 	CDataManager();
@@ -95,8 +97,10 @@ public:
     bool IsEnableLog()    { return m_EnableLog; }
 	void EnableLog(bool enable)	{ m_EnableLog = enable; }
 
-	void Save(const std::string fileName);
-	void Load(const std::string fileName);
+	void DumpTrainDataToCSV(const std::string& fileName, CStrategy* stg);
+
+	void Save(const std::string& fileName);
+	void Load(const std::string& fileName);
 
 	void DataBalance(const std::string loadFileName, const std::string saveFileName);
 

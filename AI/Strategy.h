@@ -7,6 +7,8 @@ typedef Eigen::MatrixXf Matrix;
 
 class CStrategy
 {
+	friend CDataManager;
+
 public:
 	bool valid;
 
