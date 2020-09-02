@@ -3,6 +3,7 @@
 #include "Game.h"
 #include <assert.h>
 #include <fstream>
+#include <time.h>
 
 InputData::InputData()
 	: player_dir(DIR_NONE)
@@ -459,4 +460,130 @@ void CDataManager::Load(const std::string fileName)
 
 		//m_IODataVec.push_back(IOData(id.MirrorLR(), od.MirrorLR() ) );
 	}
+}
+
+void CDataManager::DataBalance(const std::string loadFileName, const std::string saveFileName)
+{
+	srand((unsigned)time(0));
+
+	Load(loadFileName);
+
+	// 数据统计
+	std::cout << "----------Before Data Balance-----------" << std::endl;
+	int dataCnt = m_IODataVec.size();
+	std::cout << "Data Count: " << dataCnt << std::endl;
+	// 0: up
+	// 1: down
+	// 2: left
+	// 3: right
+	// 4: none
+	// 5: shoot
+	std::vector< vector<int> > classIds(6);
+	for (int i = 0; i < dataCnt; i++)
+	{
+		const OutputData& od = m_IODataVec[i].second;
+		if (od.shoot) classIds[5].push_back(i);
+		else
+		{
+			switch (od.mov)
+			{
+			case DIR_UP:
+				classIds[0].push_back(i); break;
+			case DIR_DOWN:
+				classIds[1].push_back(i); break;
+			case DIR_LEFT:
+				classIds[2].push_back(i); break;
+			case DIR_RIGHT:
+				classIds[3].push_back(i); break;
+			case DIR_NONE:
+				classIds[4].push_back(i); break;
+			}
+		}
+	}
+	int upCnt = classIds[0].size();
+	int downCnt = classIds[1].size();
+	int leftCnt = classIds[2].size();
+	int rightCnt = classIds[3].size();
+	int noneCnt = classIds[4].size();
+	int shootCnt = classIds[5].size();
+	std::cout << "Move Up    Count: " << upCnt << std::endl;
+	std::cout << "Move Down  Count: " << downCnt << std::endl;
+	std::cout << "Move Left  Count: " << leftCnt << std::endl;
+	std::cout << "Move Right Count: " << rightCnt << std::endl;
+	std::cout << "No   Move  Count: " << noneCnt << std::endl;
+	std::cout << "Shoot      Count: " << shootCnt << std::endl;
+	std::cout << "----------------------------------------" << std::endl;
+
+	// Data Balance
+	// 取平均，多的采样，少的镜像/复制补全
+	IODataVec newDataSet(0);
+	//int maxCnt(shootCnt), minCnt(shootCnt);
+	int avg(0);
+	for (int i = 0; i < 6; i++)
+	{
+		int cnt = classIds[i].size();
+		avg += cnt;
+		//if (cnt > maxCnt) maxCnt = cnt;
+		//if (cnt < minCnt) minCnt = cnt;
+	}
+	avg /= 6;
+	
+	for (int i = 0; i < 6; i++)
+	{
+		int cnt = classIds[i].size();
+		if (cnt >= avg)
+		{
+			// 多的采样
+			for (int j = 0; j < avg; j++)
+			{
+				int idx = rand() % cnt;
+				newDataSet.push_back(m_IODataVec[classIds[i][idx]]);
+			}
+		}
+		else if (cnt < avg)
+		{
+			// 少的补
+			// 先全部塞进去
+			for (int j = 0; j < cnt; j++) newDataSet.push_back(m_IODataVec[classIds[i][j]]);
+			// 想办法补全
+			if (i != 3 && i != 4)
+			{
+				// 自身镜像填充
+				for (int j = 0; j < (avg - cnt) / 2; j++)
+				{
+					int idx = rand() % cnt;
+					InputData& id = m_IODataVec[classIds[i][idx]].first;
+					OutputData& od = m_IODataVec[classIds[i][idx]].second;
+					IOData mirror;
+					mirror.first = id.MirrorLR();
+					mirror.second = od.MirrorLR();
+					newDataSet.push_back(m_IODataVec[classIds[i][idx]]);
+					newDataSet.push_back(mirror);
+				}
+			}
+			else
+			{
+				// 对方镜像填充
+				for (int j = 0; j < (avg - cnt) / 2; j++)
+				{
+					int other = i == 3 ? 4 : 3;
+					int otherCnt = classIds[other].size();
+					int idx = rand() % cnt;
+					int otherIdx = rand() % otherCnt;
+
+					InputData& id = m_IODataVec[classIds[other][otherIdx]].first;
+					OutputData& od = m_IODataVec[classIds[other][otherIdx]].second;
+					IOData mirror;
+					mirror.first = id.MirrorLR();
+					mirror.second = od.MirrorLR();
+					newDataSet.push_back(m_IODataVec[classIds[i][idx]]);
+					newDataSet.push_back(mirror);
+				}
+			}
+			
+		}
+	}
+	m_IODataVec.assign(newDataSet.begin(), newDataSet.end());
+
+	Save(saveFileName);
 }

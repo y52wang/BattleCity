@@ -98,6 +98,8 @@ public:
 	void Save(const std::string fileName);
 	void Load(const std::string fileName);
 
+	void DataBalance(const std::string loadFileName, const std::string saveFileName);
+
 	IODataVec       m_IODataVec;
 
 	InputData		m_InputData;
