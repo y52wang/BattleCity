@@ -41,6 +41,12 @@ InputData InputData::Normalize() const
 	nid.player_bullet_pos.x -= px;
 	nid.player_bullet_pos.y -= py;
 
+	for (int i=0; i<InputData::HisPosesCnt; ++i)
+	{
+		nid.player_his_poses[i].x -= px;
+		nid.player_his_poses[i].y -= py;
+	}
+
 	for (auto it=nid.enemies_pos.begin(); it!=nid.enemies_pos.end(); ++it)
 	{
 		it->x -= px;
@@ -375,6 +381,9 @@ void CDataManager::Save(const std::string fileName)
 		fs.write((char*)&id.player_bullet_pos, sizeof(Pos));
 		fs.write((char*)&id.player_bullet_dir, sizeof(DIRECTION));
 
+		for (int i=0; i<InputData::HisPosesCnt; ++i)
+			fs.write((const char*)&(id.player_his_poses[i]), sizeof(Pos));
+
 		int enemyCount = id.enemies_pos.size();
 		fs.write((char*)&enemyCount, sizeof(int));
 		for (int i = 0; i < enemyCount; i++)
@@ -415,6 +424,9 @@ void CDataManager::Load(const std::string fileName)
 		fs.read((char*)&id.player_dir, sizeof(DIRECTION));
 		fs.read((char*)&id.player_bullet_pos, sizeof(Pos));
 		fs.read((char*)&id.player_bullet_dir, sizeof(DIRECTION));
+
+		for (int i=0; i<InputData::HisPosesCnt; ++i)
+			fs.read((char*)&(id.player_his_poses[i]), sizeof(Pos));
 
 		int enemyCount(0);
 		fs.read((char*)&enemyCount, sizeof(int));
