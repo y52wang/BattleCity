@@ -50,6 +50,7 @@ void CGame::Init() {
 	Renderer()->Init();
 	Level()->Init();
 	Player()->Init(8, 0, 1);
+	//Player()->Init(12, 12, 1);  // WangLiang: 玩家初始化到中间
 	Menu()->Init();
 
 	m_game_offset_scr_x = 32;  //Stała
@@ -88,6 +89,7 @@ void CGame::Init() {
 				break;
 
 			case GS_GAMEPLAY:
+				m_GSGP_noinput = true;
 				ProcessEvents();
 				break;
 
@@ -112,7 +114,7 @@ void CGame::Init() {
 			dm->EndLog(accumulator);
 
 			// 如果开启了实时策略运用，则此处使用策略
-			if (Player()->Alive() && !GameLost())
+			if (Player()->Alive() && !GameLost() && m_GSGP_noinput)  // 且在没有输入的情况下
 			{
 				if (m_Stg->valid)
 				{
@@ -248,6 +250,9 @@ void CGame::ProcessEvents()
         }
 		else if(event.type == SDL_KEYDOWN)
 		{
+			if (m_game_state == GS_GAMEPLAY)
+				m_GSGP_noinput = false;
+
 			CDataManager* dm = DataManager();
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 SetGameState(GS_MENU);
@@ -298,14 +303,16 @@ void CGame::ProcessEvents()
                 if(m_game_state == GS_EDITOR)
                     Level()->SaveLevel();
 			} else if(event.key.keysym.sym == SDLK_g) {
-
 				// CLevel 中全局势力图，固定不变的网格显示
-				//CLevel* level = CGame::Get().Level();
-				//level->m_drawGrid = !level->m_drawGrid;
+				CLevel* level = CGame::Get().Level();
+				level->m_drawGrid = !level->m_drawGrid;
 			}
         }
 		else if(event.type == SDL_KEYUP)
 		{
+			if (m_game_state == GS_GAMEPLAY)
+				m_GSGP_noinput = false;
+
             if(event.key.keysym.sym == SDLK_UP && Player()->Alive()) {
                 Player()->Stop(DIR_UP);
             } else if(event.key.keysym.sym == SDLK_LEFT && Player()->Alive()) {

@@ -25,7 +25,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "AI/Data.h"
 #include "AI/StrategyCnn.h"
 #include "AI/StrategyNN.h"
-#include "AI/Strategy.h"
+#include "AI/StrategyWL.h"
 
 struct Mouse { int x, y; };
 
@@ -50,7 +50,7 @@ public: //Metody
     void SetGameLost(bool status)   { m_game_lost = status; }   //Ustaw status przegranej
     bool GameLost()         { return m_game_lost; }             //Czy przegrałeś?
 
-    int TailSize() { return m_tail_size; }                      //Rozmiar kafelki
+    int TailSize() { return m_tail_size; }                      //Rozmiar kafelki（平铺尺寸）
     int GameOffsetX() { return m_game_offset_scr_x;}            //Offset na osi X czarnego okna (gameplay itp)
     int GameOffsetY() { return m_game_offset_scr_y;}            //-||-
 
@@ -82,7 +82,11 @@ private: //Metody
         m_Enemies = new CEnemies;           m_Menu = new CMenu;
         m_GameTimer = new CGameTimer;       m_Items = new CItems;
         m_GUI = new CGUI;                   m_Effects = new CEffects;
-		m_DataMgr = new CDataManager;		m_Stg = new StrategyNN();
+		m_DataMgr = new CDataManager;
+
+		m_Stg = new StrategyNN();
+		//m_Stg = new StrategyWL<InfluenceMethod9>();
+		//m_Stg = new StrategyWL<InfluenceMethodVerHorSquares>();
 
         m_end_game = false;
         //Rozmiar 1 klocka w budowaniu poziomu
@@ -126,6 +130,8 @@ private:
 
     int m_game_offset_scr_x;//Pozycja okna gry głównej
     int m_game_offset_scr_y;//Pozycja okna gry głównej
+
+	bool	m_GSGP_noinput;  // GS_GAMEPLAY 模式下，没有任何按键输入
 
     //Wskaznki na główne obiekty gry
     CWindow*		m_Window;		//Obiekt okna (w SDL)
