@@ -152,8 +152,8 @@ void InfluenceMethod9::CalcInfluence(const InputData& id, std::vector<float>& ou
 
 	for (int idx=0; idx<InputData::HisPosesCnt; ++idx)
 	{
-		out[_moving_hint_cnt + _region_cnt + idx*2]		= nid.player_his_poses[idx].x / 24.0f;
-		out[_moving_hint_cnt + _region_cnt + idx*2 + 1]	= nid.player_his_poses[idx].y / 24.0f;
+		out[_region_cnt + _moving_hint_cnt + idx*2]		= nid.player_his_poses[idx].x / 24.0f;
+		out[_region_cnt + _moving_hint_cnt + idx*2 + 1]	= nid.player_his_poses[idx].y / 24.0f;
 	}
 }
 

@@ -183,6 +183,33 @@ void StrategyPJW::Train(const IODataVec & database, std::string folder, std::str
 	Matrix x, y;
 	MakeFakeData(x, y);
 
+	// WangLiang: Dump data to csv --------------------------------------------
+	{
+		assert(x.cols()==y.cols());
+		FILE* fp = fopen("data/TrainDataPJW.csv", "w");
+		if (fp!=NULL)
+		{
+			for (int i=0; i<x.cols(); ++i)
+			{
+				for (int m=0; m<x.rows(); ++m)
+				{
+					fprintf(fp, "%8.4f,", x(m, i));
+				}
+				for (int n=0; n<y.rows(); ++n)
+				{
+					fprintf(fp, "%8.4f", y(n, i));
+					if (n==y.rows()-1)
+						fprintf(fp, "\n");
+					else
+						fprintf(fp, ",");
+				}
+			}
+
+			fclose(fp);
+		}
+	}
+	// ------------------------------------------------------------------------
+
 	MiniDNN::Adam opt;
 	opt.m_lrate = learning_rate;
 
