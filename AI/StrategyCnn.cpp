@@ -5,7 +5,7 @@
 
 using namespace MiniDNN;
 
-const int view_size = 6;
+const int view_size = 5;
 const int map_width = view_size * 2 + 2;
 const int map_size = map_width * map_width;
 const int action = 5;
@@ -13,11 +13,11 @@ const int h_dim = 200;
 
 #define EDGE -1					// 边缘势力影响
 #define ENEMY_INFLUENCE -1		// 敌方坦克势力影响基数
-#define ENEMY_FADE 0.1			// 敌方坦克势力影响衰减率
+#define ENEMY_FADE 0.2			// 敌方坦克势力影响衰减率
 #define ENEMY_DIRECTION_INFLUENCE -1			// 敌方坦克势力影响衰减率
-#define ENEMY_DIRECTION_FADE 0.6			// 敌方坦克势力影响衰减率
+#define ENEMY_DIRECTION_FADE 0.7			// 敌方坦克势力影响衰减率
 #define BULLET_INFLUENCE -2		// 子弹势力影响基数
-#define BULLET_FADE 0.8			// 子弹势力影响衰减率
+#define BULLET_FADE 0.9			// 子弹势力影响衰减率
 
 #define INDEX(x,y,c) ((c)*map_width*map_width+(x)*map_width+(y)) // c: channel
 
@@ -54,6 +54,50 @@ OutputData StrategyCNN::MakeDecision(const InputData & id)
 	
 	
 	return od;
+}
+
+void StrategyCNN::Train(const IODataVec & database, std::string folder, std::string fileName, float learning_rate, int batch_size, int epoch)
+{
+	SetupNetwork();
+
+	int dataCount = database.size();
+
+	Matrix x(x_dim, dataCount * 2);
+	Matrix y(y_dim, dataCount * 2);
+
+	for (int i = 0; i < dataCount; i++)
+	{
+		const InputData& id = database[i].first;
+		const OutputData& od = database[i].second;
+
+		ConvertData(id);
+		ConvertData(od);
+		for (int k = 0; k < x_dim; k++) x(k, i) = input(k, 0);
+		for (int k = 0; k < y_dim; k++) y(k, i) = output(k, 0);
+
+		const InputData& id_m = id.MirrorLR();
+		const OutputData& od_m = od.MirrorLR();
+
+		ConvertData(id_m);
+		ConvertData(od_m);
+		for (int k = 0; k < x_dim; k++) x(k, dataCount + i) = input(k, 0);
+		for (int k = 0; k < y_dim; k++) y(k, dataCount + i) = output(k, 0);
+	}
+
+	MiniDNN::Adam opt;
+	opt.m_lrate = learning_rate;
+
+	MiniDNN::VerboseCallback callback;
+	network.set_callback(callback);
+
+	network.init(0, 0.01, 123);
+
+	network.fit(opt, x, y, batch_size, epoch);
+
+	valid = true;
+
+	// export_net文件夹已存在时会报错，把Network.h中对应行注释掉，自己创建文件夹，或训练前把文件夹删除 （已修复）
+	network.export_net(folder, fileName);
 }
 
 void StrategyCNN::Draw()
@@ -164,9 +208,9 @@ void StrategyCNN::Draw()
 
 void StrategyCNN::SetupNetwork()
 {
-	Layer* conv1 = new Convolutional<ReLU>(14, 14, 3, 16, 3, 3);
-	Layer* pool1 = new MaxPooling<Identity>(12, 12, 16, 2, 2);
-	Layer* layer1 = new FullyConnected<ReLU>(6*6*16, h_dim);
+	Layer* conv1 = new Convolutional<ReLU>(12, 12, 3, 16, 3, 3);
+	Layer* pool1 = new MaxPooling<Identity>(10, 10, 16, 2, 2);
+	Layer* layer1 = new FullyConnected<ReLU>(5*5*16, h_dim);
 	//Layer* layer1 = new FullyConnected<ReLU>(map_size, h_dim);
 	Layer* layer11 = new FullyConnected<ReLU>(h_dim, h_dim);
 	Layer* layer2 = new FullyConnected<Softmax>(h_dim, action);
@@ -252,7 +296,7 @@ void StrategyCNN::UpdateInfluenceMap(const InputData & id)
 				int dist_x = min(abs(x - ex), abs(x - ex - 1));
 				int dist_y = min(abs(y - ey), abs(y - ey - 1));
 				int dist = dist_x + dist_y;
-				//influence_map[x][y][0] += ENEMY_INFLUENCE * pow(ENEMY_FADE, dist);
+				influence_map[x][y][0] += ENEMY_INFLUENCE * pow(ENEMY_FADE, dist);
 			}
 
 			// Enemy Direction Influence

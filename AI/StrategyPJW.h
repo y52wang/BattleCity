@@ -19,6 +19,8 @@ protected:
 	void SetupNetwork();
 	void ConvertData(const InputData& id);  // Ìî³ä Matrix input
 	void ConvertData(const OutputData& od); // Ìî³ä Matrix output
+	void MakeFakeData(Matrix& x, Matrix& y); // Ôì¼ÙÊı¾İ
+	OutputData MakeDecisionHardCode(int ex, int ey, int dx, int dy);
 };
 
 #endif
