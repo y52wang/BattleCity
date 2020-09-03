@@ -120,6 +120,7 @@ void CGame::Init() {
 				{
 					// 使用策略控制 Player
 					OutputData od = m_Stg->MakeDecision(dm->m_InputData);
+					if (od.shoot) Player()->Shoot();
 					switch (od.mov) {
 					case DIR_UP:	Player()->SetDirection(DIR_UP);		Player()->Drive();  break;
 					case DIR_DOWN:	Player()->SetDirection(DIR_DOWN);	Player()->Drive();  break;
