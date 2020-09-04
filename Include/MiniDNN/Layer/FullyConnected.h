@@ -75,9 +75,13 @@ class FullyConnected: public Layer
             m_z.resize(this->m_out_size, nobs);
             m_z.noalias() = m_weight.transpose() * prev_layer_data;
             m_z.colwise() += m_bias;
+
+		//	assert(!isnan(m_z.data()[0]));
             // Apply activation function
             m_a.resize(this->m_out_size, nobs);
             Activation::activate(m_z, m_a);
+
+		//	assert(!isnan(m_a.data()[0]));
         }
 
         const Matrix& output() const
@@ -89,6 +93,8 @@ class FullyConnected: public Layer
         // next_layer_data: out_size x nobs
         void backprop(const Matrix& prev_layer_data, const Matrix& next_layer_data)
         {
+		//	assert(!isnan(m_z.data()[0]));
+
             const int nobs = prev_layer_data.cols();
             // After forward stage, m_z contains z = W' * in + b
             // Now we need to calculate d(L) / d(z) = [d(a) / d(z)] * [d(L) / d(a)]
@@ -96,14 +102,28 @@ class FullyConnected: public Layer
             // The Jacobian matrix J = d(a) / d(z) is determined by the activation function
             Matrix& dLz = m_z;
             Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
+
+		//	assert(!isnan(dLz.data()[0]));
+
+		//	printf("backprop dlz:\n");
+		//	for (int i=0; i<dLz.size(); ++i)
+		//		printf("%.3f, ", dLz.data()[i]);
+		//	printf("\n");
+
             // Now dLz contains d(L) / d(z)
             // Derivative for weights, d(L) / d(W) = [d(L) / d(z)] * in'
             m_dw.noalias() = prev_layer_data * dLz.transpose() / nobs;
             // Derivative for bias, d(L) / d(b) = d(L) / d(z)
             m_db.noalias() = dLz.rowwise().mean();
+
+		//	assert(!isnan(m_dw.data()[0]));
+		//	assert(!isnan(m_db.data()[0]));
+
             // Compute d(L) / d_in = W * [d(L) / d(z)]
             m_din.resize(this->m_in_size, nobs);
             m_din.noalias() = m_weight * dLz;
+
+		//	assert(!isnan(m_din.data()[0]));
         }
 
         const Matrix& backprop_data() const
@@ -119,6 +139,9 @@ class FullyConnected: public Layer
             AlignedMapVec      b(m_bias.data(), m_bias.size());
             opt.update(dw, w);
             opt.update(db, b);
+
+		//	assert(!isnan(m_weight.data()[0]));
+		//	assert(!isnan(m_bias.data()[0]));
         }
 
         std::vector<Scalar> get_parameters() const

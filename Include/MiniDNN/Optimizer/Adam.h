@@ -76,6 +76,7 @@ class Adam: public Optimizer
             // Correction coefficients
             const Scalar correct1 = Scalar(1) / (Scalar(1) - m_beta1t);
             const Scalar correct2 = Scalar(1) / sqrt(Scalar(1) - m_beta2t);
+			//printf("correct1: %.3f, correct2: %.3f\n", correct1, correct2);
             // Update parameters
             vec.array() -= (m_lrate * correct1) * mvec / (correct2 * vvec.sqrt() + m_eps);
             m_beta1t *= m_beta1;

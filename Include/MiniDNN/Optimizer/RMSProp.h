@@ -42,6 +42,16 @@ class RMSProp: public Optimizer
 
         void update(ConstAlignedMapVec& dvec, AlignedMapVec& vec)
         {
+//			printf("dvec:\n");
+//			for (int i=0; i<dvec.size(); ++i)
+//				printf("%.3f, ", dvec.data()[i]);
+//			printf("\n");
+//
+//			printf("Before vec:\n");
+//			for (int i=0; i<vec.size(); ++i)
+//				printf("%.3f, ", vec.data()[i]);
+//			printf("\n");
+
             // Get the accumulated squared gradient associated with this gradient
             Array& grad_square = m_history[dvec.data()];
 
@@ -57,6 +67,11 @@ class RMSProp: public Optimizer
                           dvec.array().square();
             // Update parameters
             vec.array() -= m_lrate * dvec.array() / (grad_square + m_eps).sqrt();
+
+//			printf("After vec:\n");
+//			for (int i=0; i<vec.size(); ++i)
+//				printf("%.3f, ", vec.data()[i]);
+//			printf("\n");
         }
 };
 

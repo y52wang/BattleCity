@@ -80,12 +80,35 @@ class MultiClassEntropy: public Output
                 throw std::invalid_argument("[class MultiClassEntropy]: Target data have incorrect dimension");
             }
 
+		//	for (int i=0; i<prev_layer_data.size(); ++i)
+		//		assert(!isnan(prev_layer_data.data()[i]));
+		//	for (int i=0; i<target.size(); ++i)
+		//		assert(!isnan(target.data()[i]));
+
+		//	printf("prev_layer_data:\n");
+		//	for (int i=0; i<prev_layer_data.size(); ++i)
+		//		printf("%.3f, ", prev_layer_data.data()[i]);
+		//	printf("\n");
+
             // Compute the derivative of the input of this layer
             // L = -sum(log(phat) * y)
             // in = phat
             // d(L) / d(in) = -y / phat
             m_din.resize(nclass, nobs);
             m_din.noalias() = -target.cwiseQuotient(prev_layer_data);
+
+			// WangLiang: 前级 Softmax 出 0.0 的补丁修正，避免 NaN
+			for (int i=0; i<m_din.size(); ++i)
+				if (target.data()[i]==0.0f || prev_layer_data.data()[i]==0.0f)
+					m_din.data()[i] = 0.0f;
+
+		//	for (int i=0; i<m_din.size(); ++i)
+		//		assert(!isnan(m_din.data()[i]));
+
+		//	printf("m_din:\n");
+		//	for (int i=0; i<m_din.size(); ++i)
+		//		printf("%.3f, ", m_din.data()[i]);
+		//	printf("\n");
         }
 
         // target is a vector of class labels that take values from [0, 1, ..., nclass - 1]
