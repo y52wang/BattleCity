@@ -13,6 +13,8 @@ using namespace std;
 
 void CGame::StartGameplay()
 {
+	m_tick_noinput = 0;
+
 	Player()->SetPosition(8, 0);
 	Player()->SetAlive(false);
 	Player()->SetDirection(DIR_UP);
@@ -100,6 +102,7 @@ void CGame::Init() {
 
 		//Frame Processing
 		ticks_n		= SDL_GetTicks();
+		int ticks_delta = ticks_n - ticks_o;
 		delta_time	= double((ticks_n-ticks_o))/1000.0;
 		ticks_o		= ticks_n;
 		if (delta_time<0)  delta_time = 0;
@@ -114,9 +117,12 @@ void CGame::Init() {
 			dm->EndLog(accumulator);
 
 			// 如果开启了实时策略运用，则此处使用策略
-			if (Player()->Alive() && !GameLost() && m_GSGP_noinput)  // 且在没有输入的情况下
+			if (Player()->Alive() && !GameLost())
 			{
-				if (m_Stg->valid)
+				if (m_GSGP_noinput)  // 在没有输入的情况下
+					m_tick_noinput += ticks_delta;
+
+				if (m_GSGP_noinput && m_tick_noinput>500 && m_Stg->valid)  // 500 ms 延时
 				{
 					// 使用策略控制 Player
 					OutputData od = m_Stg->MakeDecision(dm->m_InputData);
@@ -222,13 +228,14 @@ void CGame::Init() {
 }
 
 void CGame::SetGameState(GAME_STATE state) {
-    if(m_game_state == GS_GAMEPLAY) {
+    if (m_game_state==GS_GAMEPLAY) {  // 当前状态
         Bullets()->DestroyAllBullets();
         Enemies()->DestroyAllEnemies();
         Audio()->StopAll();
     }
-    if (state == GS_GAMEPLAY) StartGameplay();
-    else if(state == GS_MENU) {
+    if (state==GS_GAMEPLAY) {
+		StartGameplay();
+	} else if (state == GS_MENU) {
         SetGameLost(false);
         Player()->SetPlayerLevel(0);
         if(PlayerTwo() != NULL) PlayerTwo()->SetPlayerLevel(0);
@@ -252,7 +259,10 @@ void CGame::ProcessEvents()
 		else if(event.type == SDL_KEYDOWN)
 		{
 			if (m_game_state == GS_GAMEPLAY)
+			{
 				m_GSGP_noinput = false;
+				m_tick_noinput = 0;
+			}
 
 			CDataManager* dm = DataManager();
             if (event.key.keysym.sym == SDLK_ESCAPE) {
@@ -312,7 +322,10 @@ void CGame::ProcessEvents()
 		else if(event.type == SDL_KEYUP)
 		{
 			if (m_game_state == GS_GAMEPLAY)
+			{
 				m_GSGP_noinput = false;
+				m_tick_noinput = 0;
+			}
 
             if(event.key.keysym.sym == SDLK_UP && Player()->Alive()) {
                 Player()->Stop(DIR_UP);

@@ -25,6 +25,7 @@ URL: http://warsztat.gd/projects.php?x=view&id=2063
 #include "AI/Data.h"
 #include "AI/StrategyCnn.h"
 #include "AI/StrategyNN.h"
+#include "AI/StrategyPJW.h"
 #include "AI/StrategyWL.h"
 
 struct Mouse { int x, y; };
@@ -85,6 +86,7 @@ private: //Metody
 		m_DataMgr = new CDataManager;
 
 		m_Stg = new StrategyNN();
+		//m_Stg = new StrategyPJW();
 		//m_Stg = new StrategyWL<InfluenceMethod9>();
 		//m_Stg = new StrategyWL<InfluenceMethodVerHorSquares>();
 
@@ -92,6 +94,8 @@ private: //Metody
         //Rozmiar 1 klocka w budowaniu poziomu
         //横向单位长度
         m_tail_size = 16;
+
+		m_tick_noinput = 0;
     }
     ~CGame() {
         delete m_Window;    m_Window    = NULL;
@@ -132,6 +136,7 @@ private:
     int m_game_offset_scr_y;//Pozycja okna gry głównej
 
 	bool	m_GSGP_noinput;  // GS_GAMEPLAY 模式下，没有任何按键输入
+	int		m_tick_noinput;  // GS_GAMEPLAY 模式下，没有任何按键输入的时长
 
     //Wskaznki na główne obiekty gry
     CWindow*		m_Window;		//Obiekt okna (w SDL)

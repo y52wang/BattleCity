@@ -107,7 +107,7 @@ void CMenu::ProcessEvents() {
             } else if (event.key.keysym.sym == SDLK_t) {  // 按下 字母 t 键
                 // 读取数据，进行卷积网络的训练
 				CDataManager* dm = game.DataManager();
-				dm->Load("data/IOData_Balance.dat");
+				dm->Load((event.key.keysym.mod&KMOD_LSHIFT) ? "data/IOData.dat" : "data/IOData_Balance.dat");
 				game.Strategy()->Train(dm->m_IODataVec, "data", "Stg");
             } else if (event.key.keysym.sym == SDLK_s) {  // 按下 字母 s 键
 				// 保存数据
